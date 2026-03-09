@@ -5,17 +5,8 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-22.04
 
     steps:
@@ -50,27 +41,22 @@ jobs:
       - name: Build Chinese HTML
         run: bash build_html_zh.sh
 
-      - name: Assemble site
-        run: |
-          mkdir -p _site
-          # English → root
-          cp -r en_chapters/_build/html/* _site/
-          # Chinese → /cn/
-          mkdir -p _site/cn
-          cp -r zh_chapters/_build/html/* _site/cn/
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-22.04
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/openmlsys/openmlsys.github.io.git
+
+          # English → root (default language)
+          cp -r en_chapters/_build/html/* openmlsys.github.io/docs/
+
+          # Chinese → /cn/ subdirectory
+          mkdir -p openmlsys.github.io/docs/cn
+          cp -r zh_chapters/_build/html/* openmlsys.github.io/docs/cn/
+
+          cd openmlsys.github.io
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "deploy: update docs (en+zh) from openmlsys-zh@${{ github.sha }}" || echo "No changes to commit"
+          git push
