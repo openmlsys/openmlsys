@@ -69,3 +69,10 @@ jobs:
 
       - name: Build Chinese HTML
         run: bash build_html_zh.sh
+
+  build:
+    name: build
+    needs: [build-en, build-zh]
+    runs-on: ubuntu-22.04
+    steps:
+      - run: echo "All builds passed"
