@@ -1,79 +1,132 @@
+<p align="center">
+  <img src="static/logo-with-text.png" alt="OpenMLSys Logo" width="400"/>
+</p>
+
+<p align="center">
+  <a href="https://github.com/openmlsys/openmlsys-zh/actions/workflows/main.yml">
+    <img src="https://github.com/openmlsys/openmlsys-zh/actions/workflows/main.yml/badge.svg" alt="CI"/>
+  </a>
+  <a href="https://openmlsys.github.io/">
+    <img src="https://img.shields.io/badge/book-online-blue" alt="Book Online"/>
+  </a>
+  <a href="https://github.com/openmlsys/openmlsys-zh/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/openmlsys/openmlsys-zh" alt="License"/>
+  </a>
+  <a href="https://github.com/openmlsys/openmlsys-zh/stargazers">
+    <img src="https://img.shields.io/github/stars/openmlsys/openmlsys-zh?style=social" alt="GitHub Stars"/>
+  </a>
+</p>
+
+<p align="center">
+  <b>中文</b> | <a href="README_EN.md">English</a>
+</p>
+
+---
+
 # 机器学习系统：设计和实现
 
-本开源项目试图给读者讲解现代机器学习系统的设计原理和实现经验。
+本开源项目讲解现代机器学习系统的设计原理和实现经验，涵盖从编程接口、计算图、编译器到分布式训练的完整技术栈。
 
-🔥 **书籍网页版：** [机器学习系统：设计和实现](https://openmlsys.github.io/)
+**在线阅读：** [openmlsys.github.io](https://openmlsys.github.io/)
 
-🔥 **书籍PDF：** 将在勘误后，2022年中发布。
+## 目录
 
-## 发布
-
-- 27/06/2022: OpenMLSys社区发布通俗易懂的高性能AI算子开发教程，助力学生和工程师60分钟理解算子性能优化的关键知识点。相应的[技术博客](https://zhuanlan.zhihu.com/p/531498210)和[复现代码](https://github.com/openmlsys/openmlsys-cuda)都已免费公开。感谢@[Jie Ren](https://github.com/JieRen98) 和 @[Wenteng Liang](https://github.com/Went-Liang) 的贡献！🔥 
-- 17/03/2022: 本书处于勘误阶段。如发现文字和图片错误，可创建Issue并@[章节编辑](info/editors.md)。我们非常欢迎社区提交PR直接勘误。
+- [适用读者](#适用读者)
+- [内容介绍](#内容介绍)
+- [构建指南](#构建指南)
+- [贡献指南](#贡献指南)
+- [社区](#社区)
+- [许可证](#许可证)
 
 ## 适用读者
 
-本书的常见读者包括：
-
--   **学生：**
-    随着大量机器学习课程在大学中的普及，学生已经开始掌握大量机器学习的基础理论和神经网络的实现。然而，需要训练出可以实际应用的机器学习模型，需要对现代机器学习系统有充分的认识。
-
--   **科研人员：**
-    研发新型的机器学习模型不仅仅需要会使用基础的机器学习系统接口。同时，新型的模型需要给系统提供新的自定义算子（Custom
-    Operators），又或者是会利用高级的分布式执行算子来实现大模型的开发。这一系列需求都需要对底层系统具有充分认识。
-
--   **开发人员：**
-    大量的数据和AI驱动的公司都部署了机器学习基础设施。这一设施的核心就是机器学习系统。因此了解机器学习系统有助于开发人员对于系统性能调优，以定位问题，并且根据业务需求对机器学习系统进行深度定制。
+- **学生**：掌握机器学习基础理论后，希望深入了解现代机器学习系统设计与实现的同学。
+- **科研人员**：需要开发自定义算子（Custom Operators）或利用分布式执行实现大模型的研究者。
+- **开发人员**：负责机器学习基础设施建设，需要对系统性能调优和深度定制的工程师。
 
 ## 内容介绍
 
-现代机器学习框架具有复杂的内部架构和繁多的外部相关组件。在本书中，我们将对其细致拆分，深入解读：
+本书分为基础篇、进阶篇和扩展篇三个部分：
 
-基础：
+### 基础篇
 
--   **编程接口：** 为了支持海量应用，机器学习框架的编程接口设计具有大量的设计哲学，在易用性和性能之间取得平衡。本书将讲述编程接口的演进，机器学习工作流，定义深度学习模型，以及用C/C++进行框架开发。
+| 章节 | 内容 |
+|------|------|
+| [编程接口](chapter_programming_interface/) | 框架接口设计哲学、机器学习工作流、深度学习模型定义、C/C++ 框架开发 |
+| [计算图](chapter_computational_graph/) | 计算图基本构成、生成方法、调度策略、自动微分 |
 
--   **计算图：** 机器学习框架需要支持自动微分，硬件加速器，多编程前端等。实现这些支持的核心技术是：计算图（Computational Graph）。本书将讲述计算图的基本构成，生成方法和调度策略。
+### 进阶篇
 
-性能进阶：
+| 章节 | 内容 |
+|------|------|
+| [编译器前端和中间表示](chapter_frontend_and_ir/) | 类型推导、中间表示（IR）、自动微分、常见优化 Pass |
+| [编译器后端和运行时](chapter_backend_and_runtime/) | 计算图优化、算子选择、内存分配、计算调度与执行 |
+| [硬件加速器](chapter_accelerator/) | GPU/Ascend 架构原理、高性能编程接口（CUDA/CANN） |
+| [数据处理框架](chapter_data_processing/) | 易用性、高效性、保序性、分布式数据处理 |
+| [模型部署](chapter_model_deployment/) | 模型转换、模型压缩、模型推理、安全保护 |
+| [分布式训练](chapter_distributed_training/) | 数据并行、模型并行、流水线并行、集合通讯、参数服务器 |
 
--   **编译器前端：**
-    机器学习框架需要利用编译器前端技术对计算图进行功能拓展和性能优化。本书将讲述常见的前端技术，包括类型推导，中间表示（Intermediate Representation），自动微分等。
+### 扩展篇
 
--   **编译器后端和运行时：**
-    机器学习框架的一个核心目标是：如何充分利用异构硬件。这其中会涉及编译器后端技术，以及将计算图算子（Operator）调度到硬件上的运行时（Runtime）。本书将讲述计算图优化，算子选择，内存分配和计算调度与执行。
-
--   **硬件加速器：**
-    机器学习框架的基本运行单元是算子，而算子的实现必须充分利用硬件加速器（GPU和Ascend）的特性。本书将会讲述硬件加速器的基本构成原理和常见的高性能编程接口。
-
--   **数据处理框架：**
-    机器学习框架会集成高性能框架来进行数据预处理。本书将会讲述这一类数据处理框架在设计中需要达到的多个目标：易用性，高效性，保序性，分布式等。
-
--   **模型部署：**
-    在模型完成训练后，用户需要将模型部署到终端设备（如云服务器，移动终端和无人车）。这其中涉及到的模型转换，模型压缩，模型推理和安全保护等知识也会在本书中讨论。
-
--   **分布式训练：**
-    机器学习模型的训练需要消耗大量资源。越来越多的机器学习框架因此原生支持分布式训练。在本书中我们将会讨论常见的分布式训练方法（包括数据并行，模型并行和流水线并行），以及实现这些方法的系统架构（包括集合通讯和参数服务器）。
-
-功能拓展：
-
--   **深度学习推荐系统：** 推荐系统是目前机器学习应用最成功的领域之一。本书将会概括推荐系统的运作原理，详细描述大规模工业场景下的推荐系统架构设计。
-
--   **联邦学习系统：** 随着数据保护法规和隐私保护的崛起，联邦学习正成为日益重要的研究领域。本书将会介绍联邦学习的常用方法以及相关系统实现。
-
--   **强化学习系统：** 强化学习是走向通用人工智能的关键技术。本书将会介绍目前常见的强化学习系统（包括单智能体和多智能体等）。
-
--   **可解释性AI系统：** 随着机器学习在安全攸关（Safety-critical）领域的应用，机器学习系统越来越需要对决策给出充分解释。本书将会讨论可解释AI系统的常用方法和落地实践经验。
-
--   **机器人系统：** 机器人（无人车，无人机，家用机器人等）作为机器学习技术重要的应用领域，在最近数年得到了广泛应用。在实践中，机器人系统在实时性，安全性，鲁棒性等方面都有极高要求，这要求开发者具有算法和系统的双重思维，从而解决实际问题。本书中我们将结合最新研究成果和机器人系统实践经验讲解该类系统的设计原则和实现细节。
-
-
-我们在持续拓展拓展本书的内容，如元学习系统，自动并行，深度学习集群调度，绿色AI系统，图学习系统等。我们也非常欢迎社区对于新内容提出建议，贡献章节。
+| 章节 | 内容 |
+|------|------|
+| [深度学习推荐系统](chapter_recommender_system/) | 推荐系统原理、大规模工业场景架构设计 |
+| [联邦学习系统](chapter_federated_learning/) | 联邦学习方法、隐私保护、系统实现 |
+| [强化学习系统](chapter_reinforcement_learning/) | 单智能体/多智能体强化学习系统 |
+| [可解释性 AI 系统](chapter_explainable_AI/) | 可解释 AI 方法与落地实践 |
+| [机器人学习系统](chapter_rl_sys/) | 机器人感知、规划、控制与系统安全 |
 
 ## 构建指南
 
-请参考[构建指南](info/info.md)来了解如何构建本书的网页版本和PDF版本。
+### 环境依赖
 
-## 写作指南
+- Python >= 3.10
+- pandoc >= 2.19
 
-我们欢迎大家来一起贡献和更新本书的内容。常见的贡献方式是提交PR来更新和添加Markdown文件。写作的风格和图片要求请参考[风格指南](info/style.md)。同时，机器学习领域涉及到大量的中英文翻译，相关的翻译要求请参考[术语指南](info/terminology.md)。
+### 安装步骤
+
+```bash
+# 克隆仓库
+git clone https://github.com/openmlsys/openmlsys-zh.git
+cd openmlsys-zh
+
+# 安装 d2lbook
+git clone https://github.com/openmlsys/d2l-book.git
+cd d2l-book && pip install . && cd ..
+
+# 安装 Python 依赖
+pip install -r requirements.txt
+```
+
+### 编译 HTML
+
+```bash
+sh build_html.sh
+# 生成结果在 _build/html/
+```
+
+更多细节请参考 [构建指南](info/info.md)。
+
+## 贡献指南
+
+我们欢迎任何形式的贡献，包括：
+
+- **勘误**：发现文字或图片错误，请创建 Issue 并 @ [章节编辑](info/editors.md)，或直接提交 PR。
+- **内容更新**：提交 PR 更新或添加 Markdown 文件。
+- **新章节**：欢迎社区对元学习系统、自动并行、集群调度、绿色 AI、图学习等主题贡献章节。
+
+提交前请阅读：
+- [写作风格指南](info/style.md)
+- [中英文术语对照](info/terminology.md)
+
+## 社区
+
+<p align="center">
+  <img src="info/mlsys_group.png" alt="微信群二维码" width="200"/>
+  <br/>
+  扫码加入微信交流群
+</p>
+
+## 许可证
+
+本项目采用 [知识共享 署名-非商业性使用-相同方式共享 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 授权。

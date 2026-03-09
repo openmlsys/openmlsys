@@ -1,5 +1,4 @@
-
-name: CI
+name: Deploy Docs
 
 on:
   pull_request:
@@ -7,30 +6,56 @@ on:
       - closed
 
 jobs:
-  if_merged:
+  deploy:
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: s-weigand/setup-conda@v1
-      - run: conda config --append channels conda-forge
-      - run: python3 -m pip install -r requirements.txt
-      - run: conda install -y pandoc==2.17
-      - run: pip install sphinx-mathjax-offline
+    runs-on: ubuntu-22.04
 
-      - run: |
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install pandoc
+        run: |
+          wget -q https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb
+          sudo dpkg -i pandoc-2.19.2-1-amd64.deb
+
+      - name: Install d2lbook
+        run: |
           git clone https://github.com/openmlsys/d2l-book.git
           cd d2l-book
+          # Fix Python 3.10+ incompatibility: bibtex<2.0.0 depends on oset which
+          # uses collections.MutableSet removed in Python 3.10.
+          sed -i "s/'sphinxcontrib-bibtex<2.0.0'/'sphinxcontrib-bibtex>=2.5.0'/" setup.py
           python3 -m pip install .
-      - run: sh build_html.sh
-      - run: cd ..
-      - run: git clone https://github.com/openmlsys/openmlsys.github.io.git
-      - run: cp -r openmlsys-zh/_build/html/*  openmlsys.github.io/docs/
-      - run: |
+
+      - name: Install Python dependencies
+        run: python3 -m pip install -r requirements.txt sphinx-mathjax-offline
+
+      - name: Build English HTML
+        run: bash build_html.sh
+
+      - name: Build Chinese HTML
+        run: bash build_html_zh.sh
+
+      - name: Deploy to GitHub Pages
+        run: |
+          git clone https://github.com/openmlsys/openmlsys.github.io.git
+
+          # English → root (default language)
+          cp -r openmlsys-zh/en_chapters/_build/html/* openmlsys.github.io/docs/
+
+          # Chinese → /cn/ subdirectory
+          mkdir -p openmlsys.github.io/docs/cn
+          cp -r openmlsys-zh/zh_chapters/_build/html/* openmlsys.github.io/docs/cn/
+
           cd openmlsys.github.io
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m 'update docs'
+          git commit -m "deploy: update docs (en+zh) from openmlsys-zh@${{ github.sha }}"
           git push
-         
-          
-      

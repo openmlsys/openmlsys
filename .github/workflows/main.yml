@@ -1,27 +1,71 @@
 name: CI
 
 on:
-- push
-- pull_request
-- workflow_dispatch  # Allows you to run this workflow manually from the Actions tab
+  push:
+  pull_request:
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+  build-en:
+    name: Build (English)
+    runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: s-weigand/setup-conda@v1
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.8'
-      - run: conda config --append channels conda-forge
-      - run: python3 -m pip install -r requirements.txt
-      - run: conda install -y pandoc==2.17
+      - uses: actions/checkout@v4
 
-      - run: |
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install pandoc
+        run: |
+          wget -q https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb
+          sudo dpkg -i pandoc-2.19.2-1-amd64.deb
+
+      - name: Install d2lbook
+        run: |
           git clone https://github.com/openmlsys/d2l-book.git
           cd d2l-book
+          # Fix Python 3.10+ incompatibility: bibtex<2.0.0 depends on oset which
+          # uses collections.MutableSet removed in Python 3.10.
+          sed -i "s/'sphinxcontrib-bibtex<2.0.0'/'sphinxcontrib-bibtex>=2.5.0'/" setup.py
           python3 -m pip install .
-      - run: d2lbook build html
+
+      - name: Install Python dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Build English HTML
+        run: bash build_html.sh
+
+  build-zh:
+    name: Build (Chinese)
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install pandoc
+        run: |
+          wget -q https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb
+          sudo dpkg -i pandoc-2.19.2-1-amd64.deb
+
+      - name: Install d2lbook
+        run: |
+          git clone https://github.com/openmlsys/d2l-book.git
+          cd d2l-book
+          sed -i "s/'sphinxcontrib-bibtex<2.0.0'/'sphinxcontrib-bibtex>=2.5.0'/" setup.py
+          python3 -m pip install .
+
+      - name: Install Python dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Build Chinese HTML
+        run: bash build_html_zh.sh

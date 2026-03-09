@@ -1,2 +1,7 @@
 bs4
-sphinx==4.4.0
+# pin setuptools<81 so pkg_resources (used by notedown) remains available
+setuptools<81
+# d2lbook pins sphinxcontrib-bibtex<2.0.0, but that version's oset dep
+# uses collections.MutableSet which was removed in Python 3.10.
+# We override it here (installed after d2lbook to win the conflict).
+sphinxcontrib-bibtex>=2.5.0
