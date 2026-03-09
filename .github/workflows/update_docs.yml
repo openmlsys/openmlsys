@@ -1,13 +1,21 @@
 name: Deploy Docs
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  deploy:
-    if: github.event.pull_request.merged == true
+  build:
     runs-on: ubuntu-22.04
 
     steps:
@@ -42,20 +50,27 @@ jobs:
       - name: Build Chinese HTML
         run: bash build_html_zh.sh
 
-      - name: Deploy to GitHub Pages
+      - name: Assemble site
         run: |
-          git clone https://github.com/openmlsys/openmlsys.github.io.git
+          mkdir -p _site
+          # English → root
+          cp -r en_chapters/_build/html/* _site/
+          # Chinese → /cn/
+          mkdir -p _site/cn
+          cp -r zh_chapters/_build/html/* _site/cn/
 
-          # English → root (default language)
-          cp -r openmlsys-zh/en_chapters/_build/html/* openmlsys.github.io/docs/
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
 
-          # Chinese → /cn/ subdirectory
-          mkdir -p openmlsys.github.io/docs/cn
-          cp -r openmlsys-zh/zh_chapters/_build/html/* openmlsys.github.io/docs/cn/
-
-          cd openmlsys.github.io
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "deploy: update docs (en+zh) from openmlsys-zh@${{ github.sha }}"
-          git push
+  deploy:
+    needs: build
+    runs-on: ubuntu-22.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
