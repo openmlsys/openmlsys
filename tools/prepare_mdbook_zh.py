@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
+from dataclasses import dataclass
 from pathlib import Path
 
 
@@ -12,6 +14,8 @@ NUMREF_RE = re.compile(r":numref:`([^`]+)`")
 EQREF_RE = re.compile(r":eqref:`([^`]+)`")
 CITE_RE = re.compile(r":cite:`([^`]+)`")
 RAW_HTML_FILE_RE = re.compile(r"^\s*:file:\s*([^\s]+)\s*$")
+TOC_LINK_RE = re.compile(r"^\[([^\]]+)\]\(([^)]+)\)\s*$")
+TOC_PART_RE = re.compile(r"^#+\s+(.+?)\s*$")
 HEAD_TAG_RE = re.compile(r"</?head>", re.IGNORECASE)
 STYLE_BLOCK_RE = re.compile(r"<style>(.*?)</style>", re.IGNORECASE | re.DOTALL)
 FRONTPAGE_LAYOUT_CSS = """
@@ -78,6 +82,13 @@ FRONTPAGE_LAYOUT_CSS = """
 """.strip()
 
 
+@dataclass(frozen=True)
+class TocItem:
+    kind: str
+    label: str
+    target: str | None = None
+
+
 def extract_title(markdown: str, fallback: str = "Untitled") -> str:
     lines = markdown.splitlines()
 
@@ -99,20 +110,37 @@ def extract_title(markdown: str, fallback: str = "Untitled") -> str:
     return fallback
 
 
-def parse_toc_blocks(markdown: str) -> list[list[str]]:
-    blocks: list[list[str]] = []
+def parse_toc_entries(block_lines: list[str]) -> list[TocItem]:
+    entries: list[TocItem] = []
+    for line in block_lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith(":"):
+            continue
+        part_match = TOC_PART_RE.match(stripped)
+        if part_match:
+            entries.append(TocItem(kind="part", label=part_match.group(1).strip()))
+            continue
+        link_match = TOC_LINK_RE.match(stripped)
+        if link_match:
+            entries.append(TocItem(kind="chapter", label=link_match.group(1).strip(), target=link_match.group(2).strip()))
+            continue
+        entries.append(TocItem(kind="chapter", label="", target=stripped))
+    return entries
+
+
+def parse_toc_blocks(markdown: str) -> list[list[TocItem]]:
+    blocks: list[list[TocItem]] = []
     lines = markdown.splitlines()
     index = 0
 
     while index < len(lines):
         if lines[index].strip() == f"```{TOC_FENCE}":
             index += 1
-            entries: list[str] = []
+            block_lines: list[str] = []
             while index < len(lines) and lines[index].strip() != "```":
-                stripped = lines[index].strip()
-                if stripped and not stripped.startswith(":"):
-                    entries.append(stripped)
+                block_lines.append(lines[index])
                 index += 1
+            entries = parse_toc_entries(block_lines)
             blocks.append(entries)
         index += 1
 
@@ -120,14 +148,15 @@ def parse_toc_blocks(markdown: str) -> list[list[str]]:
 
 
 def resolve_toc_target(current_file: Path, entry: str) -> Path:
-    target = (current_file.parent / f"{entry}.md").resolve()
+    target_name = entry if entry.endswith(".md") else f"{entry}.md"
+    target = (current_file.parent / target_name).resolve()
     if not target.exists():
         raise FileNotFoundError(f"TOC entry '{entry}' from '{current_file}' does not exist")
     return target
 
 
 def relative_link(from_file: Path, target_file: Path) -> str:
-    return target_file.relative_to(from_file.parent).as_posix()
+    return Path(os.path.relpath(target_file, start=from_file.parent)).as_posix()
 
 
 def normalize_directives(markdown: str) -> str:
@@ -204,11 +233,25 @@ def inline_raw_html(block_lines: list[str], current_file: Path) -> str | None:
     return html
 
 
-def render_toc_list(entries: list[str], current_file: Path, title_cache: dict[Path, str]) -> list[str]:
+def chapter_label(item: TocItem, target: Path, title_cache: dict[Path, str]) -> str:
+    return item.label or title_cache[target]
+
+
+def render_toc_list(entries: list[TocItem], current_file: Path, title_cache: dict[Path, str]) -> list[str]:
     rendered: list[str] = []
+    current_indent = 0
     for entry in entries:
-        target = resolve_toc_target(current_file, entry)
-        rendered.append(f"- [{title_cache[target]}]({relative_link(current_file, target)})")
+        if entry.kind == "part":
+            rendered.append(f"- {entry.label}")
+            current_indent = 1
+            continue
+
+        if entry.target is None:
+            continue
+
+        target = resolve_toc_target(current_file, entry.target)
+        label = chapter_label(entry, target, title_cache)
+        rendered.append(f"{'  ' * current_indent}- [{label}]({relative_link(current_file, target)})")
     return rendered
 
 
@@ -228,7 +271,7 @@ def rewrite_markdown(markdown: str, current_file: Path, title_cache: dict[Path, 
                 index += 1
 
             if fence == TOC_FENCE:
-                entries = [line.strip() for line in block_lines if line.strip() and not line.strip().startswith(":")]
+                entries = parse_toc_entries(block_lines)
                 if entries:
                     if output and output[-1] != "":
                         output.append("")
@@ -268,25 +311,53 @@ def build_summary(source_dir: Path, title_cache: dict[Path, str]) -> str:
     root_index = (source_dir / "index.md").resolve()
     root_markdown = root_index.read_text(encoding="utf-8")
 
-    lines = ["# Summary", "", f"- [{title_cache[root_index]}](index.md)"]
+    lines = ["# Summary", "", f"[{title_cache[root_index]}](index.md)"]
     seen: set[Path] = {root_index}
 
-    def append_entry(target: Path, indent: int) -> None:
+    def append_entry(target: Path, indent: int, label: str | None = None) -> None:
         target = target.resolve()
         if target in seen:
             return
         seen.add(target)
         rel = target.relative_to(source_dir.resolve()).as_posix()
-        lines.append(f"{'  ' * indent}- [{title_cache[target]}]({rel})")
+        title = label or title_cache[target]
+        lines.append(f"{'  ' * indent}- [{title}]({rel})")
 
         child_markdown = target.read_text(encoding="utf-8")
         for block in parse_toc_blocks(child_markdown):
             for entry in block:
-                append_entry(resolve_toc_target(target, entry), indent + 1)
+                if entry.kind != "chapter" or entry.target is None:
+                    continue
+                append_entry(resolve_toc_target(target, entry.target), indent + 1, entry.label or None)
 
+    def append_prefix_chapter(target: Path, label: str | None = None) -> None:
+        target = target.resolve()
+        if target in seen:
+            return
+        seen.add(target)
+        rel = target.relative_to(source_dir.resolve()).as_posix()
+        title = label or title_cache[target]
+        lines.append(f"[{title}]({rel})")
+
+    numbered_started = False
     for block in parse_toc_blocks(root_markdown):
         for entry in block:
-            append_entry(resolve_toc_target(root_index, entry), 0)
+            if entry.kind == "part":
+                if lines and lines[-1] != "":
+                    lines.append("")
+                lines.append(f"# {entry.label}")
+                lines.append("")
+                numbered_started = True
+                continue
+
+            if entry.target is None:
+                continue
+
+            target = resolve_toc_target(root_index, entry.target)
+            if numbered_started:
+                append_entry(target, 0, entry.label or None)
+            else:
+                append_prefix_chapter(target, entry.label or None)
 
     return "\n".join(lines) + "\n"
 

@@ -1,7 +1,10 @@
 # Summary
 
-- [机器学习系统：设计和实现](index.md)
-- [前言](chapter_preface/index.md)
+[机器学习系统：设计和实现](index.md)
+[前言](chapter_preface/index.md)
+
+# 基础篇
+
 - [导论](chapter_introduction/index.md)
   - [机器学习应用](chapter_introduction/applications.md)
   - [机器学习框架的设计目标](chapter_introduction/design.md)
@@ -21,7 +24,10 @@
   - [计算图的生成](chapter_computational_graph/generation_of_computational_graph.md)
   - [计算图的调度](chapter_computational_graph/schedule_of_computational_graph.md)
   - [总结](chapter_computational_graph/summary.md)
-- [第二部分：进阶篇](chapter_preface_advanced/index.md)
+
+# 进阶篇
+
+- [导读](chapter_preface_advanced/index.md)
 - [AI编译器和前端技术](chapter_frontend_and_ir/index.md)
   - [AI编译器设计原理](chapter_frontend_and_ir/ai_compiler_design_principle.md)
   - [AI编译器前端技术概述](chapter_frontend_and_ir/overview_of_frontend.md)
@@ -65,7 +71,10 @@
   - [集合通信](chapter_distributed_training/collective.md)
   - [参数服务器](chapter_distributed_training/parameter_servers.md)
   - [总结](chapter_distributed_training/summary.md)
-- [第三部分：拓展篇](chapter_preface_extension/index.md)
+
+# 拓展篇
+
+- [导读](chapter_preface_extension/index.md)
 - [深度学习推荐系统](chapter_recommender_system/index.md)
   - [系统基本组成](chapter_recommender_system/system_architecture.md)
   - [多阶段推荐系统](chapter_recommender_system/multi_stage_recommender_system.md)
@@ -92,7 +101,10 @@
   - [通用机器人操作系统](chapter_rl_sys/ros.md)
   - [案例分析：使用机器人操作系统](chapter_rl_sys/ros_code_ex.md)
   - [总结](chapter_rl_sys/summary.md)
-- [附录：机器学习介绍](appendix_machine_learning_introduction/index.md)
+
+# 附录
+
+- [机器学习介绍](appendix_machine_learning_introduction/index.md)
   - [神经网络](appendix_machine_learning_introduction/neural_network.md)
   - [梯度下降与反向传播](appendix_machine_learning_introduction/gradient_descent.md)
   - [经典机器学习方法](appendix_machine_learning_introduction/classic_machine_learning.md)
