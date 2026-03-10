@@ -1,0 +1,8 @@
+/* 暗色模式下为图片添加浅灰色背景，提高透明背景图片的可读性 */
+.navy img,
+.coal img,
+.ayu img {
+    background-color: #e8e8e8;
+    border-radius: 4px;
+    padding: 8px;
+}
