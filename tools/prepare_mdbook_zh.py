@@ -161,6 +161,10 @@ def resolve_raw_html_file(current_file: Path, filename: str) -> Path:
     if static_fallback.exists():
         return static_fallback
 
+    repo_static = (Path(__file__).resolve().parent.parent / "static" / filename)
+    if repo_static.exists():
+        return repo_static
+
     raise FileNotFoundError(f"Raw HTML include '{filename}' from '{current_file}' does not exist")
 
 
