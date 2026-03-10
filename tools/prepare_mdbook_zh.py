@@ -279,19 +279,17 @@ def _format_cite_label(author: str, year: str) -> str:
 def _render_bibliography(
     cited_keys: list[str], bib_db: dict[str, dict[str, str]]
 ) -> list[str]:
-    """Render a bibliography section for the cited keys."""
-    lines: list[str] = ["---", "", "## 参考文献", ""]
-    for key in cited_keys:
+    """Render a footnote-style bibliography section for the cited keys."""
+    lines: list[str] = ["---", "", "## 参考文献", "", "<ol>"]
+    for idx, key in enumerate(cited_keys, 1):
         entry = bib_db.get(key)
         if not entry:
-            lines.append(f'<p id="ref-{key}"><strong>[{key}]</strong> {key}.</p>')
-            lines.append("")
+            lines.append(f'<li id="ref-{key}">{key}. <a href="#cite-{key}">↩</a></li>')
             continue
         author = clean_bibtex(entry.get("author", ""))
         title = clean_bibtex(entry.get("title", ""))
         year = entry.get("year", "")
         venue = clean_bibtex(entry.get("journal", "") or entry.get("booktitle", ""))
-        label = _format_cite_label(entry.get("author", ""), year)
         parts: list[str] = []
         if author:
             parts.append(author)
@@ -302,15 +300,15 @@ def _render_bibliography(
         if year:
             parts.append(year)
         text = ". ".join(parts) + "." if parts else f"{key}."
-        lines.append(f'<p id="ref-{key}"><strong>[{label}]</strong> {text}</p>')
-        lines.append("")
+        lines.append(f'<li id="ref-{key}">{text} <a href="#cite-{key}">↩</a></li>')
+    lines.append("</ol>")
     return lines
 
 
 def process_citations(
     markdown: str, bib_db: dict[str, dict[str, str]]
 ) -> str:
-    """Replace :cite: references with linked citations and append bibliography."""
+    """Replace :cite: references with footnote-style numbered citations."""
     cited_keys: list[str] = []
 
     def _replace_cite(match: re.Match[str]) -> str:
@@ -320,17 +318,13 @@ def process_citations(
                 cited_keys.append(key)
         if not bib_db:
             return "[" + ", ".join(keys) + "]"
-        parts: list[str] = []
+        nums: list[str] = []
         for key in keys:
-            entry = bib_db.get(key)
-            if entry:
-                label = _format_cite_label(
-                    entry.get("author", ""), entry.get("year", "")
-                )
-                parts.append(f'<a href="#ref-{key}">{label}</a>')
-            else:
-                parts.append(key)
-        return "[" + "; ".join(parts) + "]"
+            idx = cited_keys.index(key) + 1
+            nums.append(
+                f'<sup id="cite-{key}"><a href="#ref-{key}">[{idx}]</a></sup>'
+            )
+        return "".join(nums)
 
     processed = CITE_RE.sub(_replace_cite, markdown)
     if cited_keys and bib_db:
