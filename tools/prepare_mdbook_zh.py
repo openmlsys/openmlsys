@@ -38,8 +38,11 @@ FRONTPAGE_LAYOUT_CSS = """
   flex: 0 0 48px;
 }
 .openmlsys-frontpage .mdl-cell--3-col {
-  flex: 1 1 calc(25% - 24px);
-  max-width: calc(25% - 18px);
+  flex: 0 1 calc(16.666% - 20px);
+  max-width: calc(16.666% - 20px);
+}
+.openmlsys-frontpage .authors.mdl-grid {
+  justify-content: center;
 }
 .openmlsys-frontpage .mdl-cell--5-col {
   flex: 1 1 calc(41.666% - 24px);
@@ -62,6 +65,9 @@ FRONTPAGE_LAYOUT_CSS = """
 #content,
 .content {
   max-width: min(1440px, calc(100vw - 48px));
+}
+.content main {
+  max-width: 75%;
 }
 .openmlsys-frontpage + ul,
 .openmlsys-frontpage + ul ul {
