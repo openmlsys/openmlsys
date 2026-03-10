@@ -11,6 +11,71 @@ OPTION_LINE_RE = re.compile(r"^:(width|label):`[^`]+`\s*$", re.MULTILINE)
 NUMREF_RE = re.compile(r":numref:`([^`]+)`")
 EQREF_RE = re.compile(r":eqref:`([^`]+)`")
 CITE_RE = re.compile(r":cite:`([^`]+)`")
+RAW_HTML_FILE_RE = re.compile(r"^\s*:file:\s*([^\s]+)\s*$")
+HEAD_TAG_RE = re.compile(r"</?head>", re.IGNORECASE)
+STYLE_BLOCK_RE = re.compile(r"<style>(.*?)</style>", re.IGNORECASE | re.DOTALL)
+FRONTPAGE_LAYOUT_CSS = """
+<style>
+.openmlsys-frontpage {
+  width: 100%;
+  margin: 0 auto 3rem;
+}
+.openmlsys-frontpage .mdl-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.openmlsys-frontpage .mdl-cell {
+  box-sizing: border-box;
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.openmlsys-frontpage .mdl-cell--1-col {
+  flex: 0 0 48px;
+}
+.openmlsys-frontpage .mdl-cell--3-col {
+  flex: 1 1 calc(25% - 24px);
+  max-width: calc(25% - 18px);
+}
+.openmlsys-frontpage .mdl-cell--5-col {
+  flex: 1 1 calc(41.666% - 24px);
+  max-width: calc(41.666% - 18px);
+}
+.openmlsys-frontpage .mdl-cell--12-col {
+  flex: 1 1 100%;
+  max-width: 100%;
+}
+.openmlsys-frontpage .mdl-cell--middle {
+  align-self: center;
+}
+.openmlsys-frontpage .mdl-color-text--primary {
+  color: var(--links, #0b6bcb);
+}
+.openmlsys-frontpage img {
+  max-width: 100%;
+  height: auto;
+}
+#content,
+.content {
+  max-width: min(1440px, calc(100vw - 48px));
+}
+.openmlsys-frontpage + ul,
+.openmlsys-frontpage + ul ul {
+  max-width: 960px;
+}
+@media (max-width: 1000px) {
+  .openmlsys-frontpage .mdl-cell,
+  .openmlsys-frontpage .mdl-cell--1-col,
+  .openmlsys-frontpage .mdl-cell--3-col,
+  .openmlsys-frontpage .mdl-cell--5-col {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+</style>
+""".strip()
 
 
 def extract_title(markdown: str, fallback: str = "Untitled") -> str:
@@ -87,6 +152,58 @@ def normalize_directives(markdown: str) -> str:
     return "\n".join(collapsed) + "\n"
 
 
+def resolve_raw_html_file(current_file: Path, filename: str) -> Path:
+    direct = (current_file.parent / filename).resolve()
+    if direct.exists():
+        return direct
+
+    static_fallback = (current_file.parent / "static" / filename).resolve()
+    if static_fallback.exists():
+        return static_fallback
+
+    raise FileNotFoundError(f"Raw HTML include '{filename}' from '{current_file}' does not exist")
+
+
+def rewrite_frontpage_assets(html: str) -> str:
+    rewritten = html.replace('./_images/', 'static/image/')
+    rewritten = rewritten.replace('_images/', 'static/image/')
+    rewritten = HEAD_TAG_RE.sub("", rewritten)
+    rewritten = STYLE_BLOCK_RE.sub(_minify_style_block, rewritten)
+    return rewritten
+
+
+def _minify_style_block(match: re.Match[str]) -> str:
+    content = match.group(1)
+    parts = [line.strip() for line in content.splitlines() if line.strip()]
+    return f"<style>{' '.join(parts)}</style>"
+
+
+def wrap_frontpage_html(html: str) -> str:
+    return "\n".join([FRONTPAGE_LAYOUT_CSS, '<div class="openmlsys-frontpage">', html.strip(), '</div>'])
+
+
+def inline_raw_html(block_lines: list[str], current_file: Path) -> str | None:
+    stripped = [line.strip() for line in block_lines if line.strip()]
+    if not stripped or stripped[0] != ".. raw:: html":
+        return None
+
+    filename: str | None = None
+    for line in stripped[1:]:
+        match = RAW_HTML_FILE_RE.match(line)
+        if match:
+            filename = match.group(1)
+            break
+
+    if filename is None:
+        return None
+
+    html_path = resolve_raw_html_file(current_file, filename)
+    html = rewrite_frontpage_assets(html_path.read_text(encoding="utf-8")).strip()
+    if Path(filename).name == "frontpage.html":
+        return wrap_frontpage_html(html)
+    return html
+
+
 def render_toc_list(entries: list[str], current_file: Path, title_cache: dict[Path, str]) -> list[str]:
     rendered: list[str] = []
     for entry in entries:
@@ -116,6 +233,14 @@ def rewrite_markdown(markdown: str, current_file: Path, title_cache: dict[Path, 
                     if output and output[-1] != "":
                         output.append("")
                     output.extend(render_toc_list(entries, current_file, title_cache))
+                    if output and output[-1] != "":
+                        output.append("")
+            elif fence == EVAL_RST_FENCE:
+                raw_html = inline_raw_html(block_lines, current_file)
+                if raw_html:
+                    if output and output[-1] != "":
+                        output.append("")
+                    output.extend(raw_html.splitlines())
                     if output and output[-1] != "":
                         output.append("")
             index += 1
