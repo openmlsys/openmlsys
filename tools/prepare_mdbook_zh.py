@@ -12,6 +12,7 @@ NUMREF_RE = re.compile(r":numref:`([^`]+)`")
 EQREF_RE = re.compile(r":eqref:`([^`]+)`")
 CITE_RE = re.compile(r":cite:`([^`]+)`")
 BIB_ENTRY_RE = re.compile(r"@(\w+)\{([^,]+),")
+LATEX_ESCAPE_RE = re.compile(r"\\([_%#&])")
 RAW_HTML_FILE_RE = re.compile(r"^\s*:file:\s*([^\s]+)\s*$")
 HEAD_TAG_RE = re.compile(r"</?head>", re.IGNORECASE)
 STYLE_BLOCK_RE = re.compile(r"<style>(.*?)</style>", re.IGNORECASE | re.DOTALL)
@@ -131,12 +132,20 @@ def relative_link(from_file: Path, target_file: Path) -> str:
     return target_file.relative_to(from_file.parent).as_posix()
 
 
+def _strip_latex_escapes_outside_math(line: str) -> str:
+    """Remove LaTeX escapes (\\_, \\%, \\#, \\&) from text outside $...$ math spans."""
+    parts = line.split("$")
+    for i in range(0, len(parts), 2):  # even indices are outside math
+        parts[i] = LATEX_ESCAPE_RE.sub(r"\1", parts[i])
+    return "$".join(parts)
+
+
 def normalize_directives(markdown: str) -> str:
     normalized = OPTION_LINE_RE.sub("", markdown)
     normalized = NUMREF_RE.sub(lambda match: f"`{match.group(1)}`", normalized)
     normalized = EQREF_RE.sub(lambda match: f"`{match.group(1)}`", normalized)
 
-    lines = [line.rstrip() for line in normalized.splitlines()]
+    lines = [_strip_latex_escapes_outside_math(line.rstrip()) for line in normalized.splitlines()]
     collapsed: list[str] = []
     previous_blank = False
     for line in lines:
