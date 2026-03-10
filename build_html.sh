@@ -12,9 +12,12 @@ ROOT="$(cd "$(dirname "$0")" && pwd)"
 # ── Create resource symlinks ──────────────────────────────────────────────────
 for target in img references static mlsys.bib; do
     link="$ROOT/en_chapters/$target"
-    if [ ! -e "$link" ]; then
-        ln -sf "$ROOT/$target" "$link"
+    rel_target="../$target"
+    if [ -e "$link" ] && [ ! -L "$link" ]; then
+        echo "Refusing to replace non-symlink path: $link" >&2
+        exit 1
     fi
+    ln -sfn "$rel_target" "$link"
 done
 
 # ── Build ─────────────────────────────────────────────────────────────────────
