@@ -13,6 +13,8 @@ OPTION_LINE_RE = re.compile(r"^:(width|label):`[^`]+`\s*$", re.MULTILINE)
 NUMREF_RE = re.compile(r":numref:`([^`]+)`")
 EQREF_RE = re.compile(r":eqref:`([^`]+)`")
 CITE_RE = re.compile(r":cite:`([^`]+)`")
+BIB_ENTRY_RE = re.compile(r"@(\w+)\{([^,]+),")
+LATEX_ESCAPE_RE = re.compile(r"\\([_%#&])")
 RAW_HTML_FILE_RE = re.compile(r"^\s*:file:\s*([^\s]+)\s*$")
 TOC_LINK_RE = re.compile(r"^\[([^\]]+)\]\(([^)]+)\)\s*$")
 TOC_PART_RE = re.compile(r"^#+\s+(.+?)\s*$")
@@ -40,8 +42,11 @@ FRONTPAGE_LAYOUT_CSS = """
   flex: 0 0 48px;
 }
 .openmlsys-frontpage .mdl-cell--3-col {
-  flex: 1 1 calc(25% - 24px);
-  max-width: calc(25% - 18px);
+  flex: 0 1 calc(16.666% - 20px);
+  max-width: calc(16.666% - 20px);
+}
+.openmlsys-frontpage .authors.mdl-grid {
+  justify-content: center;
 }
 .openmlsys-frontpage .mdl-cell--5-col {
   flex: 1 1 calc(41.666% - 24px);
@@ -64,6 +69,9 @@ FRONTPAGE_LAYOUT_CSS = """
 #content,
 .content {
   max-width: min(1440px, calc(100vw - 48px));
+}
+.content main {
+  max-width: 75%;
 }
 .openmlsys-frontpage + ul,
 .openmlsys-frontpage + ul ul {
@@ -159,13 +167,20 @@ def relative_link(from_file: Path, target_file: Path) -> str:
     return Path(os.path.relpath(target_file, start=from_file.parent)).as_posix()
 
 
+def _strip_latex_escapes_outside_math(line: str) -> str:
+    """Remove LaTeX escapes (\\_, \\%, \\#, \\&) from text outside $...$ math spans."""
+    parts = line.split("$")
+    for i in range(0, len(parts), 2):  # even indices are outside math
+        parts[i] = LATEX_ESCAPE_RE.sub(r"\1", parts[i])
+    return "$".join(parts)
+
+
 def normalize_directives(markdown: str) -> str:
     normalized = OPTION_LINE_RE.sub("", markdown)
     normalized = NUMREF_RE.sub(lambda match: f"`{match.group(1)}`", normalized)
     normalized = EQREF_RE.sub(lambda match: f"`{match.group(1)}`", normalized)
-    normalized = CITE_RE.sub(lambda match: f"[{match.group(1)}]", normalized)
 
-    lines = [line.rstrip() for line in normalized.splitlines()]
+    lines = [_strip_latex_escapes_outside_math(line.rstrip()) for line in normalized.splitlines()]
     collapsed: list[str] = []
     previous_blank = False
     for line in lines:
@@ -181,6 +196,187 @@ def normalize_directives(markdown: str) -> str:
     return "\n".join(collapsed) + "\n"
 
 
+# ── BibTeX parsing ────────────────────────────────────────────────────────────
+
+
+def clean_bibtex(value: str) -> str:
+    """Remove BibTeX formatting (braces, LaTeX accents) from a string."""
+    value = re.sub(r"\{\\[`'^\"~=.](\w)\}", r"\1", value)
+    value = re.sub(r"\\[`'^\"~=.](\w)", r"\1", value)
+    value = value.replace("{", "").replace("}", "")
+    return value.strip()
+
+
+def _parse_bib_fields(body: str) -> dict[str, str]:
+    """Parse field=value pairs inside a BibTeX entry body."""
+    fields: dict[str, str] = {}
+    i = 0
+    while i < len(body):
+        while i < len(body) and body[i] in " \t\n\r,":
+            i += 1
+        if i >= len(body):
+            break
+        start = i
+        while i < len(body) and body[i] not in "= \t\n\r":
+            i += 1
+        name = body[start:i].strip().lower()
+        while i < len(body) and body[i] != "=":
+            i += 1
+        if i >= len(body):
+            break
+        i += 1
+        while i < len(body) and body[i] in " \t\n\r":
+            i += 1
+        if i >= len(body):
+            break
+        if body[i] == "{":
+            depth = 1
+            i += 1
+            vstart = i
+            while i < len(body) and depth > 0:
+                if body[i] == "{":
+                    depth += 1
+                elif body[i] == "}":
+                    depth -= 1
+                i += 1
+            value = body[vstart : i - 1]
+        elif body[i] == '"':
+            i += 1
+            vstart = i
+            while i < len(body) and body[i] != '"':
+                i += 1
+            value = body[vstart:i]
+            i += 1
+        else:
+            vstart = i
+            while i < len(body) and body[i] not in ", \t\n\r}":
+                i += 1
+            value = body[vstart:i]
+        if name:
+            fields[name] = value.strip()
+    return fields
+
+
+def parse_bib(bib_path: Path) -> dict[str, dict[str, str]]:
+    """Parse a BibTeX file and return a dict keyed by citation key."""
+    text = bib_path.read_text(encoding="utf-8")
+    entries: dict[str, dict[str, str]] = {}
+    for match in BIB_ENTRY_RE.finditer(text):
+        key = match.group(2).strip()
+        start = match.end()
+        depth = 1
+        pos = start
+        while pos < len(text) and depth > 0:
+            if text[pos] == "{":
+                depth += 1
+            elif text[pos] == "}":
+                depth -= 1
+            pos += 1
+        fields = _parse_bib_fields(text[start : pos - 1])
+        fields["_type"] = match.group(1).lower()
+        entries[key] = fields
+    return entries
+
+
+# ── Citation formatting ───────────────────────────────────────────────────────
+
+
+def _first_author_surname(author_str: str) -> str:
+    """Extract the first author's surname from a BibTeX author string."""
+    author_str = clean_bibtex(author_str)
+    authors = [a.strip() for a in author_str.split(" and ")]
+    if not authors or not authors[0]:
+        return ""
+    first = authors[0]
+    if "," in first:
+        return first.split(",")[0].strip()
+    parts = first.split()
+    return parts[-1] if parts else first
+
+
+def _format_cite_label(author: str, year: str) -> str:
+    """Format an inline citation label like 'Surname et al., Year'."""
+    surname = _first_author_surname(author)
+    if not surname:
+        return year or "?"
+    authors = [a.strip() for a in clean_bibtex(author).split(" and ")]
+    if len(authors) > 2:
+        name_part = f"{surname} et al."
+    elif len(authors) == 2:
+        second = authors[1]
+        if second.lower() == "others":
+            name_part = f"{surname} et al."
+        else:
+            if "," in second:
+                surname2 = second.split(",")[0].strip()
+            else:
+                parts = second.split()
+                surname2 = parts[-1] if parts else second
+            name_part = f"{surname} and {surname2}"
+    else:
+        name_part = surname
+    if year:
+        return f"{name_part}, {year}"
+    return name_part
+
+
+def _render_bibliography(
+    cited_keys: list[str], bib_db: dict[str, dict[str, str]]
+) -> list[str]:
+    """Render a footnote-style bibliography section for the cited keys."""
+    lines: list[str] = ["---", "", "## 参考文献", "", "<ol>"]
+    for idx, key in enumerate(cited_keys, 1):
+        entry = bib_db.get(key)
+        if not entry:
+            lines.append(f'<li id="ref-{key}">{key}. <a href="#cite-{key}">↩</a></li>')
+            continue
+        author = clean_bibtex(entry.get("author", ""))
+        title = clean_bibtex(entry.get("title", ""))
+        year = entry.get("year", "")
+        venue = clean_bibtex(entry.get("journal", "") or entry.get("booktitle", ""))
+        parts: list[str] = []
+        if author:
+            parts.append(author)
+        if title:
+            parts.append(f"<em>{title}</em>")
+        if venue:
+            parts.append(venue)
+        if year:
+            parts.append(year)
+        text = ". ".join(parts) + "." if parts else f"{key}."
+        lines.append(f'<li id="ref-{key}">{text} <a href="#cite-{key}">↩</a></li>')
+    lines.append("</ol>")
+    return lines
+
+
+def process_citations(
+    markdown: str, bib_db: dict[str, dict[str, str]]
+) -> str:
+    """Replace :cite: references with footnote-style numbered citations."""
+    cited_keys: list[str] = []
+
+    def _replace_cite(match: re.Match[str]) -> str:
+        keys = [k.strip() for k in match.group(1).split(",")]
+        for key in keys:
+            if key not in cited_keys:
+                cited_keys.append(key)
+        if not bib_db:
+            return "[" + ", ".join(keys) + "]"
+        nums: list[str] = []
+        for key in keys:
+            idx = cited_keys.index(key) + 1
+            nums.append(
+                f'<sup id="cite-{key}"><a href="#ref-{key}">[{idx}]</a></sup>'
+            )
+        return "".join(nums)
+
+    processed = CITE_RE.sub(_replace_cite, markdown)
+    if cited_keys and bib_db:
+        bib_lines = _render_bibliography(cited_keys, bib_db)
+        processed = processed.rstrip("\n") + "\n\n" + "\n".join(bib_lines) + "\n"
+    return processed
+
+
 def resolve_raw_html_file(current_file: Path, filename: str) -> Path:
     direct = (current_file.parent / filename).resolve()
     if direct.exists():
@@ -189,6 +385,10 @@ def resolve_raw_html_file(current_file: Path, filename: str) -> Path:
     static_fallback = (current_file.parent / "static" / filename).resolve()
     if static_fallback.exists():
         return static_fallback
+
+    repo_static = (Path(__file__).resolve().parent.parent / "static" / filename)
+    if repo_static.exists():
+        return repo_static
 
     raise FileNotFoundError(f"Raw HTML include '{filename}' from '{current_file}' does not exist")
 
@@ -255,7 +455,12 @@ def render_toc_list(entries: list[TocItem], current_file: Path, title_cache: dic
     return rendered
 
 
-def rewrite_markdown(markdown: str, current_file: Path, title_cache: dict[Path, str]) -> str:
+def rewrite_markdown(
+    markdown: str,
+    current_file: Path,
+    title_cache: dict[Path, str],
+    bib_db: dict[str, dict[str, str]] | None = None,
+) -> str:
     output: list[str] = []
     lines = markdown.splitlines()
     index = 0
@@ -295,7 +500,9 @@ def rewrite_markdown(markdown: str, current_file: Path, title_cache: dict[Path, 
     while output and output[-1] == "":
         output.pop()
 
-    return normalize_directives("\n".join(output) + "\n")
+    result = normalize_directives("\n".join(output) + "\n")
+    result = process_citations(result, bib_db or {})
+    return result
 
 
 def build_title_cache(source_dir: Path) -> dict[Path, str]:
