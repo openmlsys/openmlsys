@@ -460,7 +460,6 @@ def _render_bibliography(
     for key in cited_keys:
         entry = bib_db.get(key)
         if not entry:
-            lines.append(f'<li id="ref-{key}">{key}. <a href="#cite-{key}">↩</a></li>')
             continue
         author = clean_bibtex(entry.get("author", ""))
         title = clean_bibtex(entry.get("title", ""))
@@ -491,12 +490,14 @@ def process_citations(
     def _replace_cite(match: re.Match[str]) -> str:
         keys = [k.strip() for k in match.group(1).split(",")]
         for key in keys:
-            if key not in cited_keys:
+            if key not in cited_keys and key in bib_db:
                 cited_keys.append(key)
         if not bib_db:
             return "[" + ", ".join(keys) + "]"
         nums: list[str] = []
         for key in keys:
+            if key not in bib_db:
+                continue
             idx = cited_keys.index(key) + 1
             nums.append(f'<sup id="cite-{key}"><a href="#ref-{key}">[{idx}]</a></sup>')
         return "".join(nums)
