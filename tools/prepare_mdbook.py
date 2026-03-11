@@ -209,11 +209,87 @@ def relative_link(from_file: Path, target_file: Path) -> str:
     return Path(os.path.relpath(target_file, start=from_file.parent)).as_posix()
 
 
-def _strip_latex_escapes_outside_math(line: str) -> str:
-    parts = line.split("$")
-    for i in range(0, len(parts), 2):
-        parts[i] = LATEX_ESCAPE_RE.sub(r"\1", parts[i])
-    return "$".join(parts)
+def _strip_latex_escapes_outside_math(text: str) -> str:
+    """Remove LaTeX text-mode escapes (``\\_``, ``\\#``, etc.) outside math
+    spans, fenced code blocks, and inline code.
+
+    Operates on the full text (not per-line) to correctly handle multi-line
+    display math ``$$...$$`` blocks.
+    """
+    # 1. Find all protected regions where escapes must NOT be stripped.
+    protected: list[tuple[int, int]] = []  # (start, end)
+    n = len(text)
+    i = 0
+    in_fence: str | None = None
+    fence_start = 0
+
+    while i < n:
+        # Fenced code blocks (``` or ~~~) at start of line
+        if (i == 0 or text[i - 1] == "\n") and text[i] in ("`", "~"):
+            m = re.match(r"`{3,}|~{3,}", text[i:])
+            if m:
+                if in_fence is None:
+                    in_fence = m.group()[0]
+                    fence_start = i
+                elif m.group()[0] == in_fence:
+                    eol = text.find("\n", m.end() + i)
+                    end = eol + 1 if eol != -1 else n
+                    protected.append((fence_start, end))
+                    in_fence = None
+                    i = end
+                    continue
+                eol = text.find("\n", i)
+                i = eol + 1 if eol != -1 else n
+                continue
+
+        if in_fence is not None:
+            i += 1
+            continue
+
+        # Inline code `...`
+        if text[i] == "`":
+            close = text.find("`", i + 1)
+            if close != -1:
+                protected.append((i, close + 1))
+                i = close + 1
+                continue
+
+        # Display math $$...$$
+        if text[i:i + 2] == "$$":
+            close = text.find("$$", i + 2)
+            if close != -1:
+                protected.append((i, close + 2))
+                i = close + 2
+                continue
+
+        # Inline math $...$
+        if text[i] == "$":
+            j = i + 1
+            while j < n and text[j] != "$" and text[j] != "\n":
+                j += 1
+            if j < n and text[j] == "$" and j > i + 1:
+                protected.append((i, j + 1))
+                i = j + 1
+                continue
+
+        i += 1
+
+    # Unclosed fence → protect everything from fence_start to end
+    if in_fence is not None:
+        protected.append((fence_start, n))
+
+    # 2. Apply substitution only to unprotected gaps.
+    parts: list[str] = []
+    prev = 0
+    for start, end in protected:
+        if start > prev:
+            parts.append(LATEX_ESCAPE_RE.sub(r"\1", text[prev:start]))
+        parts.append(text[start:end])
+        prev = end
+    if prev < n:
+        parts.append(LATEX_ESCAPE_RE.sub(r"\1", text[prev:]))
+
+    return "".join(parts)
 
 
 def process_equation_labels(markdown: str) -> tuple[str, dict[str, int]]:
@@ -281,7 +357,9 @@ def normalize_directives(
     else:
         normalized = EQREF_RE.sub(lambda match: f"$\\eqref{{{match.group(1)}}}$", normalized)
 
-    lines = [_strip_latex_escapes_outside_math(line.rstrip()) for line in normalized.splitlines()]
+    normalized = _strip_latex_escapes_outside_math(normalized)
+
+    lines = [line.rstrip() for line in normalized.splitlines()]
     collapsed: list[str] = []
     previous_blank = False
     for line in lines:
