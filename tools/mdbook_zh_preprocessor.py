@@ -38,6 +38,11 @@ def main() -> int:
     title_cache = build_title_cache(source_dir)
     bib_path = source_dir.parent / "mlsys.bib"
     bib_db = parse_bib(bib_path) if bib_path.exists() else {}
+    refs_dir = source_dir.parent / "references"
+    if refs_dir.is_dir():
+        for extra_bib in sorted(refs_dir.glob("*.bib")):
+            for key, fields in parse_bib(extra_bib).items():
+                bib_db.setdefault(key, fields)
 
     for chapter in iter_chapters(book.get("items", [])):
         source_path = chapter.get("source_path") or chapter.get("path")
