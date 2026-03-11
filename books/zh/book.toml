@@ -11,9 +11,8 @@ create-missing = false
 [preprocessor.openmlsys-zh]
 command = "python3 ../../tools/mdbook_zh_preprocessor.py"
 
-[preprocessor.typst-math]
-
 [output.html]
+mathjax-support = true
 git-repository-url = "https://github.com/openmlsys/openmlsys-zh"
 preferred-dark-theme = "navy"
-additional-css = ["theme/dark-mode-images.css", "theme/typst.css"]
+additional-css = ["theme/dark-mode-images.css"]

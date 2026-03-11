@@ -509,6 +509,121 @@ def process_citations(
     return processed
 
 
+_FENCE_RE = re.compile(r"^(`{3,}|~{3,})", re.MULTILINE)
+_CJK_RE = re.compile(r"[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]")
+
+
+def _iter_math_spans(content: str):
+    """Yield ``(start, end, is_display)`` for every math span.
+
+    Skips spans inside fenced code blocks and inline code.
+    """
+    n = len(content)
+    i = 0
+    in_fence: str | None = None  # fence marker when inside a code block
+
+    while i < n:
+        # Track fenced code blocks
+        if content[i] == "`" or content[i] == "~":
+            m = _FENCE_RE.match(content, i)
+            if m and (i == 0 or content[i - 1] == "\n"):
+                marker = m.group(1)
+                if in_fence is None:
+                    in_fence = marker[0]  # opening
+                    i = content.index("\n", i) + 1 if "\n" in content[i:] else n
+                    continue
+                elif marker[0] == in_fence:
+                    in_fence = None       # closing
+                    i = m.end()
+                    continue
+
+        if in_fence:
+            i += 1
+            continue
+
+        # Skip inline code
+        if content[i] == "`":
+            end_tick = content.find("`", i + 1)
+            if end_tick != -1:
+                i = end_tick + 1
+                continue
+
+        # Display math $$...$$
+        if content[i:i + 2] == "$$":
+            start = i
+            close = content.find("$$", i + 2)
+            if close != -1:
+                yield (start + 2, close, True)
+                i = close + 2
+                continue
+
+        # Inline math $...$
+        if content[i] == "$":
+            start = i
+            j = i + 1
+            while j < n:
+                if content[j] == "$":
+                    if j > i + 1:  # non-empty
+                        yield (start + 1, j, False)
+                    j += 1
+                    break
+                if content[j] == "\n" and not content[i + 1:j].strip():
+                    break  # empty line → not math
+                j += 1
+            i = j
+            continue
+
+        i += 1
+
+
+def convert_math_to_mathjax(content: str) -> str:
+    """Replace ``$``/``$$`` delimited math with MathJax ``\\(…\\)``/``\\[…\\]``.
+
+    Inside math content, ``\\`` (LaTeX newline) is doubled to ``\\\\`` so that
+    mdBook's markdown processing (which consumes one level of backslash
+    escaping) delivers the correct ``\\`` to MathJax.
+    """
+    spans = list(_iter_math_spans(content))
+    if not spans:
+        return content
+
+    parts: list[str] = []
+    prev = 0
+    for start, end, is_display in spans:
+        delim = "$$" if is_display else "$"
+        delim_len = len(delim)
+        delim_start = start - delim_len
+
+        math = content[start:end]
+
+        # Spans containing CJK characters are almost certainly mismatched $.
+        # Strip the $ delimiters and emit the raw text.
+        if _CJK_RE.search(math):
+            parts.append(content[prev:delim_start])
+            parts.append(math)
+            prev = end + delim_len
+            continue
+
+        parts.append(content[prev:delim_start])
+
+        # Double backslashes inside math so that after mdBook markdown
+        # processing (which eats one backslash layer) MathJax sees the
+        # original LaTeX.
+        math = math.replace("\\\\", "\\\\\\\\")
+        math = math.replace("*", "\\*")
+        math = math.replace("_", "\\_")
+
+        if is_display:
+            parts.append(f"\\\\[{math}\\\\]")
+        else:
+            parts.append(f"\\\\({math}\\\\)")
+
+        prev = end + delim_len
+
+    parts.append(content[prev:])
+    return "".join(parts)
+
+
 def resolve_raw_html_file(current_file: Path, filename: str) -> Path:
     direct = (current_file.parent / filename).resolve()
     if direct.exists():

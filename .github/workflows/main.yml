@@ -23,20 +23,12 @@ jobs:
         with:
           mdbook-version: 'latest'
 
-      - name: Cache mdbook-typst-math binary
-        uses: actions/cache@v4
-        with:
-          path: .mdbook-bin
-          key: mdbook-typst-math-v0.3.0-linux-x86_64
-
       - name: Run mdBook regression tests
         run: |
           python3 -m unittest discover -s tests -p 'test_prepare_mdbook.py'
           python3 -m unittest discover -s tests -p 'test_prepare_mdbook_zh.py'
           python3 -m unittest discover -s tests -p 'test_assemble_docs_publish_tree.py'
           python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
-          python3 -m unittest discover -s tests -p 'test_mdbook_typst_math.py'
-          python3 -m unittest discover -s tests -p 'test_ensure_mdbook_typst_math.py'
           python3 -m unittest discover -s tests -p 'test_update_docs_workflow.py'
 
       - name: Build English HTML with mdBook

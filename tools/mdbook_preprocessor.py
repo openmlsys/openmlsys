@@ -5,9 +5,9 @@ import sys
 from pathlib import Path
 
 try:
-    from tools.prepare_mdbook import build_title_cache, parse_bib, rewrite_markdown
+    from tools.prepare_mdbook import build_title_cache, convert_math_to_mathjax, parse_bib, rewrite_markdown
 except ModuleNotFoundError:
-    from prepare_mdbook import build_title_cache, parse_bib, rewrite_markdown
+    from prepare_mdbook import build_title_cache, convert_math_to_mathjax, parse_bib, rewrite_markdown
 
 
 PLACEHOLDER_PREFIX = "[TODO: src = zh_chapters/"
@@ -57,6 +57,7 @@ def main() -> int:
             frontpage_switch_label=FRONTPAGE_SWITCH_LABEL,
             frontpage_switch_href=FRONTPAGE_SWITCH_HREF,
         )
+        chapter["content"] = convert_math_to_mathjax(chapter["content"])
 
     json.dump(book, sys.stdout, ensure_ascii=False)
     return 0

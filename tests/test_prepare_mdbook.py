@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.prepare_mdbook import build_title_cache, rewrite_markdown, write_summary
+from tools.prepare_mdbook import build_title_cache, convert_math_to_mathjax, rewrite_markdown, write_summary
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -231,6 +231,51 @@ Reference :cite:`smith2024`.
         self.assertIn("display: block;", frontpage)
         self.assertIn(".author-group-title h3,", frontpage)
         self.assertIn("width: 100%;", frontpage)
+
+
+class ConvertMathToMathjaxTests(unittest.TestCase):
+    def test_display_math(self) -> None:
+        result = convert_math_to_mathjax("before $$x^2$$ after")
+        self.assertEqual(result, "before \\\\[x^2\\\\] after")
+
+    def test_inline_math(self) -> None:
+        result = convert_math_to_mathjax("before $x^2$ after")
+        self.assertEqual(result, "before \\\\(x^2\\\\) after")
+
+    def test_backslash_doubling_inside_math(self) -> None:
+        result = convert_math_to_mathjax("$$a \\\\ b$$")
+        self.assertEqual(result, "\\\\[a \\\\\\\\ b\\\\]")
+
+    def test_math_inside_code_block_not_converted(self) -> None:
+        text = "```\n$x^2$\n```"
+        result = convert_math_to_mathjax(text)
+        self.assertEqual(result, text)
+
+    def test_math_inside_inline_code_not_converted(self) -> None:
+        text = "use `$x$` for math"
+        result = convert_math_to_mathjax(text)
+        self.assertEqual(result, text)
+
+    def test_cjk_dollar_spans_stripped(self) -> None:
+        result = convert_math_to_mathjax("price $100美元$ done")
+        self.assertEqual(result, "price 100美元 done")
+
+    def test_no_math_passthrough(self) -> None:
+        text = "No math here at all."
+        self.assertEqual(convert_math_to_mathjax(text), text)
+
+    def test_mixed_display_and_inline(self) -> None:
+        text = "Inline $a$ and display $$b$$."
+        result = convert_math_to_mathjax(text)
+        self.assertEqual(result, "Inline \\\\(a\\\\) and display \\\\[b\\\\].")
+
+    def test_asterisk_escaped_inside_math(self) -> None:
+        result = convert_math_to_mathjax("$$n*CHW$$")
+        self.assertEqual(result, "\\\\[n\\*CHW\\\\]")
+
+    def test_underscore_escaped_inside_math(self) -> None:
+        result = convert_math_to_mathjax("$x_i$")
+        self.assertEqual(result, "\\\\(x\\_i\\\\)")
 
 
 if __name__ == "__main__":

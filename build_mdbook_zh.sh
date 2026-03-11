@@ -14,10 +14,6 @@ if ! command -v mdbook >/dev/null 2>&1; then
     exit 1
 fi
 
-MDBOOK_TYPST_MATH_BIN_DIR="${ROOT}/.mdbook-bin"
-"${PYTHON_BIN}" "${ROOT}/tools/ensure_mdbook_typst_math.py" --output-dir "${MDBOOK_TYPST_MATH_BIN_DIR}" >/dev/null
-export PATH="${MDBOOK_TYPST_MATH_BIN_DIR}:${PATH}"
-
 # ── Create resource links ─────────────────────────────────────────────────────
 "${PYTHON_BIN}" "${ROOT}/tools/ensure_book_resources.py" --chapter-dir "${ROOT}/zh_chapters"
 

@@ -5,11 +5,9 @@ import sys
 from pathlib import Path
 
 try:
-    from tools.prepare_mdbook import build_title_cache, parse_bib, rewrite_markdown
-    from tools.latex_to_typst import convert_latex_math_to_typst
+    from tools.prepare_mdbook import build_title_cache, convert_math_to_mathjax, parse_bib, rewrite_markdown
 except ModuleNotFoundError:
-    from prepare_mdbook import build_title_cache, parse_bib, rewrite_markdown
-    from latex_to_typst import convert_latex_math_to_typst
+    from prepare_mdbook import build_title_cache, convert_math_to_mathjax, parse_bib, rewrite_markdown
 
 
 BIBLIOGRAPHY_TITLE = "参考文献"
@@ -58,7 +56,7 @@ def main() -> int:
             frontpage_switch_label=FRONTPAGE_SWITCH_LABEL,
             frontpage_switch_href=FRONTPAGE_SWITCH_HREF,
         )
-        chapter["content"] = convert_latex_math_to_typst(chapter["content"])
+        chapter["content"] = convert_math_to_mathjax(chapter["content"])
 
     json.dump(book, sys.stdout, ensure_ascii=False)
     return 0
