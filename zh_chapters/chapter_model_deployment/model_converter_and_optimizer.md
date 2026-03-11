@@ -53,14 +53,10 @@ $$\pmb{Y_{bn}}=\pmb{A}*\pmb{X_{conv}}+\pmb{B}$$
 
 在融合过程中，Convolution计算公式和Batchnorm计算公式中被认为是常量的符号在训练时均为参数，并不是常量。训练阶段如果进行该融合会导致模型参数的缺失。从该融合Pattern的结果来看，融合后网络中减少了一个Batchnorm算子，减少了一个Batchnorm算子的参数量，其实就是改变了深度神经网络的算法，会影响到网络的准确率，这是不可接受的。所以Convolution算子与Batchnorm算子的融合一般是在部署阶段特有的一种优化手段，其优化效果以MindSpore Lite为例，构造了包含一个Convolution和一个Batchnorm的sample网络，分别以样例网络和mobilenet-v2网络为例，在华为Mate30手机上，以两线程运行模型推理，取3000轮推理的平均时耗作为模型推理性能的指标，对比融合前后该指标的变化。从表 :numref:`ch08-tab-conv_bn_fusion`可以看到，对于sample网络和mobilenet-v2网络，融合后分别获得了8.5%和11.7%的推理性能提升，这个性能提升非常可观。并且这个性能提升没有带来任何的副作用，也没有对于硬件或算子库的提出额外要求。
 
-::: {#tab:ch08-tab-conv_bn_fusion}
-   网络       sample       mobilenet-v2
-  ------- ------------- -----------------
-   融合前     0.035         15.415
-   融合后     0.031         13.606
-
-: Convolution + Batchnorm融合前后推理性能（单位：ms）
-:::
+| 网络 | sample | mobilenet-v2 |
+|---|---|---|
+| 融合前 | 0.035 | 15.415 |
+| 融合后 | 0.031 | 13.606 |
 :label:`ch08-tab-conv_bn_fusion`
 
 ### 算子替换

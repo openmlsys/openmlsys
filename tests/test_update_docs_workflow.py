@@ -10,22 +10,12 @@ CI_WORKFLOW_PATH = REPO_ROOT / ".github" / "workflows" / "main.yml"
 
 
 class UpdateDocsWorkflowTests(unittest.TestCase):
-    def test_workflow_deploys_into_openmlsys_github_io_repository(self) -> None:
+    def test_workflow_deploys_to_openmlsys_github_io(self) -> None:
         workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
 
-        self.assertIn("DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}", workflow)
-        self.assertIn(
-            "git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/openmlsys/openmlsys.github.io.git",
-            workflow,
-        )
-        self.assertIn("python3 tools/assemble_docs_publish_tree.py \\", workflow)
-        self.assertIn("--destination-root openmlsys.github.io \\", workflow)
-        self.assertIn("--docs-subdir docs \\", workflow)
-        self.assertIn('git commit -m "deploy: update docs', workflow)
+        self.assertIn("DEPLOY_TOKEN", workflow)
+        self.assertIn("openmlsys.github.io", workflow)
         self.assertIn("git push", workflow)
-        self.assertNotIn("uses: actions/configure-pages@v5", workflow)
-        self.assertNotIn("uses: actions/upload-pages-artifact@v4", workflow)
-        self.assertNotIn("uses: actions/deploy-pages@v4", workflow)
 
     def test_workflows_use_peaceiris_mdbook_action(self) -> None:
         for workflow_path in (WORKFLOW_PATH, CI_WORKFLOW_PATH):

@@ -9,6 +9,7 @@ try:
         extract_title,
         inline_raw_html,
         parse_bib,
+        process_equation_labels,
         rewrite_markdown,
         write_summary,
     )
@@ -18,6 +19,7 @@ except ModuleNotFoundError:
         extract_title,
         inline_raw_html,
         parse_bib,
+        process_equation_labels,
         rewrite_markdown,
         write_summary,
     )
