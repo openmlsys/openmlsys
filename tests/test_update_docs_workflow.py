@@ -10,15 +10,12 @@ CI_WORKFLOW_PATH = REPO_ROOT / ".github" / "workflows" / "main.yml"
 
 
 class UpdateDocsWorkflowTests(unittest.TestCase):
-    def test_workflow_uses_official_pages_actions_and_page_variables(self) -> None:
+    def test_workflow_deploys_to_openmlsys_github_io(self) -> None:
         workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
 
-        self.assertIn("uses: actions/configure-pages@v5", workflow)
-        self.assertIn("uses: actions/upload-pages-artifact@v4", workflow)
-        self.assertIn("uses: actions/deploy-pages@v4", workflow)
-        self.assertIn("url: ${{ steps.deployment.outputs.page_url }}", workflow)
-        self.assertIn("${{ steps.pages.outputs.base_url }}", workflow)
-        self.assertNotIn("git clone https://x-access-token:${DEPLOY_TOKEN}", workflow)
+        self.assertIn("DEPLOY_TOKEN", workflow)
+        self.assertIn("openmlsys.github.io", workflow)
+        self.assertIn("git push", workflow)
 
     def test_workflows_use_peaceiris_mdbook_action(self) -> None:
         for workflow_path in (WORKFLOW_PATH, CI_WORKFLOW_PATH):
