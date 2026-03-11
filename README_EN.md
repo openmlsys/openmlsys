@@ -91,8 +91,8 @@ The book is organized into three parts: Fundamentals, Advanced Topics, and Exten
 
 ### Prerequisites
 
-- Python >= 3.10
-- pandoc >= 2.19
+- curl
+- git
 
 ### Installation
 
@@ -101,19 +101,18 @@ The book is organized into three parts: Fundamentals, Advanced Topics, and Exten
 git clone https://github.com/openmlsys/openmlsys-zh.git
 cd openmlsys-zh
 
-# Install d2lbook
-git clone https://github.com/openmlsys/d2l-book.git
-cd d2l-book && pip install . && cd ..
+# Install Rust toolchain (Linux/macOS)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-# Install Python dependencies
-pip install -r requirements.txt
+# Install mdbook
+cargo install mdbook
 ```
 
 ### Build HTML
 
 ```bash
-sh build_html.sh
-# Output is in _build/html/
+sh build_mdbook.sh
+# Output is in .mdbook/book
 ```
 
 For more details, see the [Build Guide](info/info.md).

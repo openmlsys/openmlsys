@@ -89,8 +89,8 @@
 
 ### 环境依赖
 
-- Python >= 3.10
-- pandoc >= 2.19
+- curl
+- git
 
 ### 安装步骤
 
@@ -99,19 +99,18 @@
 git clone https://github.com/openmlsys/openmlsys-zh.git
 cd openmlsys-zh
 
-# 安装 d2lbook
-git clone https://github.com/openmlsys/d2l-book.git
-cd d2l-book && pip install . && cd ..
+# 安装rust toolchain 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-# 安装 Python 依赖
-pip install -r requirements.txt
+# 安装mdbook
+cargo install mdbook
 ```
 
-### 编译 HTML
+### 编译HTML
 
 ```bash
-sh build_html.sh
-# 生成结果在 _build/html/
+sh build_mdbook_zh.sh
+# 生成结果位于 .mdbook-zh/book
 ```
 
 更多细节请参考 [构建指南](info/info.md)。
