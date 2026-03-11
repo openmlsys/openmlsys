@@ -29,13 +29,10 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Rust toolchain
-        run: |
-          curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
-          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
-
-      - name: Install mdBook
-        run: cargo install mdbook --locked
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v2
+        with:
+          mdbook-version: 'latest'
 
       - name: Run mdBook regression tests
         run: |
