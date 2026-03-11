@@ -192,6 +192,8 @@ Reference :cite:`smith2024`.
             self.assertIn("padding: 0 !important;", rewritten)
             self.assertIn("border-radius: 6px;", rewritten)
             self.assertIn("background: #f6f8fa;", rewritten)
+            self.assertIn("max-width: var(--content-max-width);", rewritten)
+            self.assertIn("margin-inline: auto;", rewritten)
 
     def test_regular_page_does_not_render_frontpage_switch(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

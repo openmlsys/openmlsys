@@ -26,7 +26,9 @@ FRONTPAGE_LAYOUT_CSS = """
 <style>
 .openmlsys-frontpage {
   width: 100%;
+  max-width: var(--content-max-width);
   margin: 0 auto 3rem;
+  margin-inline: auto;
 }
 .openmlsys-frontpage-switch-row {
   margin: 12px 0 0;
@@ -95,16 +97,10 @@ FRONTPAGE_LAYOUT_CSS = """
   background: transparent !important;
   padding: 0 !important;
 }
-#content,
-.content {
-  max-width: min(1440px, calc(100vw - 48px));
-}
-.content main {
-  max-width: 75%;
-}
 .openmlsys-frontpage + ul,
 .openmlsys-frontpage + ul ul {
   max-width: 960px;
+  margin-inline: auto;
 }
 @media (max-width: 1000px) {
   .openmlsys-frontpage .mdl-cell,
