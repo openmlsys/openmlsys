@@ -26,6 +26,31 @@ FRONTPAGE_LAYOUT_CSS = """
 .openmlsys-frontpage {
   width: 100%;
   margin: 0 auto 3rem;
+  position: relative;
+}
+.openmlsys-frontpage-switch {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(11, 107, 203, 0.25);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--links, #0b6bcb);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(11, 107, 203, 0.12);
+  backdrop-filter: blur(10px);
+}
+.openmlsys-frontpage-switch:hover {
+  background: #fff;
+  border-color: rgba(11, 107, 203, 0.4);
 }
 .openmlsys-frontpage .mdl-grid {
   display: flex;
@@ -79,6 +104,10 @@ FRONTPAGE_LAYOUT_CSS = """
   max-width: 960px;
 }
 @media (max-width: 1000px) {
+  .openmlsys-frontpage-switch {
+    top: 12px;
+    right: 12px;
+  }
   .openmlsys-frontpage .mdl-cell,
   .openmlsys-frontpage .mdl-cell--1-col,
   .openmlsys-frontpage .mdl-cell--3-col,
@@ -373,11 +402,28 @@ def _minify_style_block(match: re.Match[str]) -> str:
     return f"<style>{' '.join(parts)}</style>"
 
 
-def wrap_frontpage_html(html: str) -> str:
-    return "\n".join([FRONTPAGE_LAYOUT_CSS, '<div class="openmlsys-frontpage">', html.strip(), "</div>"])
+def render_frontpage_switch(label: str, href: str) -> str:
+    return f'<a class="openmlsys-frontpage-switch" href="{href}">{label}</a>'
 
 
-def inline_raw_html(block_lines: list[str], current_file: Path) -> str | None:
+def wrap_frontpage_html(
+    html: str,
+    frontpage_switch_label: str | None = None,
+    frontpage_switch_href: str | None = None,
+) -> str:
+    parts = [FRONTPAGE_LAYOUT_CSS, '<div class="openmlsys-frontpage">']
+    if frontpage_switch_label and frontpage_switch_href:
+        parts.append(render_frontpage_switch(frontpage_switch_label, frontpage_switch_href))
+    parts.extend([html.strip(), "</div>"])
+    return "\n".join(parts)
+
+
+def inline_raw_html(
+    block_lines: list[str],
+    current_file: Path,
+    frontpage_switch_label: str | None = None,
+    frontpage_switch_href: str | None = None,
+) -> str | None:
     stripped = [line.strip() for line in block_lines if line.strip()]
     if not stripped or stripped[0] != ".. raw:: html":
         return None
@@ -395,7 +441,11 @@ def inline_raw_html(block_lines: list[str], current_file: Path) -> str | None:
     html_path = resolve_raw_html_file(current_file, filename)
     html = rewrite_frontpage_assets(html_path.read_text(encoding="utf-8")).strip()
     if Path(filename).name == "frontpage.html":
-        return wrap_frontpage_html(html)
+        return wrap_frontpage_html(
+            html,
+            frontpage_switch_label=frontpage_switch_label,
+            frontpage_switch_href=frontpage_switch_href,
+        )
     return html
 
 
@@ -430,6 +480,8 @@ def rewrite_markdown(
     title_cache: dict[Path, str],
     bib_db: dict[str, dict[str, str]] | None = None,
     bibliography_title: str = DEFAULT_BIBLIOGRAPHY_TITLE,
+    frontpage_switch_label: str | None = None,
+    frontpage_switch_href: str | None = None,
 ) -> str:
     output: list[str] = []
     lines = markdown.splitlines()
@@ -455,7 +507,12 @@ def rewrite_markdown(
                     if rendered and output and output[-1] != "":
                         output.append("")
             elif fence == EVAL_RST_FENCE:
-                raw_html = inline_raw_html(block_lines, current_file)
+                raw_html = inline_raw_html(
+                    block_lines,
+                    current_file,
+                    frontpage_switch_label=frontpage_switch_label,
+                    frontpage_switch_href=frontpage_switch_href,
+                )
                 if raw_html:
                     if output and output[-1] != "":
                         output.append("")

@@ -109,6 +109,57 @@ Reference :cite:`smith2024`.
             self.assertIn("## References", rewritten)
             self.assertNotIn("## 参考文献", rewritten)
 
+    def test_rewrite_markdown_inlines_frontpage_with_language_switch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            source = root / "en_chapters"
+            static_dir = source / "static"
+            static_dir.mkdir(parents=True)
+
+            index = source / "index.md"
+            index.write_text(
+                """# Home
+
+```eval_rst
+.. raw:: html
+   :file: frontpage.html
+```
+""",
+                encoding="utf-8",
+            )
+            (static_dir / "frontpage.html").write_text(
+                "<div class=\"hero\">frontpage</div>\n",
+                encoding="utf-8",
+            )
+
+            rewritten = rewrite_markdown(
+                index.read_text(encoding="utf-8"),
+                index.resolve(),
+                {index.resolve(): "Home"},
+                frontpage_switch_label="中文",
+                frontpage_switch_href="cn/",
+            )
+
+            self.assertIn('class="openmlsys-frontpage-switch"', rewritten)
+            self.assertIn('href="cn/"', rewritten)
+            self.assertIn(">中文</a>", rewritten)
+
+    def test_regular_page_does_not_render_frontpage_switch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            page = root / "chapter.md"
+            page.write_text("# Chapter\n\nRegular body.\n", encoding="utf-8")
+
+            rewritten = rewrite_markdown(
+                page.read_text(encoding="utf-8"),
+                page.resolve(),
+                {page.resolve(): "Chapter"},
+                frontpage_switch_label="中文",
+                frontpage_switch_href="cn/",
+            )
+
+            self.assertNotIn('openmlsys-frontpage-switch', rewritten)
+
 
 if __name__ == "__main__":
     unittest.main()

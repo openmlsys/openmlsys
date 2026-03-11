@@ -12,6 +12,8 @@ except ModuleNotFoundError:
 
 PLACEHOLDER_PREFIX = "[TODO: src = zh_chapters/"
 BIBLIOGRAPHY_TITLE = "References"
+FRONTPAGE_SWITCH_LABEL = "中文"
+FRONTPAGE_SWITCH_HREF = "cn/"
 
 
 def iter_chapters(items: list[dict]) -> list[dict]:
@@ -47,6 +49,8 @@ def main() -> int:
             title_cache,
             bib_db,
             bibliography_title=BIBLIOGRAPHY_TITLE,
+            frontpage_switch_label=FRONTPAGE_SWITCH_LABEL,
+            frontpage_switch_href=FRONTPAGE_SWITCH_HREF,
         )
 
     json.dump(book, sys.stdout, ensure_ascii=False)

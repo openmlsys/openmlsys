@@ -221,6 +221,9 @@ missing
             self.assertIn("static/image/logo.png", rewritten)
             self.assertIn("static/image/jinxuefeng.png", rewritten)
             self.assertIn("console.log('frontpage')", rewritten)
+            self.assertIn('class="openmlsys-frontpage-switch"', rewritten)
+            self.assertIn('href="../"', rewritten)
+            self.assertIn(">English</a>", rewritten)
 
 
 if __name__ == "__main__":
