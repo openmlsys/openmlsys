@@ -60,10 +60,22 @@ h2.toc {
     align-items: flex-start;
     row-gap: calc(24px + 1.5em);
 }
-.authors .mdl-cell {
+.authors .mdl-cell:not(.author-group-title) {
     display: flex;
     align-items: flex-start;
     justify-content: center;
+}
+.author-group-title {
+    display: block;
+    width: 100%;
+}
+.author-group-title h3,
+.author-group-title h4 {
+    width: 100%;
+    margin: 0 0 0.75em;
+}
+.author-group-title h4:last-child {
+    margin-bottom: 0;
 }
 .authors h4 {
     width: 100%;

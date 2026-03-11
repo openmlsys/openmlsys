@@ -220,6 +220,15 @@ Reference :cite:`smith2024`.
         self.assertIn("height: 120px;", frontpage)
         self.assertIn("object-fit: cover;", frontpage)
 
+    def test_english_frontpage_footer_titles_are_stacked_not_flex_columns(self) -> None:
+        frontpage = (REPO_ROOT / "en_chapters" / "frontpage.html").read_text(encoding="utf-8")
+
+        self.assertIn(".authors .mdl-cell:not(.author-group-title) {", frontpage)
+        self.assertIn(".author-group-title {", frontpage)
+        self.assertIn("display: block;", frontpage)
+        self.assertIn(".author-group-title h3,", frontpage)
+        self.assertIn("width: 100%;", frontpage)
+
 
 if __name__ == "__main__":
     unittest.main()
