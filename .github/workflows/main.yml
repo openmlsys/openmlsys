@@ -29,7 +29,8 @@ jobs:
           python3 -m unittest discover -s tests -p 'test_prepare_mdbook_zh.py'
           python3 -m unittest discover -s tests -p 'test_assemble_docs_publish_tree.py'
           python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
-          python3 -m unittest discover -s tests -p 'test_mdbook_mathjax.py'
+          python3 -m unittest discover -s tests -p 'test_mdbook_typst_math.py'
+          python3 -m unittest discover -s tests -p 'test_ensure_mdbook_typst_math.py'
 
       - name: Build English HTML with mdBook
         run: bash build_mdbook.sh

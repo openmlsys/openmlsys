@@ -5,24 +5,16 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
-  group: github-pages
+  group: deploy-openmlsys-github-io
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v5
-
-      - id: pages
-        uses: actions/configure-pages@v5
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
@@ -40,7 +32,8 @@ jobs:
           python3 -m unittest discover -s tests -p 'test_prepare_mdbook_zh.py'
           python3 -m unittest discover -s tests -p 'test_assemble_docs_publish_tree.py'
           python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
-          python3 -m unittest discover -s tests -p 'test_mdbook_mathjax.py'
+          python3 -m unittest discover -s tests -p 'test_mdbook_typst_math.py'
+          python3 -m unittest discover -s tests -p 'test_ensure_mdbook_typst_math.py'
 
       - name: Build English HTML with mdBook
         run: bash build_mdbook.sh
@@ -48,29 +41,26 @@ jobs:
       - name: Build Chinese HTML with mdBook
         run: bash build_mdbook_zh.sh
 
-      - name: Assemble GitHub Pages artifact
+      - name: Deploy to openmlsys.github.io
         env:
-          DEPLOY_TARGET_URL: ${{ steps.pages.outputs.base_url }}
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
-          echo "Deploy target: ${DEPLOY_TARGET_URL}" >> "$GITHUB_STEP_SUMMARY"
+          git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/openmlsys/openmlsys.github.io.git
 
           python3 tools/assemble_docs_publish_tree.py \
-            --destination-root _site \
-            --docs-subdir . \
+            --destination-root openmlsys.github.io \
+            --docs-subdir docs \
             --en-source .mdbook/book \
             --zh-source .mdbook-zh/book
 
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: _site
+          cd openmlsys.github.io
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "deploy: update docs from ${GITHUB_REPOSITORY}@${GITHUB_SHA}"
+            git push
+          fi

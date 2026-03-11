@@ -15,6 +15,7 @@ env
 .mdbook/
 .mdbook-zh/
 .mdbook-zh-test/
+.mdbook-bin/
 task_plan.md
 findings.md
 progress.md
