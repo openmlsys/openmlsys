@@ -5,12 +5,24 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
 jobs:
-  deploy:
-    runs-on: ubuntu-22.04
+  build:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+
+      - id: pages
+        uses: actions/configure-pages@v5
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
@@ -39,21 +51,29 @@ jobs:
       - name: Build Chinese HTML with mdBook
         run: bash build_mdbook_zh.sh
 
-      - name: Deploy to GitHub Pages
+      - name: Assemble GitHub Pages artifact
         env:
-          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+          DEPLOY_TARGET_URL: ${{ steps.pages.outputs.base_url }}
         run: |
-          git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/openmlsys/openmlsys.github.io.git
+          echo "Deploy target: ${DEPLOY_TARGET_URL}" >> "$GITHUB_STEP_SUMMARY"
 
           python3 tools/assemble_docs_publish_tree.py \
-            --destination-root openmlsys.github.io \
-            --docs-subdir docs \
+            --destination-root _site \
+            --docs-subdir . \
             --en-source .mdbook/book \
             --zh-source .mdbook-zh/book
 
-          cd openmlsys.github.io
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "deploy: update docs (en+zh) from openmlsys-zh@${{ github.sha }}" || echo "No changes to commit"
-          git push
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
