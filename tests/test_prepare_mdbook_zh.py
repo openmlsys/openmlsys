@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.prepare_mdbook_zh import extract_title, rewrite_markdown, write_summary
+from tools.prepare_mdbook_zh import extract_title, process_equation_labels, rewrite_markdown, write_summary
 
 
 class PrepareMdBookZhTests(unittest.TestCase):
@@ -173,7 +173,7 @@ missing
             self.assertNotIn(":eqref:", rewritten)
             self.assertNotIn(":cite:", rewritten)
             self.assertIn("`fig_example`", rewritten)
-            self.assertIn("`eq_example`", rewritten)
+            self.assertIn("$\\eqref{eq_example}$", rewritten)
             self.assertIn("[foo2024]", rewritten)
 
     def test_rewrite_markdown_inlines_frontpage_html_include(self) -> None:
@@ -231,6 +231,32 @@ missing
                 rewritten.index('class="star-slot"'),
                 rewritten.index('class="openmlsys-frontpage-switch-row"'),
             )
+
+
+    def test_process_equation_labels_single_line(self) -> None:
+        """Verify single-line equation gets \\tag and \\label injected."""
+        md = "# Title\n\n$$a = f(z)$$\n:eqlabel:`sigmoid`\n\nSee :eqref:`sigmoid`.\n"
+        result = process_equation_labels(md)
+        self.assertIn("\\tag{1}\\label{sigmoid}$$", result)
+        self.assertNotIn(":eqlabel:", result)
+
+    def test_process_equation_labels_multiline(self) -> None:
+        """Verify multi-line equation (closing $$ on own line) gets \\tag and \\label."""
+        md = "# Title\n\n$$\na = f(z)\n$$\n:eqlabel:`eq1`\n"
+        result = process_equation_labels(md)
+        lines = result.split("\n")
+        # \\tag line should appear before the closing $$
+        tag_idx = next(i for i, l in enumerate(lines) if "\\tag{1}\\label{eq1}" in l)
+        close_idx = next(i for i, l in enumerate(lines) if l.strip() == "$$" and i > tag_idx)
+        self.assertLess(tag_idx, close_idx)
+        self.assertNotIn(":eqlabel:", result)
+
+    def test_process_equation_labels_sequential_numbering(self) -> None:
+        """Verify multiple equations get sequential numbers."""
+        md = "$$a$$\n:eqlabel:`eq1`\n\n$$b$$\n:eqlabel:`eq2`\n"
+        result = process_equation_labels(md)
+        self.assertIn("\\tag{1}\\label{eq1}", result)
+        self.assertIn("\\tag{2}\\label{eq2}", result)
 
 
 if __name__ == "__main__":

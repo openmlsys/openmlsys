@@ -12,6 +12,7 @@ EVAL_RST_FENCE = "eval_rst"
 OPTION_LINE_RE = re.compile(r"^:(width|label):`[^`]+`\s*$", re.MULTILINE)
 NUMREF_RE = re.compile(r":numref:`([^`]+)`")
 EQREF_RE = re.compile(r":eqref:`([^`]+)`")
+EQLABEL_LINE_RE = re.compile(r"^:eqlabel:`([^`]+)`\s*$")
 CITE_RE = re.compile(r":cite:`([^`]+)`")
 BIB_ENTRY_RE = re.compile(r"@(\w+)\{([^,]+),")
 LATEX_ESCAPE_RE = re.compile(r"\\([_%#&])")
@@ -215,10 +216,59 @@ def _strip_latex_escapes_outside_math(line: str) -> str:
     return "$".join(parts)
 
 
+def process_equation_labels(markdown: str) -> str:
+    """Convert :eqlabel: directives to MathJax \\tag + \\label in preceding equations.
+
+    Args:
+        markdown: The markdown content to process.
+
+    Returns:
+        The markdown with :eqlabel: directives replaced by \\tag{n}\\label{name}
+        injected into the preceding display equation.
+    """
+    lines = markdown.split("\n")
+    result: list[str] = []
+    eq_counter = 0
+
+    for line in lines:
+        match = EQLABEL_LINE_RE.match(line.strip())
+        if not match:
+            result.append(line)
+            continue
+
+        label_name = match.group(1)
+        eq_counter += 1
+        tag = f"\\tag{{{eq_counter}}}\\label{{{label_name}}}"
+
+        # Search backward for the closing $$ of the preceding equation
+        inserted = False
+        for j in range(len(result) - 1, -1, -1):
+            stripped = result[j].rstrip()
+            if not stripped:
+                continue  # skip blank lines
+            if stripped == "$$":
+                # Multi-line equation: $$ on its own line
+                result.insert(j, tag)
+                inserted = True
+                break
+            if stripped.endswith("$$"):
+                # Single-line or end-of-content $$
+                result[j] = stripped[:-2] + tag + "$$"
+                inserted = True
+                break
+            break  # non-blank, non-$$ line: no equation found
+
+        if not inserted:
+            # Fallback: keep original line if no equation found
+            result.append(line)
+
+    return "\n".join(result)
+
+
 def normalize_directives(markdown: str) -> str:
     normalized = OPTION_LINE_RE.sub("", markdown)
     normalized = NUMREF_RE.sub(lambda match: f"`{match.group(1)}`", normalized)
-    normalized = EQREF_RE.sub(lambda match: f"`{match.group(1)}`", normalized)
+    normalized = EQREF_RE.sub(lambda match: f"$\\eqref{{{match.group(1)}}}$", normalized)
 
     lines = [_strip_latex_escapes_outside_math(line.rstrip()) for line in normalized.splitlines()]
     collapsed: list[str] = []
@@ -534,7 +584,9 @@ def rewrite_markdown(
     while output and output[-1] == "":
         output.pop()
 
-    result = normalize_directives("\n".join(output) + "\n")
+    raw = "\n".join(output) + "\n"
+    result = process_equation_labels(raw)
+    result = normalize_directives(result)
     result = process_citations(result, bib_db or {}, bibliography_title=bibliography_title)
     return result
 
