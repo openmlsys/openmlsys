@@ -27,7 +27,9 @@
 
 An open-source book explaining the design principles and implementation experience of modern machine learning systems, covering the complete technology stack from programming interfaces and computational graphs to compilers and distributed training.
 
-**Read Online:** [openmlsys.github.io](https://openmlsys.github.io/)
+**English version 1 (stable):** [openmlsys.github.io/html-en/](https://openmlsys.github.io/html-en/)
+
+**English version 2:** Under reconstruction.
 
 ## Table of Contents
 
@@ -81,11 +83,7 @@ The book is organized into three parts: Fundamentals, Advanced Topics, and Exten
 | Date | Event |
 |------|-------|
 | 2022-01 | Project initialized; Chinese content writing begins |
-| 2022-03 | CI setup; Recommender Systems chapter released |
 | 2022-05 | Extension chapters released (Federated Learning, RL Systems, Explainable AI) |
-| 2022-11 | Introduction and Preface rewritten |
-| 2023-02 | Computational Graph chapter rewritten |
-| 2023-03 | Robot Learning Systems chapter added |
 | 2023-05 | Codebase adapted to MindSpore 2.0 |
 | 2026-03 | Bilingual (CN/EN) build architecture refactored; English version launched |
 
