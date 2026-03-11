@@ -25,7 +25,7 @@ FRONTPAGE_SWITCH_PLACEHOLDER = "<!-- OPENMLSYS_LANGUAGE_SWITCH -->"
 FRONTPAGE_LAYOUT_CSS = """
 <style>
 .openmlsys-frontpage {
-  width: min(100%, max(80%, var(--content-max-width)));
+  width: 100%;
   margin: 0 auto 3rem;
   margin-inline: auto;
 }
@@ -100,6 +100,9 @@ FRONTPAGE_LAYOUT_CSS = """
 .openmlsys-frontpage + ul ul {
   max-width: 960px;
   margin-inline: auto;
+}
+.content main {
+  max-width: min(100%, max(80%, var(--content-max-width)));
 }
 @media (max-width: 1000px) {
   .openmlsys-frontpage .mdl-cell,
