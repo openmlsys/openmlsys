@@ -216,19 +216,20 @@ def _strip_latex_escapes_outside_math(line: str) -> str:
     return "$".join(parts)
 
 
-def process_equation_labels(markdown: str) -> str:
+def process_equation_labels(markdown: str) -> tuple[str, dict[str, int]]:
     """Convert :eqlabel: directives to MathJax \\tag + \\label in preceding equations.
 
     Args:
         markdown: The markdown content to process.
 
     Returns:
-        The markdown with :eqlabel: directives replaced by \\tag{n}\\label{name}
-        injected into the preceding display equation.
+        A tuple of (processed_markdown, label_map) where label_map maps
+        label names to their equation numbers.
     """
     lines = markdown.split("\n")
     result: list[str] = []
     eq_counter = 0
+    label_map: dict[str, int] = {}
 
     for line in lines:
         match = EQLABEL_LINE_RE.match(line.strip())
@@ -238,6 +239,7 @@ def process_equation_labels(markdown: str) -> str:
 
         label_name = match.group(1)
         eq_counter += 1
+        label_map[label_name] = eq_counter
         tag = f"\\tag{{{eq_counter}}}\\label{{{label_name}}}"
 
         # Search backward for the closing $$ of the preceding equation
@@ -262,13 +264,22 @@ def process_equation_labels(markdown: str) -> str:
             # Fallback: keep original line if no equation found
             result.append(line)
 
-    return "\n".join(result)
+    return "\n".join(result), label_map
 
 
-def normalize_directives(markdown: str) -> str:
+def normalize_directives(
+    markdown: str,
+    label_map: dict[str, int] | None = None,
+) -> str:
     normalized = OPTION_LINE_RE.sub("", markdown)
     normalized = NUMREF_RE.sub(lambda match: f"`{match.group(1)}`", normalized)
-    normalized = EQREF_RE.sub(lambda match: f"$\\eqref{{{match.group(1)}}}$", normalized)
+    if label_map:
+        normalized = EQREF_RE.sub(
+            lambda m: f"({label_map[m.group(1)]})" if m.group(1) in label_map else f"$\\eqref{{{m.group(1)}}}$",
+            normalized,
+        )
+    else:
+        normalized = EQREF_RE.sub(lambda match: f"$\\eqref{{{match.group(1)}}}$", normalized)
 
     lines = [_strip_latex_escapes_outside_math(line.rstrip()) for line in normalized.splitlines()]
     collapsed: list[str] = []
@@ -585,8 +596,8 @@ def rewrite_markdown(
         output.pop()
 
     raw = "\n".join(output) + "\n"
-    result = process_equation_labels(raw)
-    result = normalize_directives(result)
+    result, label_map = process_equation_labels(raw)
+    result = normalize_directives(result, label_map=label_map)
     result = process_citations(result, bib_db or {}, bibliography_title=bibliography_title)
     return result
 
