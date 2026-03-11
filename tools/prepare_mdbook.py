@@ -4,13 +4,16 @@ import argparse
 import os
 import re
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 
 TOC_FENCE = "toc"
 EVAL_RST_FENCE = "eval_rst"
-OPTION_LINE_RE = re.compile(r"^:(width|label):`[^`]+`\s*$", re.MULTILINE)
+WIDTH_LINE_RE = re.compile(r"^:width:`[^`]+`\s*$", re.MULTILINE)
+LABEL_RE = re.compile(r":label:`([^`]+)`")
 NUMREF_RE = re.compile(r":numref:`([^`]+)`")
+IMAGE_LINE_RE = re.compile(r"^!\[([^\]]*)\]\(([^)]+)\)\s*$")
+LABEL_LINE_RE = re.compile(r"^:label:`([^`]+)`\s*$")
 EQREF_RE = re.compile(r":eqref:`([^`]+)`")
 EQLABEL_LINE_RE = re.compile(r"^:eqlabel:`([^`]+)`\s*$")
 CITE_RE = re.compile(r":cite:`([^`]+)`")
@@ -343,12 +346,110 @@ def process_equation_labels(markdown: str) -> tuple[str, dict[str, int]]:
     return "\n".join(result), label_map
 
 
+def collect_labels(markdown: str) -> list[str]:
+    """Extract all label names from :label: directives."""
+    return LABEL_RE.findall(markdown)
+
+
+def collect_figure_labels(markdown: str) -> list[str]:
+    """Return label names for figures (image lines followed by :label:)."""
+    labels: list[str] = []
+    lines = markdown.splitlines()
+    for i, line in enumerate(lines):
+        if not IMAGE_LINE_RE.match(line.strip()):
+            continue
+        j = i + 1
+        while j < len(lines):
+            s = lines[j].strip()
+            if not s or WIDTH_LINE_RE.match(s):
+                j += 1
+                continue
+            m = LABEL_LINE_RE.match(s)
+            if m:
+                labels.append(m.group(1))
+            break
+    return labels
+
+
+def process_figure_captions(
+    markdown: str,
+    fig_number_map: dict[str, str] | None = None,
+) -> str:
+    """Convert image+label blocks into figures with anchors and captions."""
+    lines = markdown.splitlines()
+    result: list[str] = []
+    i = 0
+    while i < len(lines):
+        img_match = IMAGE_LINE_RE.match(lines[i].strip())
+        if img_match:
+            caption = img_match.group(1)
+            img_line = lines[i]
+            # Look ahead for :width: and :label:
+            j = i + 1
+            label = None
+            while j < len(lines):
+                s = lines[j].strip()
+                if not s or WIDTH_LINE_RE.match(s):
+                    j += 1
+                    continue
+                m = LABEL_LINE_RE.match(s)
+                if m:
+                    label = m.group(1)
+                    j += 1
+                break
+
+            if label:
+                fig_num = (fig_number_map or {}).get(label)
+                result.append(f'<a id="{label}"></a>')
+                result.append("")
+                result.append(img_line)
+                if fig_num and caption:
+                    result.append("")
+                    result.append(f'<p align="center">图{fig_num} {caption}</p>')
+                elif fig_num:
+                    result.append("")
+                    result.append(f'<p align="center">图{fig_num}</p>')
+                elif caption:
+                    result.append("")
+                    result.append(f'<p align="center">{caption}</p>')
+                i = j
+                continue
+
+        result.append(lines[i])
+        i += 1
+    return "\n".join(result)
+
+
+def _relative_chapter_path(from_path: str, to_path: str) -> str:
+    """Compute relative path between two mdbook source_paths."""
+    if from_path == to_path:
+        return ""
+    from_dir = str(PurePosixPath(from_path).parent)
+    return PurePosixPath(os.path.relpath(to_path, start=from_dir)).as_posix()
+
+
 def normalize_directives(
     markdown: str,
     label_map: dict[str, int] | None = None,
+    ref_label_map: dict[str, str] | None = None,
+    current_source_path: str | None = None,
+    fig_number_map: dict[str, str] | None = None,
 ) -> str:
-    normalized = OPTION_LINE_RE.sub("", markdown)
-    normalized = NUMREF_RE.sub(lambda match: f"`{match.group(1)}`", normalized)
+    normalized = WIDTH_LINE_RE.sub("", markdown)
+    normalized = LABEL_RE.sub(lambda m: f'<a id="{m.group(1)}"></a>', normalized)
+
+    def _numref_replace(match: re.Match[str]) -> str:
+        name = match.group(1)
+        if ref_label_map and current_source_path and name in ref_label_map:
+            target_path = ref_label_map[name]
+            rel = _relative_chapter_path(current_source_path, target_path)
+            display = f"图{fig_number_map[name]}" if fig_number_map and name in fig_number_map else name
+            if rel:
+                return f"[{display}]({rel}#{name})"
+            return f"[{display}](#{name})"
+        return f"`{name}`"
+
+    normalized = NUMREF_RE.sub(_numref_replace, normalized)
     if label_map:
         normalized = EQREF_RE.sub(
             lambda m: f"({label_map[m.group(1)]})" if m.group(1) in label_map else f"$\\eqref{{{m.group(1)}}}$",
@@ -743,6 +844,9 @@ def rewrite_markdown(
     bibliography_title: str = DEFAULT_BIBLIOGRAPHY_TITLE,
     frontpage_switch_label: str | None = None,
     frontpage_switch_href: str | None = None,
+    ref_label_map: dict[str, str] | None = None,
+    current_source_path: str | None = None,
+    fig_number_map: dict[str, str] | None = None,
 ) -> str:
     output: list[str] = []
     lines = markdown.splitlines()
@@ -791,7 +895,14 @@ def rewrite_markdown(
 
     raw = "\n".join(output) + "\n"
     result, label_map = process_equation_labels(raw)
-    result = normalize_directives(result, label_map=label_map)
+    result = process_figure_captions(result, fig_number_map=fig_number_map)
+    result = normalize_directives(
+        result,
+        label_map=label_map,
+        ref_label_map=ref_label_map,
+        current_source_path=current_source_path,
+        fig_number_map=fig_number_map,
+    )
     result = process_citations(result, bib_db or {}, bibliography_title=bibliography_title)
     return result
 

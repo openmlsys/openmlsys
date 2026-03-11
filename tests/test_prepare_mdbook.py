@@ -4,7 +4,17 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.prepare_mdbook import build_title_cache, convert_math_to_mathjax, rewrite_markdown, write_summary
+from tools.prepare_mdbook import (
+    _relative_chapter_path,
+    build_title_cache,
+    collect_figure_labels,
+    collect_labels,
+    convert_math_to_mathjax,
+    normalize_directives,
+    process_figure_captions,
+    rewrite_markdown,
+    write_summary,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -231,6 +241,243 @@ Reference :cite:`smith2024`.
         self.assertIn("display: block;", frontpage)
         self.assertIn(".author-group-title h3,", frontpage)
         self.assertIn("width: 100%;", frontpage)
+
+
+class CollectLabelsTests(unittest.TestCase):
+    def test_standalone_label(self) -> None:
+        md = ":label:`my_fig`\n"
+        self.assertEqual(collect_labels(md), ["my_fig"])
+
+    def test_inline_table_label(self) -> None:
+        md = "|:label:`tbl`|||\n"
+        self.assertEqual(collect_labels(md), ["tbl"])
+
+    def test_escaped_underscores(self) -> None:
+        md = ":label:`ros2\\_topics`\n"
+        self.assertEqual(collect_labels(md), ["ros2\\_topics"])
+
+    def test_empty(self) -> None:
+        md = "No labels here.\n"
+        self.assertEqual(collect_labels(md), [])
+
+    def test_multiple_labels(self) -> None:
+        md = ":label:`fig1`\nsome text\n:label:`fig2`\n"
+        self.assertEqual(collect_labels(md), ["fig1", "fig2"])
+
+
+class LabelToAnchorTests(unittest.TestCase):
+    def test_standalone_label_becomes_anchor(self) -> None:
+        result = normalize_directives(":label:`ROS2_arch`\n")
+        self.assertIn('<a id="ROS2_arch"></a>', result)
+        self.assertNotIn(":label:", result)
+
+    def test_table_row_label_becomes_anchor(self) -> None:
+        result = normalize_directives("|:label:`tbl`|||\n")
+        self.assertIn('|<a id="tbl"></a>|||', result)
+
+    def test_width_line_removed(self) -> None:
+        result = normalize_directives(":width:`800px`\n")
+        self.assertNotIn(":width:", result)
+        self.assertNotIn("800px", result)
+
+
+class NumrefToLinkTests(unittest.TestCase):
+    def test_same_file_link(self) -> None:
+        ref_map = {"my_fig": "chapter/page.md"}
+        result = normalize_directives(
+            "See :numref:`my_fig`.\n",
+            ref_label_map=ref_map,
+            current_source_path="chapter/page.md",
+        )
+        self.assertIn("[my_fig](#my_fig)", result)
+
+    def test_cross_file_link(self) -> None:
+        ref_map = {"my_fig": "other_ch/file.md"}
+        result = normalize_directives(
+            "See :numref:`my_fig`.\n",
+            ref_label_map=ref_map,
+            current_source_path="chapter/page.md",
+        )
+        self.assertIn("[my_fig](../other_ch/file.md#my_fig)", result)
+
+    def test_unknown_label_fallback(self) -> None:
+        result = normalize_directives(
+            "See :numref:`unknown`.\n",
+            ref_label_map={},
+            current_source_path="chapter/page.md",
+        )
+        self.assertIn("`unknown`", result)
+        self.assertNotIn("[unknown]", result)
+
+    def test_no_ref_map_fallback(self) -> None:
+        result = normalize_directives("See :numref:`foo`.\n")
+        self.assertIn("`foo`", result)
+
+    def test_escaped_underscores_in_numref(self) -> None:
+        ref_map = {"ros2\\_topics": "chapter/ros.md"}
+        result = normalize_directives(
+            "See :numref:`ros2\\_topics`.\n",
+            ref_label_map=ref_map,
+            current_source_path="chapter/ros.md",
+        )
+        # _strip_latex_escapes_outside_math removes \_ → _, producing consistent IDs
+        self.assertIn("[ros2_topics](#ros2_topics)", result)
+
+
+class RelativeChapterPathTests(unittest.TestCase):
+    def test_same_file(self) -> None:
+        self.assertEqual(_relative_chapter_path("ch/page.md", "ch/page.md"), "")
+
+    def test_same_dir(self) -> None:
+        result = _relative_chapter_path("ch/a.md", "ch/b.md")
+        self.assertEqual(result, "b.md")
+
+    def test_different_dir(self) -> None:
+        result = _relative_chapter_path("ch1/page.md", "ch2/other.md")
+        self.assertEqual(result, "../ch2/other.md")
+
+
+class CollectFigureLabelsTests(unittest.TestCase):
+    def test_image_followed_by_label(self) -> None:
+        md = "![cap](img.png)\n:label:`fig1`\n"
+        self.assertEqual(collect_figure_labels(md), ["fig1"])
+
+    def test_image_with_width_and_label(self) -> None:
+        md = "![cap](img.png)\n:width:`800px`\n:label:`fig1`\n"
+        self.assertEqual(collect_figure_labels(md), ["fig1"])
+
+    def test_image_with_blank_lines(self) -> None:
+        md = "![cap](img.png)\n\n:width:`800px`\n\n:label:`fig1`\n"
+        self.assertEqual(collect_figure_labels(md), ["fig1"])
+
+    def test_table_label_not_collected(self) -> None:
+        md = "|:label:`tbl`|||\n"
+        self.assertEqual(collect_figure_labels(md), [])
+
+    def test_standalone_label_without_image(self) -> None:
+        md = "# Heading\n:label:`sec1`\n"
+        self.assertEqual(collect_figure_labels(md), [])
+
+    def test_multiple_figures(self) -> None:
+        md = "![a](a.png)\n:label:`f1`\n\n![b](b.png)\n:label:`f2`\n"
+        self.assertEqual(collect_figure_labels(md), ["f1", "f2"])
+
+
+class ProcessFigureCaptionsTests(unittest.TestCase):
+    def test_figure_with_number_and_caption(self) -> None:
+        md = "![量化原理](img.png)\n:width:`800px`\n:label:`fig1`\n"
+        result = process_figure_captions(md, fig_number_map={"fig1": "8.1"})
+        self.assertIn('<a id="fig1"></a>', result)
+        self.assertIn("![量化原理](img.png)", result)
+        self.assertIn('<p align="center">图8.1 量化原理</p>', result)
+        self.assertNotIn(":width:", result)
+        self.assertNotIn(":label:", result)
+
+    def test_figure_without_number_map(self) -> None:
+        md = "![caption](img.png)\n:label:`fig1`\n"
+        result = process_figure_captions(md)
+        self.assertIn('<a id="fig1"></a>', result)
+        self.assertIn("![caption](img.png)", result)
+        self.assertIn('<p align="center">caption</p>', result)
+
+    def test_image_without_label_passthrough(self) -> None:
+        md = "![caption](img.png)\nSome text\n"
+        result = process_figure_captions(md)
+        self.assertIn("![caption](img.png)", result)
+        self.assertNotIn('<a id=', result)
+        self.assertNotIn('<p align="center">', result)
+
+    def test_figure_empty_caption(self) -> None:
+        md = "![](img.png)\n:label:`fig1`\n"
+        result = process_figure_captions(md, fig_number_map={"fig1": "1.1"})
+        self.assertIn('<p align="center">图1.1</p>', result)
+
+
+class NumrefWithFigureNumberTests(unittest.TestCase):
+    def test_numref_shows_figure_number(self) -> None:
+        result = normalize_directives(
+            "See :numref:`my_fig`.\n",
+            ref_label_map={"my_fig": "ch/page.md"},
+            current_source_path="ch/page.md",
+            fig_number_map={"my_fig": "8.1"},
+        )
+        self.assertIn("[图8.1](#my_fig)", result)
+
+    def test_numref_cross_file_with_figure_number(self) -> None:
+        result = normalize_directives(
+            "See :numref:`my_fig`.\n",
+            ref_label_map={"my_fig": "other/page.md"},
+            current_source_path="ch/page.md",
+            fig_number_map={"my_fig": "3.2"},
+        )
+        self.assertIn("[图3.2](../other/page.md#my_fig)", result)
+
+    def test_numref_without_figure_number_shows_name(self) -> None:
+        result = normalize_directives(
+            "See :numref:`tbl`.\n",
+            ref_label_map={"tbl": "ch/page.md"},
+            current_source_path="ch/page.md",
+            fig_number_map={},
+        )
+        self.assertIn("[tbl](#tbl)", result)
+
+
+class LabelNumrefIntegrationTests(unittest.TestCase):
+    def test_rewrite_markdown_with_label_map(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            page = Path(tmpdir) / "chapter" / "page.md"
+            page.parent.mkdir()
+            page.write_text(
+                "# Title\n\n:label:`my_fig`\n\nSee :numref:`my_fig`.\n",
+                encoding="utf-8",
+            )
+            rewritten = rewrite_markdown(
+                page.read_text(encoding="utf-8"),
+                page.resolve(),
+                {page.resolve(): "Title"},
+                ref_label_map={"my_fig": "chapter/page.md"},
+                current_source_path="chapter/page.md",
+            )
+            self.assertIn('<a id="my_fig"></a>', rewritten)
+            self.assertIn("[my_fig](#my_fig)", rewritten)
+
+    def test_rewrite_markdown_cross_file_numref(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            page = Path(tmpdir) / "ch1" / "page.md"
+            page.parent.mkdir()
+            page.write_text(
+                "# Title\n\nSee :numref:`other_fig`.\n",
+                encoding="utf-8",
+            )
+            rewritten = rewrite_markdown(
+                page.read_text(encoding="utf-8"),
+                page.resolve(),
+                {page.resolve(): "Title"},
+                ref_label_map={"other_fig": "ch2/file.md"},
+                current_source_path="ch1/page.md",
+            )
+            self.assertIn("[other_fig](../ch2/file.md#other_fig)", rewritten)
+
+    def test_rewrite_markdown_figure_with_number_and_caption(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            page = Path(tmpdir) / "ch" / "page.md"
+            page.parent.mkdir()
+            page.write_text(
+                "# Title\n\n![量化原理](img.png)\n:width:`800px`\n:label:`qfig`\n\nSee :numref:`qfig`.\n",
+                encoding="utf-8",
+            )
+            rewritten = rewrite_markdown(
+                page.read_text(encoding="utf-8"),
+                page.resolve(),
+                {page.resolve(): "Title"},
+                ref_label_map={"qfig": "ch/page.md"},
+                current_source_path="ch/page.md",
+                fig_number_map={"qfig": "8.1"},
+            )
+            self.assertIn('<a id="qfig"></a>', rewritten)
+            self.assertIn("![量化原理](img.png)", rewritten)
+            self.assertIn('<p align="center">图8.1 量化原理</p>', rewritten)
+            self.assertIn("[图8.1](#qfig)", rewritten)
 
 
 class ConvertMathToMathjaxTests(unittest.TestCase):
