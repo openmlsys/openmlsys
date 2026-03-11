@@ -11,8 +11,11 @@ create-missing = false
 [preprocessor.openmlsys-zh]
 command = "python3 ../../tools/mdbook_zh_preprocessor.py"
 
+[preprocessor.katex]
+after = ["links", "openmlsys-zh"]
+pre-render = true
+
 [output.html]
 git-repository-url = "https://github.com/openmlsys/openmlsys-zh"
-mathjax-support = true
 preferred-dark-theme = "navy"
 additional-css = ["theme/dark-mode-images.css"]
