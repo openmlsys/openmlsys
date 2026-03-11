@@ -144,6 +144,45 @@ Reference :cite:`smith2024`.
             self.assertIn('href="cn/"', rewritten)
             self.assertIn(">中文</a>", rewritten)
 
+    def test_rewrite_markdown_prefers_book_local_frontpage_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            source = root / "en_chapters"
+            static_dir = source / "static"
+            source.mkdir()
+            static_dir.mkdir()
+
+            index = source / "index.md"
+            index.write_text(
+                """# Home
+
+```eval_rst
+.. raw:: html
+   :file: frontpage.html
+```
+""",
+                encoding="utf-8",
+            )
+            (source / "frontpage.html").write_text(
+                "<div class=\"hero\">English frontpage</div>\n",
+                encoding="utf-8",
+            )
+            (static_dir / "frontpage.html").write_text(
+                "<div class=\"hero\">Chinese fallback</div>\n",
+                encoding="utf-8",
+            )
+
+            rewritten = rewrite_markdown(
+                index.read_text(encoding="utf-8"),
+                index.resolve(),
+                {index.resolve(): "Home"},
+            )
+
+            self.assertIn("English frontpage", rewritten)
+            self.assertNotIn("Chinese fallback", rewritten)
+            self.assertIn("background: transparent !important;", rewritten)
+            self.assertIn("padding: 0 !important;", rewritten)
+
     def test_regular_page_does_not_render_frontpage_switch(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir)

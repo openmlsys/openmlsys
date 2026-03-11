@@ -91,6 +91,8 @@ FRONTPAGE_LAYOUT_CSS = """
 .openmlsys-frontpage img {
   max-width: 100%;
   height: auto;
+  background: transparent !important;
+  padding: 0 !important;
 }
 #content,
 .content {
