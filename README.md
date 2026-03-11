@@ -76,6 +76,19 @@
 | [可解释性 AI 系统](chapter_explainable_AI/) | 可解释 AI 方法与落地实践 |
 | [机器人学习系统](chapter_rl_sys/) | 机器人感知、规划、控制与系统安全 |
 
+## 更新日志
+
+| 日期 | 事件 |
+|------|------|
+| 2022-01 | 项目初始化，开始中文内容编写 |
+| 2022-03 | CI 搭建；推荐系统章节首发 |
+| 2022-05 | 完成扩展篇各章节（联邦学习、强化学习、可解释 AI） |
+| 2022-11 | 重写导论与序言 |
+| 2023-02 | 重写计算图章节 |
+| 2023-03 | 新增机器人学习系统章节 |
+| 2023-05 | 适配 MindSpore 2.0 |
+| 2026-03 | 中英文双语构建架构重构；启动英文版 |
+
 ## 构建指南
 
 ### 环境依赖
@@ -126,6 +139,26 @@ sh build_html.sh
   <br/>
   扫码加入微信交流群
 </p>
+
+## 引用
+
+如果本书对您的研究或工作有所帮助，请使用以下格式引用：
+
+**文本格式：**
+
+> OpenMLSys Team. *机器学习系统：设计和实现*. 2022. https://openmlsys.github.io/
+
+**BibTeX：**
+
+```bibtex
+@book{openmlsys2022,
+  title     = {机器学习系统：设计和实现},
+  author    = {OpenMLSys Team},
+  year      = {2022},
+  url       = {https://openmlsys.github.io/},
+  note      = {开源教材，\url{https://github.com/openmlsys/openmlsys-zh}}
+}
+```
 
 ## 许可证
 
