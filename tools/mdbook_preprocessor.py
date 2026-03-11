@@ -10,7 +10,8 @@ except ModuleNotFoundError:
     from prepare_mdbook import build_title_cache, parse_bib, rewrite_markdown
 
 
-BIBLIOGRAPHY_TITLE = "参考文献"
+PLACEHOLDER_PREFIX = "[TODO: src = zh_chapters/"
+BIBLIOGRAPHY_TITLE = "References"
 
 
 def iter_chapters(items: list[dict]) -> list[dict]:
@@ -31,7 +32,7 @@ def main() -> int:
     context, book = json.load(sys.stdin)
     root = Path(context["root"]).resolve()
     source_dir = (root / context["config"]["book"]["src"]).resolve()
-    title_cache = build_title_cache(source_dir)
+    title_cache = build_title_cache(source_dir, placeholder_prefix=PLACEHOLDER_PREFIX)
     bib_path = source_dir.parent / "mlsys.bib"
     bib_db = parse_bib(bib_path) if bib_path.exists() else {}
 

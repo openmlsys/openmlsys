@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-en:
-    name: Build (English)
+    name: Build (English mdBook)
     runs-on: ubuntu-22.04
 
     steps:
@@ -17,30 +17,28 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          cache: 'pip'
 
-      - name: Install pandoc
+      - name: Install Rust toolchain
         run: |
-          wget -q https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb
-          sudo dpkg -i pandoc-2.19.2-1-amd64.deb
+          curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
 
-      - name: Install d2lbook
+      - name: Install mdBook
+        run: cargo install mdbook --locked
+
+      - name: Run mdBook regression tests
         run: |
-          git clone https://github.com/openmlsys/d2l-book.git
-          cd d2l-book
-          # Fix Python 3.10+ incompatibility: bibtex<2.0.0 depends on oset which
-          # uses collections.MutableSet removed in Python 3.10.
-          sed -i "s/'sphinxcontrib-bibtex<2.0.0'/'sphinxcontrib-bibtex>=2.5.0'/" setup.py
-          python3 -m pip install .
+          python3 -m unittest discover -s tests -p 'test_prepare_mdbook.py'
+          python3 -m unittest discover -s tests -p 'test_prepare_mdbook_zh.py'
+          python3 -m unittest discover -s tests -p 'test_assemble_docs_publish_tree.py'
+          python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
+          python3 -m unittest discover -s tests -p 'test_mdbook_mathjax.py'
 
-      - name: Install Python dependencies
-        run: python3 -m pip install -r requirements.txt
-
-      - name: Build English HTML
-        run: bash build_html.sh
+      - name: Build English HTML with mdBook
+        run: bash build_mdbook.sh
 
   build-zh:
-    name: Build (Chinese)
+    name: Build (Chinese mdBook)
     runs-on: ubuntu-22.04
 
     steps:
@@ -50,25 +48,17 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          cache: 'pip'
-
-      - name: Install pandoc
+      
+      - name: Install Rust toolchain
         run: |
-          wget -q https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb
-          sudo dpkg -i pandoc-2.19.2-1-amd64.deb
+          curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
 
-      - name: Install d2lbook
-        run: |
-          git clone https://github.com/openmlsys/d2l-book.git
-          cd d2l-book
-          sed -i "s/'sphinxcontrib-bibtex<2.0.0'/'sphinxcontrib-bibtex>=2.5.0'/" setup.py
-          python3 -m pip install .
+      - name: Install mdBook
+        run: cargo install mdbook --locked
 
-      - name: Install Python dependencies
-        run: python3 -m pip install -r requirements.txt
-
-      - name: Build Chinese HTML
-        run: bash build_html_zh.sh
+      - name: Build Chinese HTML with mdBook
+        run: bash build_mdbook_zh.sh
 
   build:
     name: build

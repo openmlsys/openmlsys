@@ -10,15 +10,7 @@ set -e
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
 # ── Create resource symlinks ──────────────────────────────────────────────────
-for target in img references static mlsys.bib; do
-    link="$ROOT/zh_chapters/$target"
-    rel_target="../$target"
-    if [ -e "$link" ] && [ ! -L "$link" ]; then
-        echo "Refusing to replace non-symlink path: $link" >&2
-        exit 1
-    fi
-    ln -sfn "$rel_target" "$link"
-done
+python3 "$ROOT/tools/ensure_book_resources.py" --chapter-dir "$ROOT/zh_chapters"
 
 # ── Build ─────────────────────────────────────────────────────────────────────
 cd "$ROOT/zh_chapters"

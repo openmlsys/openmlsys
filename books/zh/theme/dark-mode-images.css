@@ -1,0 +1,6 @@
+html.light img[src$=".png"],
+html.light img[src$=".jpg"],
+html.light img[src$=".jpeg"],
+html.light img[src$=".gif"] {
+  background-color: #fff;
+}

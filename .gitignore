@@ -12,6 +12,7 @@ test*.md
 run.sh
 .idea
 env
+.mdbook/
 .mdbook-zh/
 .mdbook-zh-test/
 task_plan.md
@@ -19,7 +20,6 @@ findings.md
 progress.md
 d2l-book/
 docs/
-tests/
 en_chapters/img
 en_chapters/references
 en_chapters/static
