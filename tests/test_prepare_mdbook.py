@@ -7,6 +7,9 @@ from pathlib import Path
 from tools.prepare_mdbook import build_title_cache, rewrite_markdown, write_summary
 
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
 class PrepareMdBookTests(unittest.TestCase):
     def test_write_summary_skips_placeholder_pages(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -198,6 +201,15 @@ Reference :cite:`smith2024`.
             )
 
             self.assertNotIn('openmlsys-frontpage-switch', rewritten)
+
+    def test_english_frontpage_author_grid_uses_top_aligned_spacing(self) -> None:
+        frontpage = (REPO_ROOT / "en_chapters" / "frontpage.html").read_text(encoding="utf-8")
+
+        self.assertIn(".authors.mdl-grid {", frontpage)
+        self.assertIn("align-items: flex-start;", frontpage)
+        self.assertIn("row-gap: calc(24px + 1.5em);", frontpage)
+        self.assertIn("height: 120px;", frontpage)
+        self.assertIn("object-fit: cover;", frontpage)
 
 
 if __name__ == "__main__":
