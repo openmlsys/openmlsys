@@ -193,7 +193,7 @@ Reference :cite:`smith2024`.
             self.assertIn("border-radius: 6px;", rewritten)
             self.assertIn("background: #f6f8fa;", rewritten)
             self.assertIn(".content main {", rewritten)
-            self.assertIn("max-width: min(100%, max(80%, var(--content-max-width)));", rewritten)
+            self.assertIn("max-width: min(100%, max(65%, var(--content-max-width)));", rewritten)
             self.assertIn(".openmlsys-frontpage {", rewritten)
             self.assertIn("width: 100%;", rewritten)
             self.assertIn("margin-inline: auto;", rewritten)

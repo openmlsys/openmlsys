@@ -102,7 +102,7 @@ FRONTPAGE_LAYOUT_CSS = """
   margin-inline: auto;
 }
 .content main {
-  max-width: min(100%, max(80%, var(--content-max-width)));
+  max-width: min(100%, max(65%, var(--content-max-width)));
 }
 @media (max-width: 1000px) {
   .openmlsys-frontpage .mdl-cell,
