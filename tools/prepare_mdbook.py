@@ -21,36 +21,37 @@ TOC_PART_RE = re.compile(r"^#+\s+(.+?)\s*$")
 HEAD_TAG_RE = re.compile(r"</?head>", re.IGNORECASE)
 STYLE_BLOCK_RE = re.compile(r"<style>(.*?)</style>", re.IGNORECASE | re.DOTALL)
 DEFAULT_BIBLIOGRAPHY_TITLE = "References"
+FRONTPAGE_SWITCH_PLACEHOLDER = "<!-- OPENMLSYS_LANGUAGE_SWITCH -->"
 FRONTPAGE_LAYOUT_CSS = """
 <style>
 .openmlsys-frontpage {
   width: 100%;
   margin: 0 auto 3rem;
-  position: relative;
+}
+.openmlsys-frontpage-switch-row {
+  margin: 12px 0 0;
+  display: flex;
+  justify-content: center;
 }
 .openmlsys-frontpage-switch {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 88px;
-  padding: 10px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(11, 107, 203, 0.25);
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--links, #0b6bcb);
-  font-size: 14px;
+  min-width: 82px;
+  height: 28px;
+  padding: 0 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(31, 35, 40, 0.15);
+  background: #f6f8fa;
+  color: #24292f;
+  font-size: 13px;
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 12px 30px rgba(11, 107, 203, 0.12);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 rgba(31, 35, 40, 0.04);
 }
 .openmlsys-frontpage-switch:hover {
-  background: #fff;
-  border-color: rgba(11, 107, 203, 0.4);
+  background: #f3f4f6;
+  border-color: rgba(31, 35, 40, 0.2);
 }
 .openmlsys-frontpage .mdl-grid {
   display: flex;
@@ -106,10 +107,6 @@ FRONTPAGE_LAYOUT_CSS = """
   max-width: 960px;
 }
 @media (max-width: 1000px) {
-  .openmlsys-frontpage-switch {
-    top: 12px;
-    right: 12px;
-  }
   .openmlsys-frontpage .mdl-cell,
   .openmlsys-frontpage .mdl-cell--1-col,
   .openmlsys-frontpage .mdl-cell--3-col,
@@ -405,7 +402,11 @@ def _minify_style_block(match: re.Match[str]) -> str:
 
 
 def render_frontpage_switch(label: str, href: str) -> str:
-    return f'<a class="openmlsys-frontpage-switch" href="{href}">{label}</a>'
+    return (
+        '<p class="openmlsys-frontpage-switch-row">'
+        f'<a class="openmlsys-frontpage-switch" href="{href}">{label}</a>'
+        "</p>"
+    )
 
 
 def wrap_frontpage_html(
@@ -413,10 +414,15 @@ def wrap_frontpage_html(
     frontpage_switch_label: str | None = None,
     frontpage_switch_href: str | None = None,
 ) -> str:
-    parts = [FRONTPAGE_LAYOUT_CSS, '<div class="openmlsys-frontpage">']
+    rendered_html = html.strip()
     if frontpage_switch_label and frontpage_switch_href:
-        parts.append(render_frontpage_switch(frontpage_switch_label, frontpage_switch_href))
-    parts.extend([html.strip(), "</div>"])
+        switch_html = render_frontpage_switch(frontpage_switch_label, frontpage_switch_href)
+        if FRONTPAGE_SWITCH_PLACEHOLDER in rendered_html:
+            rendered_html = rendered_html.replace(FRONTPAGE_SWITCH_PLACEHOLDER, switch_html)
+        else:
+            rendered_html = "\n".join([switch_html, rendered_html])
+
+    parts = [FRONTPAGE_LAYOUT_CSS, '<div class="openmlsys-frontpage">', rendered_html, "</div>"]
     return "\n".join(parts)
 
 

@@ -131,7 +131,7 @@ Reference :cite:`smith2024`.
                 encoding="utf-8",
             )
             (static_dir / "frontpage.html").write_text(
-                "<div class=\"hero\">frontpage</div>\n",
+                "<p class=\"star-slot\">STAR</p>\n<!-- OPENMLSYS_LANGUAGE_SWITCH -->\n<div class=\"hero\">frontpage</div>\n",
                 encoding="utf-8",
             )
 
@@ -143,9 +143,14 @@ Reference :cite:`smith2024`.
                 frontpage_switch_href="cn/",
             )
 
+            self.assertIn('class="openmlsys-frontpage-switch-row"', rewritten)
             self.assertIn('class="openmlsys-frontpage-switch"', rewritten)
             self.assertIn('href="cn/"', rewritten)
             self.assertIn(">中文</a>", rewritten)
+            self.assertLess(
+                rewritten.index('class="star-slot"'),
+                rewritten.index('class="openmlsys-frontpage-switch-row"'),
+            )
 
     def test_rewrite_markdown_prefers_book_local_frontpage_file(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -185,6 +190,8 @@ Reference :cite:`smith2024`.
             self.assertNotIn("Chinese fallback", rewritten)
             self.assertIn("background: transparent !important;", rewritten)
             self.assertIn("padding: 0 !important;", rewritten)
+            self.assertIn("border-radius: 6px;", rewritten)
+            self.assertIn("background: #f6f8fa;", rewritten)
 
     def test_regular_page_does_not_render_frontpage_switch(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

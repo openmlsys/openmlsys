@@ -202,6 +202,8 @@ missing
 .other { color: blue; }
 </style>
 </head>
+<p class="star-slot">STAR</p>
+<!-- OPENMLSYS_LANGUAGE_SWITCH -->
 <div class="hero">
   <img src="_images/logo.png" />
   <img src="./_images/jinxuefeng.png" />
@@ -221,9 +223,14 @@ missing
             self.assertIn("static/image/logo.png", rewritten)
             self.assertIn("static/image/jinxuefeng.png", rewritten)
             self.assertIn("console.log('frontpage')", rewritten)
+            self.assertIn('class="openmlsys-frontpage-switch-row"', rewritten)
             self.assertIn('class="openmlsys-frontpage-switch"', rewritten)
             self.assertIn('href="../"', rewritten)
             self.assertIn(">English</a>", rewritten)
+            self.assertLess(
+                rewritten.index('class="star-slot"'),
+                rewritten.index('class="openmlsys-frontpage-switch-row"'),
+            )
 
 
 if __name__ == "__main__":
