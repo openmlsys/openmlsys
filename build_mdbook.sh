@@ -14,16 +14,6 @@ if ! command -v mdbook >/dev/null 2>&1; then
     exit 1
 fi
 
-if ! mdbook --version | grep -q "mdbook v0.4.48"; then
-    echo "mdbook-katex currently requires mdbook v0.4.48. Install it with: cargo install mdbook --version 0.4.48 --locked --force" >&2
-    exit 1
-fi
-
-if ! command -v mdbook-katex >/dev/null 2>&1; then
-    echo "mdbook-katex is not installed. Install it first, for example with: cargo install mdbook-katex" >&2
-    exit 1
-fi
-
 "${PYTHON_BIN}" "${ROOT}/tools/ensure_book_resources.py" --chapter-dir "${ROOT}/en_chapters"
 "${PYTHON_BIN}" "${ROOT}/tools/prepare_mdbook.py" \
     --source "${ROOT}/en_chapters" \

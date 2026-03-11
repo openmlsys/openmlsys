@@ -24,11 +24,8 @@ class UpdateDocsWorkflowTests(unittest.TestCase):
         for workflow_path in (WORKFLOW_PATH, CI_WORKFLOW_PATH):
             workflow = workflow_path.read_text(encoding="utf-8")
             self.assertIn("uses: peaceiris/actions-mdbook@v2", workflow, workflow_path.as_posix())
-            self.assertIn("mdbook-version: '0.4.48'", workflow, workflow_path.as_posix())
+            self.assertIn("mdbook-version: 'latest'", workflow, workflow_path.as_posix())
             self.assertNotIn("cargo install mdbook --locked", workflow, workflow_path.as_posix())
-            self.assertIn("cargo install mdbook-katex --locked", workflow, workflow_path.as_posix())
-            self.assertIn("test_mdbook_katex.py", workflow, workflow_path.as_posix())
-            self.assertIn("test_mdbook_katex_config.py", workflow, workflow_path.as_posix())
 
 
 if __name__ == "__main__":

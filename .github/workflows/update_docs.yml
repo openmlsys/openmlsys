@@ -32,10 +32,7 @@ jobs:
       - name: Setup mdBook
         uses: peaceiris/actions-mdbook@v2
         with:
-          mdbook-version: '0.4.48'
-
-      - name: Install mdBook KaTeX
-        run: cargo install mdbook-katex --locked
+          mdbook-version: 'latest'
 
       - name: Run mdBook regression tests
         run: |
@@ -43,8 +40,7 @@ jobs:
           python3 -m unittest discover -s tests -p 'test_prepare_mdbook_zh.py'
           python3 -m unittest discover -s tests -p 'test_assemble_docs_publish_tree.py'
           python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
-          python3 -m unittest discover -s tests -p 'test_mdbook_katex.py'
-          python3 -m unittest discover -s tests -p 'test_mdbook_katex_config.py'
+          python3 -m unittest discover -s tests -p 'test_mdbook_mathjax.py'
 
       - name: Build English HTML with mdBook
         run: bash build_mdbook.sh
