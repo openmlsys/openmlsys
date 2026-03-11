@@ -9,7 +9,3 @@
 - 消息队列介绍：[什么是消息队列](https://aws.amazon.com/message-queue/)
   
 - 特征存储介绍：[什么是机器学习中的特征存储](https://www.featurestore.org/what-is-a-feature-store)
-
-## 参考文献
-
-:bibliography:`../references/recommender.bib`
