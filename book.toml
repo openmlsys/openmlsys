@@ -1,0 +1,19 @@
+[book]
+authors = ["OpenMLSys Contributors"]
+language = "en"
+src = "en_chapters"
+title = "Machine Learning Systems: Design and Implementation"
+
+[build]
+build-dir = ".mdbook/book"
+create-missing = false
+
+[preprocessor.openmlsys]
+command = "python3 tools/mdbook_preprocessor.py"
+
+[preprocessor.typst-math]
+
+[output.html]
+git-repository-url = "https://github.com/openmlsys/openmlsys-zh"
+preferred-dark-theme = "navy"
+additional-css = ["theme/dark-mode-images.css", "theme/typst.css"]

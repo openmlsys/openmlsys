@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-en:
-    name: Build (English)
+  test:
+    name: Tests
     runs-on: ubuntu-22.04
 
     steps:
@@ -17,62 +17,30 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          cache: 'pip'
 
-      - name: Install pandoc
-        run: |
-          wget -q https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb
-          sudo dpkg -i pandoc-2.19.2-1-amd64.deb
-
-      - name: Install d2lbook
-        run: |
-          git clone https://github.com/openmlsys/d2l-book.git
-          cd d2l-book
-          # Fix Python 3.10+ incompatibility: bibtex<2.0.0 depends on oset which
-          # uses collections.MutableSet removed in Python 3.10.
-          sed -i "s/'sphinxcontrib-bibtex<2.0.0'/'sphinxcontrib-bibtex>=2.5.0'/" setup.py
-          python3 -m pip install .
-
-      - name: Install Python dependencies
-        run: python3 -m pip install -r requirements.txt
-
-      - name: Build English HTML
-        run: bash build_html.sh
-
-  build-zh:
-    name: Build (Chinese)
-    runs-on: ubuntu-22.04
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v5
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v2
         with:
-          python-version: '3.10'
-          cache: 'pip'
+          mdbook-version: 'latest'
 
-      - name: Install pandoc
+      - name: Cache mdbook-typst-math binary
+        uses: actions/cache@v4
+        with:
+          path: .mdbook-bin
+          key: mdbook-typst-math-v0.3.0-linux-x86_64
+
+      - name: Run mdBook regression tests
         run: |
-          wget -q https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb
-          sudo dpkg -i pandoc-2.19.2-1-amd64.deb
+          python3 -m unittest discover -s tests -p 'test_prepare_mdbook.py'
+          python3 -m unittest discover -s tests -p 'test_prepare_mdbook_zh.py'
+          python3 -m unittest discover -s tests -p 'test_assemble_docs_publish_tree.py'
+          python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
+          python3 -m unittest discover -s tests -p 'test_mdbook_typst_math.py'
+          python3 -m unittest discover -s tests -p 'test_ensure_mdbook_typst_math.py'
+          python3 -m unittest discover -s tests -p 'test_update_docs_workflow.py'
 
-      - name: Install d2lbook
-        run: |
-          git clone https://github.com/openmlsys/d2l-book.git
-          cd d2l-book
-          sed -i "s/'sphinxcontrib-bibtex<2.0.0'/'sphinxcontrib-bibtex>=2.5.0'/" setup.py
-          python3 -m pip install .
+      - name: Build English HTML with mdBook
+        run: bash build_mdbook.sh
 
-      - name: Install Python dependencies
-        run: python3 -m pip install -r requirements.txt
-
-      - name: Build Chinese HTML
-        run: bash build_html_zh.sh
-
-  build:
-    name: build
-    needs: [build-en, build-zh]
-    runs-on: ubuntu-22.04
-    steps:
-      - run: echo "All builds passed"
+      - name: Build Chinese HTML with mdBook
+        run: bash build_mdbook_zh.sh

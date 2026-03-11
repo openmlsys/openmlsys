@@ -1,0 +1,16 @@
+/* 暗色模式下仅为正文图片添加浅灰色背景，提高透明背景图片的可读性 */
+.navy .content main img,
+.coal .content main img,
+.ayu .content main img {
+    background-color: #e8e8e8;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+/* 首页 frontpage 图片保持透明，不添加正文图像底色。 */
+.navy .openmlsys-frontpage img,
+.coal .openmlsys-frontpage img,
+.ayu .openmlsys-frontpage img {
+    background-color: transparent !important;
+    padding: 0 !important;
+}

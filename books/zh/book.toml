@@ -1,0 +1,19 @@
+[book]
+authors = ["OpenMLSys Contributors"]
+language = "zh-CN"
+src = "../../zh_chapters"
+title = "机器学习系统：设计和实现"
+
+[build]
+build-dir = "../../.mdbook-zh/book"
+create-missing = false
+
+[preprocessor.openmlsys-zh]
+command = "python3 ../../tools/mdbook_zh_preprocessor.py"
+
+[preprocessor.typst-math]
+
+[output.html]
+git-repository-url = "https://github.com/openmlsys/openmlsys-zh"
+preferred-dark-theme = "navy"
+additional-css = ["theme/dark-mode-images.css", "theme/typst.css"]

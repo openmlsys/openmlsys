@@ -16,47 +16,53 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          cache: 'pip'
 
-      - name: Install pandoc
+      - name: Cache mdbook-typst-math binary
+        uses: actions/cache@v4
+        with:
+          path: .mdbook-bin
+          key: mdbook-typst-math-v0.3.0-linux-x86_64
+
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v2
+        with:
+          mdbook-version: 'latest'
+
+      - name: Run mdBook regression tests
         run: |
-          wget -q https://github.com/jgm/pandoc/releases/download/2.19.2/pandoc-2.19.2-1-amd64.deb
-          sudo dpkg -i pandoc-2.19.2-1-amd64.deb
+          python3 -m unittest discover -s tests -p 'test_prepare_mdbook.py'
+          python3 -m unittest discover -s tests -p 'test_prepare_mdbook_zh.py'
+          python3 -m unittest discover -s tests -p 'test_assemble_docs_publish_tree.py'
+          python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
+          python3 -m unittest discover -s tests -p 'test_mdbook_typst_math.py'
+          python3 -m unittest discover -s tests -p 'test_ensure_mdbook_typst_math.py'
 
-      - name: Install d2lbook
-        run: |
-          git clone https://github.com/openmlsys/d2l-book.git
-          cd d2l-book
-          # Fix Python 3.10+ incompatibility: bibtex<2.0.0 depends on oset which
-          # uses collections.MutableSet removed in Python 3.10.
-          sed -i "s/'sphinxcontrib-bibtex<2.0.0'/'sphinxcontrib-bibtex>=2.5.0'/" setup.py
-          python3 -m pip install .
+      - name: Build English HTML with mdBook
+        run: bash build_mdbook.sh
 
-      - name: Install Python dependencies
-        run: python3 -m pip install -r requirements.txt sphinx-mathjax-offline
+      - name: Build Chinese HTML with mdBook
+        run: bash build_mdbook_zh.sh
 
-      - name: Build English HTML
-        run: bash build_html.sh
-
-      - name: Build Chinese HTML
-        run: bash build_html_zh.sh
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy to openmlsys.github.io
         env:
           DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
           git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/openmlsys/openmlsys.github.io.git
 
-          # English → root (default language)
-          cp -r en_chapters/_build/html/* openmlsys.github.io/docs/
-
-          # Chinese → /cn/ subdirectory
-          mkdir -p openmlsys.github.io/docs/cn
-          cp -r zh_chapters/_build/html/* openmlsys.github.io/docs/cn/
+          python3 tools/assemble_docs_publish_tree.py \
+            --destination-root openmlsys.github.io \
+            --docs-subdir docs \
+            --en-source .mdbook/book \
+            --zh-source .mdbook-zh/book
 
           cd openmlsys.github.io
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "deploy: update docs (en+zh) from openmlsys-zh@${{ github.sha }}" || echo "No changes to commit"
-          git push
+          git add docs
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "deploy: update docs from ${GITHUB_REPOSITORY}@${GITHUB_SHA}"
+            git push
+          fi
