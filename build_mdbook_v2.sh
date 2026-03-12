@@ -21,7 +21,7 @@ fi
     --summary-output "${ROOT}/v2/en_chapters/SUMMARY.md" \
     --placeholder-prefix "[TODO: src = zh_chapters/"
 
-mdbook build "${ROOT}/v2"
+cd "${ROOT}/v2" && mdbook build .
 
 # ── Chinese v2 ────────────────────────────────────────────────────────────────
 "${PYTHON_BIN}" "${ROOT}/tools/ensure_book_resources.py" --chapter-dir "${ROOT}/v2/zh_chapters"
@@ -29,4 +29,4 @@ mdbook build "${ROOT}/v2"
     --source "${ROOT}/v2/zh_chapters" \
     --summary-output "${ROOT}/v2/zh_chapters/SUMMARY.md"
 
-mdbook build "${ROOT}/v2/books/zh"
+cd "${ROOT}/v2/books/zh" && mdbook build .
