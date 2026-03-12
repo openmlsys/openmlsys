@@ -760,11 +760,7 @@ def _minify_style_block(match: re.Match[str]) -> str:
 
 
 def render_frontpage_switch(label: str, href: str) -> str:
-    return (
-        '<p class="openmlsys-frontpage-switch-row">'
-        f'<a class="openmlsys-frontpage-switch" href="{href}">{label}</a>'
-        "</p>"
-    )
+    return ""
 
 
 def wrap_frontpage_html(
