@@ -31,8 +31,18 @@ jobs:
           python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
           python3 -m unittest discover -s tests -p 'test_update_docs_workflow.py'
 
-      - name: Build v2 (latest) HTML with mdBook
+      - name: Build v2 (EN + ZH) with mdBook
         run: bash build_mdbook_v2.sh
 
-      - name: Build v1 HTML with mdBook
+      - name: Build v1 (EN + ZH) with mdBook
         run: bash build_mdbook_v1.sh
+
+      - name: Verify build outputs
+        run: |
+          for d in .mdbook-v2/book .mdbook-v2-zh/book .mdbook-v1/book .mdbook-v1-zh/book; do
+            if [ ! -f "$d/index.html" ]; then
+              echo "ERROR: $d/index.html not found"
+              exit 1
+            fi
+            echo "OK: $d/index.html exists"
+          done
