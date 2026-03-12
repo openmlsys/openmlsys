@@ -128,61 +128,7 @@ section_two
 ​```
 ```
 
-### 自定义语法
-
-本项目的预处理器支持以下扩展语法，**请严格遵守**以确保构建正确：
-
-**行内公式**
-
-```markdown
-模型学习映射 $f: \mathcal{X} \rightarrow \mathcal{Y}$。
-```
-
-**行间公式与标签**
-
-```markdown
-$$
-\mathcal{L}_{CE} = -\sum_{i=1}^{N} y_i \log(\hat{y}_i)
-$$
-:eqlabel:`eq-cross-entropy-zh`
-```
-
-引用公式：`:eqref:\`eq-cross-entropy-zh\``
-
-**图片与标签**
-
-```markdown
-![图片描述](../img/ch01/figure.png)
-:width:`600px`
-:label:`figure-label-zh`
-```
-
-引用图片：`:numref:\`figure-label-zh\``
-
-**文献引用**
-
-```markdown
-感知机 :cite:`rosenblatt1958perceptron` 是最早期的神经网络模型之一。
-```
-
-参考文献条目统一维护在 `mlsys.bib` 中。
-
-**代码块**
-
-使用标准 Markdown 围栏代码块，标注语言类型：
-
-````markdown
-```python
-import torch
-```
-````
-
-### 图片规范
-
-- 图片存放于 `img/ch<章节编号>/` 目录下，如 `img/ch01/`
-- 文件名使用英文小写加连字符，如 `framework-architecture.png`
-- 推荐格式：PNG、SVG
-- 分辨率建议：≥ 150 dpi，宽度不超过 1200px
+详细的自定义语法（公式、图片标签、文献引用、代码块等）及图片规范，请参阅 **[写作样式规范](style_zh.md)**。
 
 
 ---

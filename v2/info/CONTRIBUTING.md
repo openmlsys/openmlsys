@@ -128,61 +128,7 @@ section_two
 ​```
 ```
 
-### Custom Syntax
-
-The project preprocessor supports the following extended syntax. **Please follow it strictly** to ensure a correct build:
-
-**Inline Math**
-
-```markdown
-The model learns the mapping $f: \mathcal{X} \rightarrow \mathcal{Y}$.
-```
-
-**Display Math with Label**
-
-```markdown
-$$
-\mathcal{L}_{CE} = -\sum_{i=1}^{N} y_i \log(\hat{y}_i)
-$$
-:eqlabel:`eq-cross-entropy-en`
-```
-
-Reference an equation: `:eqref:\`eq-cross-entropy-en\``
-
-**Figures with Labels**
-
-```markdown
-![Figure description](../img/ch01/figure.png)
-:width:`600px`
-:label:`figure-label-en`
-```
-
-Reference a figure: `:numref:\`figure-label-en\``
-
-**Citations**
-
-```markdown
-The perceptron :cite:`rosenblatt1958perceptron` is one of the earliest neural network models.
-```
-
-All bibliography entries are maintained in `mlsys.bib`.
-
-**Code Blocks**
-
-Use standard Markdown fenced code blocks with a language tag:
-
-````markdown
-```python
-import torch
-```
-````
-
-### Figure Guidelines
-
-- Store figures under `img/ch<chapter-number>/`, e.g., `img/ch01/`
-- Use lowercase English filenames with hyphens, e.g., `framework-architecture.png`
-- Recommended formats: PNG, SVG
-- Recommended resolution: ≥ 150 dpi, width no greater than 1200 px
+For detailed custom syntax (math, figure labels, citations, code blocks) and figure guidelines, refer to the **[Writing Style Guide](style.md)**.
 
 ---
 
