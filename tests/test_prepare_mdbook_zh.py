@@ -225,14 +225,7 @@ missing
             self.assertIn("static/image/logo.png", rewritten)
             self.assertIn("static/image/jinxuefeng.png", rewritten)
             self.assertIn("console.log('frontpage')", rewritten)
-            self.assertIn('class="openmlsys-frontpage-switch-row"', rewritten)
-            self.assertIn('class="openmlsys-frontpage-switch"', rewritten)
-            self.assertIn('href="../"', rewritten)
-            self.assertIn(">English</a>", rewritten)
-            self.assertLess(
-                rewritten.index('class="star-slot"'),
-                rewritten.index('class="openmlsys-frontpage-switch-row"'),
-            )
+            self.assertNotIn('class="openmlsys-frontpage-switch-row"', rewritten)
 
 
     def test_process_equation_labels_single_line(self) -> None:

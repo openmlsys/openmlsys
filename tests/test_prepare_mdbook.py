@@ -153,14 +153,8 @@ Reference :cite:`smith2024`.
                 frontpage_switch_href="cn/",
             )
 
-            self.assertIn('class="openmlsys-frontpage-switch-row"', rewritten)
-            self.assertIn('class="openmlsys-frontpage-switch"', rewritten)
-            self.assertIn('href="cn/"', rewritten)
-            self.assertIn(">中文</a>", rewritten)
-            self.assertLess(
-                rewritten.index('class="star-slot"'),
-                rewritten.index('class="openmlsys-frontpage-switch-row"'),
-            )
+            self.assertIn('class="openmlsys-frontpage"', rewritten)
+            self.assertNotIn('class="openmlsys-frontpage-switch-row"', rewritten)
 
     def test_rewrite_markdown_prefers_book_local_frontpage_file(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -225,7 +219,7 @@ Reference :cite:`smith2024`.
             self.assertNotIn('openmlsys-frontpage-switch', rewritten)
 
     def test_english_frontpage_author_grid_uses_top_aligned_spacing(self) -> None:
-        frontpage = (REPO_ROOT / "en_chapters" / "frontpage.html").read_text(encoding="utf-8")
+        frontpage = (REPO_ROOT / "v1" / "en_chapters" / "frontpage.html").read_text(encoding="utf-8")
 
         self.assertIn(".authors.mdl-grid {", frontpage)
         self.assertIn("align-items: flex-start;", frontpage)
@@ -234,7 +228,7 @@ Reference :cite:`smith2024`.
         self.assertIn("object-fit: cover;", frontpage)
 
     def test_english_frontpage_footer_titles_are_stacked_not_flex_columns(self) -> None:
-        frontpage = (REPO_ROOT / "en_chapters" / "frontpage.html").read_text(encoding="utf-8")
+        frontpage = (REPO_ROOT / "v1" / "en_chapters" / "frontpage.html").read_text(encoding="utf-8")
 
         self.assertIn(".authors .mdl-cell:not(.author-group-title) {", frontpage)
         self.assertIn(".author-group-title {", frontpage)

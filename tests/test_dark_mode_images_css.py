@@ -10,8 +10,10 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 class DarkModeImagesCssTests(unittest.TestCase):
     def test_both_theme_css_files_style_dark_mode_body_images_only(self) -> None:
         css_paths = [
-            REPO_ROOT / "theme" / "dark-mode-images.css",
-            REPO_ROOT / "books" / "zh" / "theme" / "dark-mode-images.css",
+            REPO_ROOT / "v1" / "theme" / "dark-mode-images.css",
+            REPO_ROOT / "v1" / "books" / "zh" / "theme" / "dark-mode-images.css",
+            REPO_ROOT / "v2" / "theme" / "dark-mode-images.css",
+            REPO_ROOT / "v2" / "books" / "zh" / "theme" / "dark-mode-images.css",
         ]
 
         for css_path in css_paths:

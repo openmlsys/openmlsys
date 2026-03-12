@@ -14,16 +14,17 @@ class EnsureBookResourcesTests(unittest.TestCase):
             chapter_dir = root / "en_chapters"
             chapter_dir.mkdir()
 
+            v1 = root / "v1"
             for directory in ("img", "references", "static"):
-                (root / directory).mkdir()
-            (root / "mlsys.bib").write_text("bib", encoding="utf-8")
+                (v1 / directory).mkdir(parents=True)
+            (v1 / "mlsys.bib").write_text("bib", encoding="utf-8")
 
             ensure_resource_views(chapter_dir, root)
 
             for name in ("img", "references", "static", "mlsys.bib"):
                 path = chapter_dir / name
                 self.assertTrue(path.is_symlink(), f"{name} should be a symlink")
-                self.assertEqual(path.resolve(), (root / name).resolve())
+                self.assertEqual(path.resolve(), (v1 / name).resolve())
 
     def test_ensure_resource_views_keeps_existing_non_symlink_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -31,9 +32,10 @@ class EnsureBookResourcesTests(unittest.TestCase):
             chapter_dir = root / "en_chapters"
             chapter_dir.mkdir()
 
+            v1 = root / "v1"
             for directory in ("img", "references", "static"):
-                (root / directory).mkdir()
-            (root / "mlsys.bib").write_text("root bib", encoding="utf-8")
+                (v1 / directory).mkdir(parents=True)
+            (v1 / "mlsys.bib").write_text("root bib", encoding="utf-8")
 
             local_bib = chapter_dir / "mlsys.bib"
             local_bib.write_text("local bib", encoding="utf-8")
