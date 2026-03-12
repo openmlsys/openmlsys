@@ -112,7 +112,7 @@ sh build_mdbook_v2.sh
 ## 社区
 
 <p align="center">
-  <img src="v2/info/mlsys_group.png" alt="微信群二维码" width="200"/>
+  <img src="info/mlsys_group.png" alt="微信群二维码" width="200"/>
   <br/>
   扫码加入微信交流群
 </p>
