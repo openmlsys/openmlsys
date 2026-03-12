@@ -115,7 +115,7 @@ sh build_mdbook.sh
 # Output is in .mdbook/book
 ```
 
-For more details, see the [Build Guide](info/info.md).
+For more details, see the [Build Guide](v2/info/info.md).
 
 ## Contributing
 

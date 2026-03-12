@@ -109,11 +109,11 @@ cargo install mdbook
 ### 编译HTML
 
 ```bash
-sh build_mdbook_zh.sh
-# 生成结果位于 .mdbook-zh/book
+sh build_mdbook_v2.sh
+# 生成结果位于 .mdbook-v2-zh/book
 ```
 
-更多细节请参考 [构建指南](info/info.md)。
+更多细节请参考 [构建指南](v2/info/info.md)。
 
 ## 贡献指南
 

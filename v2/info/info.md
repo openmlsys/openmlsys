@@ -14,12 +14,11 @@ cargo install mdbook
 ```
 使用mdbook工具编译HTML。 请尽量使用build_mdbook.sh脚本进行编译，保证首页正确合并到书籍中去。
 ```bash
-sh build_mdbook.sh
-# 中文版本
-sh build_mdbook_zh.sh
+sh build_mdbook_v1.sh
+sh build_mdbook_v2.sh
 ```
 
-生成的html会在`.mdbook/book`或者`.mdbook-zh/book`下。此时我们可以使用`tools/assemble_docs_publish_tree.py`组装最终的双语发布版本，然后将其拷贝至openmlsys.github.io的docs发布。
+生成的html会在`.mdbook-v2/book`或者`.mdbook-v2-zh/book`下。此时我们可以使用`tools/assemble_docs_publish_tree.py`组装最终的双语发布版本，然后将其拷贝至openmlsys.github.io的docs发布。
 
 具体工作流可以参考`.github/workflows/update_docs.yml`
 
