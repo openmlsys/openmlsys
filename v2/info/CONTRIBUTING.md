@@ -115,19 +115,6 @@ After modifying source files under `zh_chapters/` or `en_chapters/`, the browser
 
 ### Directory and File Organization
 
-- Each chapter corresponds to a `v2/<zh/en>_chapters/chapter_<name>/` directory
-- The chapter entry file is `index.md`; section content goes in separate `.md` files in the same directory
-- Declare the section structure for each chapter in `index.md` using a `toc` block (SUMMARY is generated automatically)
-
-```markdown
-​```toc
-:maxdepth: 2
-
-section_one
-section_two
-​```
-```
-
 For detailed custom syntax (math, figure labels, citations, code blocks) and figure guidelines, refer to the **[Writing Style Guide](style.md)**.
 
 ---

@@ -113,20 +113,6 @@ cd v2/ && mdbook serve --open
 
 ## 写作规范
 
-### 目录与文件组织
-
-- 每章对应 `v2/<zh/en>_chapters/chapter_<名称>/` 目录
-- 章节入口为 `index.md`，各节内容放在同目录下的独立 `.md` 文件中
-- 在 `index.md` 中使用 `toc` 块声明本章的节结构（自动生成 SUMMARY）
-
-```markdown
-​```toc
-:maxdepth: 2
-
-section_one
-section_two
-​```
-```
 
 详细的自定义语法（公式、图片标签、文献引用、代码块等）及图片规范，请参阅 **[写作样式规范](style_zh.md)**。
 
