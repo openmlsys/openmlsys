@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="static/logo-with-text.png" alt="OpenMLSys Logo" width="400"/>
+  <img src="info/logo-with-text.png" alt="OpenMLSys Logo" width="400"/>
 </p>
 
 <p align="center">
@@ -46,35 +46,19 @@
 
 ## 内容介绍
 
-本书分为基础篇、进阶篇和扩展篇三个部分：
-
-### 基础篇
+本书（第二版）共分9章：
 
 | 章节 | 内容 |
 |------|------|
-| [编程接口](chapter_programming_interface/) | 框架接口设计哲学、机器学习工作流、深度学习模型定义、C/C++ 框架开发 |
-| [计算图](chapter_computational_graph/) | 计算图基本构成、生成方法、调度策略、自动微分 |
-
-### 进阶篇
-
-| 章节 | 内容 |
-|------|------|
-| [编译器前端和中间表示](chapter_frontend_and_ir/) | 类型推导、中间表示（IR）、自动微分、常见优化 Pass |
-| [编译器后端和运行时](chapter_backend_and_runtime/) | 计算图优化、算子选择、内存分配、计算调度与执行 |
-| [硬件加速器](chapter_accelerator/) | GPU/Ascend 架构原理、高性能编程接口（CUDA/CANN） |
-| [数据处理框架](chapter_data_processing/) | 易用性、高效性、保序性、分布式数据处理 |
-| [模型部署](chapter_model_deployment/) | 模型转换、模型压缩、模型推理、安全保护 |
-| [分布式训练](chapter_distributed_training/) | 数据并行、模型并行、流水线并行、集合通讯、参数服务器 |
-
-### 扩展篇
-
-| 章节 | 内容 |
-|------|------|
-| [深度学习推荐系统](chapter_recommender_system/) | 推荐系统原理、大规模工业场景架构设计 |
-| [联邦学习系统](chapter_federated_learning/) | 联邦学习方法、隐私保护、系统实现 |
-| [强化学习系统](chapter_reinforcement_learning/) | 单智能体/多智能体强化学习系统 |
-| [可解释性 AI 系统](chapter_explainable_AI/) | 可解释 AI 方法与落地实践 |
-| [机器人学习系统](chapter_rl_sys/) | 机器人感知、规划、控制与系统安全 |
+| [第1章 导论](v2/zh_chapters/01_chapter_introduction/) | 机器学习系统架构和技术栈概述 |
+| [第2章 编程接口与计算图](v2/zh_chapters/02_chapter_programming_and_graph/) | 张量抽象、自动微分、图表示与执行 |
+| [第3章 AI加速器与编程](v2/zh_chapters/03_chapter_accelerator/) | GPU 架构与 CUDA/Triton/CUTLASS 编程模型 |
+| [第4章 AI编译器与运行时系统](v2/zh_chapters/04_chapter_compiler_and_runtime/) | IR 设计、图优化、算子生成与运行时执行 |
+| [第5章 数据处理系统](v2/zh_chapters/05_chapter_data_processing/) | 数据加载、数据管道和分布式数据处理 |
+| [第6章 训练系统](v2/zh_chapters/06_chapter_training_systems/) | 单节点与分布式训练、并行策略与训练优化 |
+| [第7章 模型服务](v2/zh_chapters/07_chapter_model_serving/) | 推理优化、在线服务与模型管理 |
+| [第8章 强化学习系统](v2/zh_chapters/08_chapter_rl_systems/) | 强化学习管道、环境交互与 RL 系统设计 |
+| [第9章 大规模GPU集群管理](v2/zh_chapters/09_chapter_gpu_cluster/) | GPU 调度、资源管理与大规模训练基础设施 |
 
 ## 更新日志
 
@@ -91,6 +75,7 @@
 
 - curl
 - git
+- Python 3
 
 ### 安装步骤
 
@@ -110,7 +95,8 @@ cargo install mdbook
 
 ```bash
 sh build_mdbook_v2.sh
-# 生成结果位于 .mdbook-v2-zh/book
+# 英文版生成结果位于 .mdbook-v2/book
+# 中文版生成结果位于 .mdbook-v2-zh/book
 ```
 
 更多细节请参考 [构建指南](v2/info/info.md)。
@@ -126,7 +112,7 @@ sh build_mdbook_v2.sh
 ## 社区
 
 <p align="center">
-  <img src="info/mlsys_group.png" alt="微信群二维码" width="200"/>
+  <img src="v2/info/mlsys_group.png" alt="微信群二维码" width="200"/>
   <br/>
   扫码加入微信交流群
 </p>
