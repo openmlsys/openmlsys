@@ -10,12 +10,14 @@
 openmlsys/
 ├── v2/                        # 第二版（当前活跃版本，接受贡献）
 │   ├── zh_chapters/           # 中文章节源文件
-│   │   ├── chapter_xxx/       # 各章目录，包含 index.md 及各节 .md 文件
+│   │   ├── 00_chapter_preface/    # 各章目录（数字前缀 + 名称）
+│   │   ├── 01_chapter_introduction/
+│   │   ├── ...
 │   │   ├── index.md           # 全书首页
 │   │   └── SUMMARY.md         # 由脚本自动生成，勿手动编辑
 │   ├── en_chapters/           # 英文章节源文件（结构与中文章节一致）
 │   ├── books/zh/              # 中文 mdBook 配置（供构建使用）
-│   ├── docs/                  # 文档（本文件所在位置）
+│   ├── info/                  # 文档（本文件所在位置）
 │   └── book.toml              # 英文版 mdBook 配置
 ├── v1/                        # 第一版（已归档）
 ├── img/                       # 全书共享图片资源
@@ -39,7 +41,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # 2. 安装 mdBook
 cargo install mdbook
 
-# 3. 克隆仓库
+# 3. 克隆仓库（需预先安装 Python 3）
 git clone https://github.com/openmlsys/openmlsys.git
 cd openmlsys
 ```
@@ -54,7 +56,7 @@ cd openmlsys
 bash build_mdbook_v2.sh
 ```
 
-构建产物输出至 `.mdbook-v2/book/cn/`（中文）和 `.mdbook-v2/book/`（英文）。
+构建产物输出至 `.mdbook-v2-zh/book`（中文）和 `.mdbook-v2/book`（英文）。
 
 ### 实时预览
 

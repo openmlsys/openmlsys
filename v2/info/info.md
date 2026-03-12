@@ -12,7 +12,7 @@ cargo install mdbook
  git clone https://github.com/openmlsys/openmlsys-zh.git
  cd openmlsys-zh
 ```
-使用mdbook工具编译HTML。 请尽量使用build_mdbook.sh脚本进行编译，保证首页正确合并到书籍中去。
+使用mdbook工具编译HTML。 请尽量使用build_mdbook_v2.sh脚本进行编译，保证首页正确合并到书籍中去。
 ```bash
 sh build_mdbook_v1.sh
 sh build_mdbook_v2.sh

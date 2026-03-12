@@ -19,7 +19,7 @@ This document defines the formatting and style requirements for v2 chapter conte
 
 ## File Structure
 
-- Each chapter corresponds to a `v2/en_chapters/chapter_<name>/` directory
+- Each chapter corresponds to a `v2/en_chapters/<nn>_chapter_<name>/` directory (e.g., `02_chapter_programming_and_graph/`)
 - The chapter entry file is `index.md`; section content goes in separate `.md` files in the same directory
 - Declare the section structure in `index.md` using a `toc` block (used to auto-generate `SUMMARY.md`):
 

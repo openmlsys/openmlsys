@@ -19,7 +19,7 @@
 
 ## 文件结构
 
-- 每章对应 `v2/zh_chapters/chapter_<名称>/` 目录
+- 每章对应 `v2/zh_chapters/<nn>_chapter_<名称>/` 目录（如 `02_chapter_programming_and_graph/`）
 - 章节入口为 `index.md`，各节内容放在同目录下的独立 `.md` 文件中
 - 在 `index.md` 中使用 `toc` 块声明本章的节结构（脚本据此自动生成 `SUMMARY.md`）：
 
