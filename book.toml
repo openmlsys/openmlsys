@@ -15,4 +15,5 @@ command = "python3 tools/mdbook_preprocessor.py"
 mathjax-support = true
 git-repository-url = "https://github.com/openmlsys/openmlsys-zh"
 preferred-dark-theme = "navy"
-additional-css = ["theme/dark-mode-images.css"]
+additional-css = ["theme/dark-mode-images.css", "theme/version-selector.css"]
+additional-js = ["theme/version-selector.js"]

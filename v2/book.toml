@@ -1,0 +1,19 @@
+[book]
+authors = ["OpenMLSys Contributors"]
+language = "en"
+src = "en_chapters"
+title = "Machine Learning Systems: Design and Implementation (2nd Edition)"
+
+[build]
+build-dir = "../.mdbook-v2/book"
+create-missing = false
+
+[preprocessor.openmlsys]
+command = "python3 tools/mdbook_preprocessor.py"
+
+[output.html]
+mathjax-support = true
+git-repository-url = "https://github.com/openmlsys/openmlsys-zh"
+preferred-dark-theme = "navy"
+additional-css = ["theme/dark-mode-images.css", "theme/version-selector.css"]
+additional-js = ["theme/version-selector.js"]

@@ -31,8 +31,8 @@ jobs:
           python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
           python3 -m unittest discover -s tests -p 'test_update_docs_workflow.py'
 
-      - name: Build English HTML with mdBook
-        run: bash build_mdbook.sh
+      - name: Build v2 (latest) HTML with mdBook
+        run: bash build_mdbook_v2.sh
 
-      - name: Build Chinese HTML with mdBook
-        run: bash build_mdbook_zh.sh
+      - name: Build v1 HTML with mdBook
+        run: bash build_mdbook_v1.sh

@@ -43,7 +43,7 @@ def main() -> int:
             for key, fields in parse_bib(extra_bib).items():
                 bib_db.setdefault(key, fields)
 
-    chapters = iter_chapters(book.get("items", []))
+    chapters = iter_chapters(book.get("sections") or book.get("items") or [])
 
     # Pass 1: collect all :label: directives and figure labels
     ref_label_map: dict[str, str] = {}

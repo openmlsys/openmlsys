@@ -29,11 +29,11 @@ jobs:
           python3 -m unittest discover -s tests -p 'test_assemble_docs_publish_tree.py'
           python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
 
-      - name: Build English HTML with mdBook
-        run: bash build_mdbook.sh
+      - name: Build v2 (latest) English HTML with mdBook
+        run: bash build_mdbook_v2.sh
 
-      - name: Build Chinese HTML with mdBook
-        run: bash build_mdbook_zh.sh
+      - name: Build v1 English and Chinese HTML with mdBook
+        run: bash build_mdbook_v1.sh
 
       - name: Deploy to openmlsys.github.io
         env:
@@ -44,8 +44,10 @@ jobs:
           python3 tools/assemble_docs_publish_tree.py \
             --destination-root openmlsys.github.io \
             --docs-subdir docs \
-            --en-source .mdbook/book \
-            --zh-source .mdbook-zh/book
+            --v2-en-source .mdbook-v2/book \
+            --v2-zh-source .mdbook-v2-zh/book \
+            --v1-en-source .mdbook-v1/book \
+            --v1-zh-source .mdbook-v1-zh/book
 
           cd openmlsys.github.io
           git config user.name "github-actions[bot]"

@@ -1,0 +1,48 @@
+/* Version and Language selectors — inline in .right-buttons */
+.openmlsys-nav-selectors {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+/* Shared style for all selector links/buttons */
+.openmlsys-selector-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  color: var(--icons, #747474);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.1s, background 0.1s;
+}
+
+.openmlsys-selector-link:hover {
+  color: var(--icons-hover, #333);
+  background: var(--theme-hover, rgba(0, 0, 0, 0.05));
+}
+
+/* Active/current indicator */
+.openmlsys-selector-link.active {
+  color: var(--links, #4183c4);
+  border-color: var(--links, #4183c4);
+  font-weight: 700;
+}
+
+/* Separator between version and language groups */
+.openmlsys-selector-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--icons, #747474);
+  opacity: 0.3;
+  margin: 0 2px;
+}
