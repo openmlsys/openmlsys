@@ -1,34 +1,6 @@
 # 贡献指南
 
-> 首先，感谢所有参与到本教材写作的贡献者们，你们的贡献让本教材可以持续蓬勃地发展。
-
 > **注意：** 本项目的 v1 版本已归档（位于 `v1/` 目录），不再接受新的贡献。请将所有内容贡献提交至 v2（`v2/` 目录）。
-
----
-
-## 目录
-
-- [贡献类型](#贡献类型)
-- [仓库结构说明](#仓库结构说明)
-- [环境准备](#环境准备)
-- [本地构建](#本地构建)
-- [写作规范](#写作规范)
-- [提交流程](#提交流程)
-- [常见问题](#常见问题)
-
----
-
-## 贡献类型
-
-欢迎以下几类贡献：
-
-- **内容修订**：修正已有章节的笔误、表述错误或过时内容
-- **新章节撰写**：认领并撰写 v2 中尚未完成的章节
-- **译文同步**：将中文内容同步翻译为英文（或反向），保持 `zh_chapters/` 与 `en_chapters/` 一致
-- **图片与代码**：补充示意图、代码示例、实验结果
-- **工具与构建**：改进 `tools/` 下的预处理脚本或构建流程
-
-> **建议：** 对于**新增内容**（如新章节、新小节）或**结构调整**（如章节重组、目录变更），建议在动手之前先[提交一个 Issue](https://github.com/openmlsys/openmlsys-zh/issues/new/choose) 与维护者讨论，确认方向和范围后再开始工作，避免无效劳动。
 
 ---
 
@@ -60,28 +32,16 @@ openmlsys/
 
 ## 环境准备
 
-本项目使用 [mdBook](https://rust-lang.github.io/mdBook/index.html) 驱动，构建前请确保安装以下依赖：
-
-| 工具 | 用途 | 最低版本 |
-|------|------|----------|
-| git | 版本管理 | - |
-| Python 3 | 运行预处理脚本 | 3.8+ |
-| Rust 工具链 | 提供 `cargo` 以安装 mdBook | stable |
-| mdBook | 构建 HTML 电子书 | 0.5.x |
-
-### 安装步骤
-
 ```bash
 # 1. 安装 Rust 工具链
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source "$HOME/.cargo/env"
 
 # 2. 安装 mdBook
 cargo install mdbook
 
 # 3. 克隆仓库
-git clone https://github.com/openmlsys/openmlsys-zh.git
-cd openmlsys-zh
+git clone https://github.com/openmlsys/openmlsys.git
+cd openmlsys
 ```
 
 ---
@@ -113,17 +73,11 @@ cd v2/ && mdbook serve --open
 
 ## 写作规范
 
-
 详细的自定义语法（公式、图片标签、文献引用、代码块等）及图片规范，请参阅 **[写作样式规范](style_zh.md)**。
-
 
 ---
 
 ## 提交流程
-
-> **提示：** 若你计划新增内容或调整文档结构，请先完成第 0 步——提 Issue 讨论，获得确认后再进行后续步骤。
-
-0. **（新增内容 / 结构调整时必做）提 Issue 讨论**：在 [GitHub Issues](https://github.com/openmlsys/openmlsys-zh/issues/new/choose) 中简要描述你的计划（涉及章节、改动原因、预期效果），待维护者确认可行后再开始动手，以确保工作方向与项目规划一致。
 
 1. **Fork** 本仓库并创建功能分支：
    ```bash
@@ -136,32 +90,20 @@ cd v2/ && mdbook serve --open
    ```bash
    git commit -m "feat(zh): 新增第X章第Y节内容"
    git commit -m "feat(en): Add content for chapter X section Y"
+   git commit -m "ci: update main.yml"
    ```
    常用前缀：`feat`（新内容）、`fix`（修正错误）、`refactor`（重组结构）、`style`（格式调整）、`ci`（构建流程更新）
 
-4. **发起 Pull Request**：目标分支为 `main`，请使用我们提供的 PR 模板：
+4. **发起 Pull Request**：目标分支为 `main`，请使用 PR 模板：
 
-   - [中文 PR 模板](https://github.com/openmlsys/openmlsys-zh/compare/main...your-branch?template=zh.md)（将 `your-branch` 替换为你的分支名）
-   - [英文 PR 模板](https://github.com/openmlsys/openmlsys-zh/compare/main...your-branch?template=en.md)
+   - [中文 PR 模板](.github/PULL_REQUEST_TEMPLATE/zh.md)
+   - [英文 PR 模板](.github/PULL_REQUEST_TEMPLATE/en.md)
 
-   模板中包含变更说明、涉及章节、关联 Issue 及提交前检查清单，请如实填写。
-
-   > **提示：** 如果你发现了笔误或内容问题但暂时没有时间修改，欢迎直接[提交 Issue](https://github.com/openmlsys/openmlsys-zh/issues/new/choose) 告知我们，这同样是宝贵的贡献！
-
-5. **代码审查**：维护者将对内容的准确性、格式规范性进行审查，请耐心等待并响应反馈
-   - 提交后请关注PR中github action状态，只有自动检查通过的PR才会被正式合并到本仓库内
+5. **代码审查**：PR要求至少有一位非本人Contributor进行检查，且github action将会自动验证新增内容是否可以编译通过
 
 ---
 
 ## 常见问题
-
-**Q：我可以为 v1 提交修改吗？**
-
-不可以。v1 已归档，仅保留历史记录，不再接受任何形式的贡献。请将所有贡献提交至 `v2/zh_chapters/`。
-
-**Q：`SUMMARY.md` 构建后被覆盖了怎么办？**
-
-这是正常行为。`SUMMARY.md` 由脚本自动生成，不应手动编辑。若需调整章节顺序或结构，请修改对应章节 `index.md` 中的 `toc` 块。
 
 **Q：如何添加新章节？**
 
@@ -177,7 +119,3 @@ cd v2/ && mdbook serve --open
 **Q：构建时提示找不到图片怎么处理？**
 
 检查图片路径是否以 `../img/` 开头（相对于章节目录），以及图片文件是否已提交至 `img/` 目录。
-
----
-
-*如有其他问题，欢迎在 [GitHub Issues](https://github.com/openmlsys/openmlsys-zh/issues) 中提出。*

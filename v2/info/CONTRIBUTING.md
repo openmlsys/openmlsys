@@ -1,34 +1,6 @@
 # Contributing Guide
 
-> First of all, thank you to all contributors who have participated in writing this textbook — your efforts keep it growing and thriving.
-
 > **Note:** The v1 version of this project has been archived (located in the `v1/` directory) and no longer accepts new contributions. Please submit all content contributions to v2 (the `v2/` directory).
-
----
-
-## Table of Contents
-
-- [Types of Contributions](#types-of-contributions)
-- [Repository Structure](#repository-structure)
-- [Environment Setup](#environment-setup)
-- [Local Build](#local-build)
-- [Writing Guidelines](#writing-guidelines)
-- [Submission Workflow](#submission-workflow)
-- [FAQ](#faq)
-
----
-
-## Types of Contributions
-
-The following types of contributions are welcome:
-
-- **Content Revisions**: Fix typos, incorrect descriptions, or outdated content in existing chapters
-- **New Chapter Writing**: Claim and write chapters in v2 that have not yet been completed
-- **Translation Sync**: Translate Chinese content to English (or vice versa), keeping `zh_chapters/` and `en_chapters/` consistent
-- **Figures and Code**: Add diagrams, code examples, and experiment results
-- **Tooling and Build**: Improve preprocessing scripts or the build pipeline under `tools/`
-
-> **Recommendation:** For **new content** (e.g., new chapters or sections) or **structural changes** (e.g., chapter reorganization, table of contents modifications), it is strongly recommended to [open an Issue](https://github.com/openmlsys/openmlsys-zh/issues/new/choose) to discuss with maintainers first. Confirm the direction and scope before starting work to avoid wasted effort.
 
 ---
 
@@ -60,28 +32,16 @@ openmlsys/
 
 ## Environment Setup
 
-This project is powered by [mdBook](https://rust-lang.github.io/mdBook/index.html). Please ensure the following dependencies are installed before building:
-
-| Tool | Purpose | Minimum Version |
-|------|---------|-----------------|
-| git | Version control | - |
-| Python 3 | Run preprocessing scripts | 3.8+ |
-| Rust toolchain | Provides `cargo` to install mdBook | stable |
-| mdBook | Build HTML e-book | 0.5.x |
-
-### Installation Steps
-
 ```bash
 # 1. Install Rust toolchain
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source "$HOME/.cargo/env"
 
 # 2. Install mdBook
 cargo install mdbook
 
 # 3. Clone the repository
-git clone https://github.com/openmlsys/openmlsys-zh.git
-cd openmlsys-zh
+git clone https://github.com/openmlsys/openmlsys.git
+cd openmlsys
 ```
 
 ---
@@ -113,17 +73,11 @@ After modifying source files under `zh_chapters/` or `en_chapters/`, the browser
 
 ## Writing Guidelines
 
-### Directory and File Organization
-
 For detailed custom syntax (math, figure labels, citations, code blocks) and figure guidelines, refer to the **[Writing Style Guide](style.md)**.
 
 ---
 
 ## Submission Workflow
-
-> **Reminder:** If you plan to add new content or restructure the documentation, please complete Step 0 first — open an Issue for discussion and proceed only after receiving confirmation.
-
-0. **(Required for new content / structural changes) Open an Issue for discussion**: In [GitHub Issues](https://github.com/openmlsys/openmlsys-zh/issues/new/choose), briefly describe your plan (chapters involved, motivation, expected outcome). Wait for maintainer confirmation before starting work to ensure your contribution aligns with the project roadmap.
 
 1. **Fork** this repository and create a feature branch:
    ```bash
@@ -136,36 +90,24 @@ For detailed custom syntax (math, figure labels, citations, code blocks) and fig
    ```bash
    git commit -m "feat(zh): 新增第X章第Y节内容"
    git commit -m "feat(en): Add content for chapter X section Y"
+   git commit -m "ci: update main.yml"
    ```
    Common prefixes: `feat` (new content), `fix` (corrections), `refactor` (restructuring), `style` (formatting), `ci` (build pipeline updates)
 
-4. **Open a Pull Request** targeting the `main` branch. Please use our provided PR templates:
+4. **Open a Pull Request** targeting the `main` branch. Please use the provided PR templates:
 
-   - [Chinese PR template](https://github.com/openmlsys/openmlsys-zh/compare/main...your-branch?template=zh.md) (replace `your-branch` with your branch name)
-   - [English PR template](https://github.com/openmlsys/openmlsys-zh/compare/main...your-branch?template=en.md)
+   - [Chinese PR template](.github/PULL_REQUEST_TEMPLATE/zh.md)
+   - [English PR template](.github/PULL_REQUEST_TEMPLATE/en.md)
 
-   The template includes fields for change description, affected chapters, linked Issues, and a pre-submission checklist — please fill them in accurately.
-
-   > **Tip:** If you spot a typo or content issue but don't have time to fix it right now, feel free to [open an Issue](https://github.com/openmlsys/openmlsys-zh/issues/new/choose) to let us know — that is a valuable contribution too!
-
-5. **Code review**: Maintainers will review the accuracy and formatting of your content. Please be patient and respond to feedback.
-   - After submitting, monitor the GitHub Actions status in your PR. Only PRs that pass automated checks will be merged.
+5. **Code review**: At least one contributor other than the author is required to review the PR. GitHub Actions will automatically verify that the new content builds successfully.
 
 ---
 
 ## FAQ
 
-**Q: Can I submit changes to v1?**
-
-No. v1 is archived and preserved for historical reference only. No contributions of any kind are accepted. Please submit all contributions to `v2/zh_chapters/` or `v2/en_chapters/`.
-
-**Q: `SUMMARY.md` gets overwritten after every build — is that normal?**
-
-Yes, that is expected behavior. `SUMMARY.md` is auto-generated by the script and should not be edited manually. To change chapter order or structure, modify the `toc` block in the corresponding chapter's `index.md`.
-
 **Q: How do I add a new chapter?**
 
-- Create a `chapter_<name>/` directory under `v2/zh_chapters/` (and `v2/en_chapters/` if adding English content)
+- Create a `chapter_<name>/` directory under `v2/zh_chapters/`
 - Create `index.md` and list the sections inside a `toc` block
 - Register the new chapter in the `toc` block of `v2/zh_chapters/index.md`
 - Ensure the local build passes before submitting a PR
@@ -177,7 +119,3 @@ Add a BibTeX entry to `mlsys.bib`, then cite it in the body text using `:cite:\`
 **Q: The build says it cannot find an image — what should I do?**
 
 Check that the image path starts with `../img/` (relative to the chapter directory) and that the image file has been committed to the `img/` directory.
-
----
-
-*For any other questions, feel free to open an issue in [GitHub Issues](https://github.com/openmlsys/openmlsys-zh/issues).*
