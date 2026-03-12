@@ -1,0 +1,62 @@
+name: Content Error Report (English)
+description: Report a typo, factual error, formula error, or build issue in the book
+title: "[Bug] "
+labels: ["bug", "v2"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report an issue! Please fill in all fields below to help us locate and fix it quickly.
+
+        > **Note:** v1 is archived. Only v2-related issues are accepted.
+
+  - type: dropdown
+    id: error-type
+    attributes:
+      label: Error Type
+      options:
+        - Typo / Wording error
+        - Formula error
+        - Missing or incorrect figure
+        - Code error
+        - Reference error
+        - Build / Rendering issue
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: Specify the chapter and file path, e.g. `v2/en_chapters/chapter_introduction/index.md`
+      placeholder: v2/en_chapters/chapter_xxx/yyy.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the error. Quote the original text if possible.
+      placeholder: |
+        Original: ...
+        Problem: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Fix (optional)
+      description: If you know the correct content, please provide it here.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I confirm this issue is in v2, not the archived v1
+          required: true
+        - label: I have searched existing issues and this has not been reported before
+          required: true

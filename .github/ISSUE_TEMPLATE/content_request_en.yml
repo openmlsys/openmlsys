@@ -1,0 +1,64 @@
+name: Content Suggestion / New Chapter Request
+description: Suggest new content, a new chapter, or improvements to existing sections
+title: "[Content] "
+labels: ["enhancement", "v2"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing ideas to improve this book!
+
+  - type: dropdown
+    id: request-type
+    attributes:
+      label: Request Type
+      options:
+        - New chapter
+        - New section / paragraph
+        - Improve existing content
+        - Add code example
+        - Add figure / diagram
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Related Chapter (if applicable)
+      description: If the suggestion targets an existing chapter, provide its path
+      placeholder: v2/en_chapters/chapter_xxx/
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Background & Motivation
+      description: Why is this content needed? What problem does it solve for readers?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Content
+      description: Describe what you'd like to add or change
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References (optional)
+      description: Relevant papers, documentation, or code links
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I confirm this suggestion is for v2, not the archived v1
+          required: true
+        - label: I have searched existing issues and this has not been suggested before
+          required: true
+        - label: I am willing to contribute this content myself (optional)
+          required: false

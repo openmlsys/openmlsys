@@ -1,0 +1,62 @@
+name: 内容错误报告（中文）
+description: 报告教材中的笔误、事实错误、公式错误或构建问题
+title: "[错误] "
+labels: ["bug", "v2"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你花时间报告问题！请尽量填写下方所有字段，以帮助我们快速定位和修复。
+
+        > **注意：** v1 已归档，仅接受 v2 相关的问题报告。
+
+  - type: dropdown
+    id: error-type
+    attributes:
+      label: 错误类型
+      options:
+        - 笔误 / 表述错误
+        - 公式错误
+        - 图片错误或缺失
+        - 代码错误
+        - 参考文献错误
+        - 构建 / 渲染问题
+        - 其他
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: 错误位置
+      description: 请指明章节名称和文件路径，例如 `v2/zh_chapters/chapter_introduction/index.md`
+      placeholder: v2/zh_chapters/chapter_xxx/yyy.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 错误描述
+      description: 描述错误内容，如可能请引用原文
+      placeholder: |
+        原文：...
+        问题：...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 建议修改（可选）
+      description: 如果你知道正确内容，请在此提供建议
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已确认此问题属于 v2，而非已归档的 v1
+          required: true
+        - label: 我已搜索现有 Issues，确认此问题未被报告过
+          required: true

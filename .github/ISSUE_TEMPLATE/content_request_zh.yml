@@ -1,0 +1,64 @@
+name: 内容建议 / 新章节请求
+description: 建议补充新内容、新章节，或对现有章节提出改进意见
+title: "[内容] "
+labels: ["enhancement", "v2"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你为本教材提供内容建议！
+
+  - type: dropdown
+    id: request-type
+    attributes:
+      label: 建议类型
+      options:
+        - 新增章节
+        - 新增小节 / 段落
+        - 改进现有内容
+        - 补充代码示例
+        - 补充图片 / 示意图
+        - 其他
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: 相关章节（如有）
+      description: 若建议针对某个已有章节，请填写路径
+      placeholder: v2/zh_chapters/chapter_xxx/
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 背景与动机
+      description: 为什么需要这部分内容？它能帮助读者解决什么问题？
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 具体建议
+      description: 描述你希望添加或修改的内容
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 参考资料（可选）
+      description: 相关论文、文档或代码链接
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已确认此建议针对 v2，而非已归档的 v1
+          required: true
+        - label: 我已搜索现有 Issues，确认此建议未被提出过
+          required: true
+        - label: 我有意愿参与撰写此内容（可选，非必填）
+          required: false
