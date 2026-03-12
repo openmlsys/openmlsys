@@ -12,13 +12,14 @@ def ensure_resource_views(
     chapter_dir: Path,
     repo_root: Path,
     resource_names: tuple[str, ...] = RESOURCE_NAMES,
+    version: str = "v1"
 ) -> None:
     chapter_dir = chapter_dir.resolve()
     repo_root = repo_root.resolve()
 
     for name in resource_names:
         destination = chapter_dir / name
-        source = repo_root / name
+        source = repo_root / version / name
         if not source.exists():
             raise FileNotFoundError(f"Resource does not exist: {source}")
 
@@ -47,12 +48,18 @@ def parse_args() -> argparse.Namespace:
         default=Path(__file__).resolve().parent.parent,
         help="Repository root that owns the shared resources.",
     )
+    parser.add_argument(
+        "--version",
+        type=str,
+        default="v1",
+        help="Version subdirectory to place the resource links (default: v1).",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    ensure_resource_views(args.chapter_dir, args.repo_root)
+    ensure_resource_views(args.chapter_dir, args.repo_root, version=args.version)
     return 0
 
 
