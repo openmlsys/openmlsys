@@ -117,15 +117,11 @@ sh build_mdbook_zh.sh
 
 ## 贡献指南
 
-我们欢迎任何形式的贡献，包括：
-
-- **勘误**：发现文字或图片错误，请创建 Issue 并 @ [章节编辑](info/editors.md)，或直接提交 PR。
-- **内容更新**：提交 PR 更新或添加 Markdown 文件。
-- **新章节**：欢迎社区对元学习系统、自动并行、集群调度、绿色 AI、图学习等主题贡献章节。
+我们欢迎任何形式的贡献，详细流程请参阅 **[贡献指南](v2/info/CONTRIBUTING_zh.md)**。
 
 提交前请阅读：
-- [写作风格指南](info/style.md)
-- [中英文术语对照](info/terminology.md)
+- [写作样式规范](v2/info/style_zh.md)
+- [中英文术语对照](v2/info/terminology.md)
 
 ## 社区
 

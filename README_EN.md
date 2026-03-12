@@ -119,15 +119,11 @@ For more details, see the [Build Guide](info/info.md).
 
 ## Contributing
 
-We welcome all forms of contributions, including:
-
-- **Errata**: If you find text or figure errors, please open an Issue and @ the [chapter editors](info/editors.md), or submit a PR directly.
-- **Content updates**: Submit PRs to update or add Markdown files.
-- **New chapters**: We welcome community contributions on topics such as meta-learning systems, automatic parallelism, cluster scheduling, green AI, and graph learning.
+We welcome all forms of contributions. For the full workflow, see the **[Contributing Guide](v2/info/CONTRIBUTING.md)**.
 
 Before contributing, please read:
-- [Writing Style Guide](info/style.md)
-- [Terminology Guide](info/terminology.md)
+- [Writing Style Guide](v2/info/style.md)
+- [Terminology Guide](v2/info/terminology.md)
 
 ## Community
 
