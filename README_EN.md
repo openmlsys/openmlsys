@@ -101,14 +101,14 @@ sh build_mdbook_v2.sh
 # Chinese output: .mdbook-v2-zh/book
 ```
 
-For more details, see the [Build Guide](CONTRIBUTING/info.md).
+For more details, see the [Build Guide](CONTRIBUTING/info_en.md).
 
 ## Contributing
 
-We welcome all forms of contributions. For the full workflow, see the **[Contributing Guide](CONTRIBUTING/CONTRIBUTING.md)**.
+We welcome all forms of contributions. For the full workflow, see the **[Contributing Guide](CONTRIBUTING/CONTRIBUTING_en.md)**.
 
 Before contributing, please read:
-- [Writing Style Guide](CONTRIBUTING/style.md)
+- [Writing Style Guide](CONTRIBUTING/style_en.md)
 - [Terminology Guide](CONTRIBUTING/terminology.md)
 
 ## Community

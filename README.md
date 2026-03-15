@@ -99,14 +99,14 @@ sh build_mdbook_v2.sh
 # 中文版生成结果位于 .mdbook-v2-zh/book
 ```
 
-更多细节请参考 [构建指南](CONTRIBUTING/info.md)。
+更多细节请参考 [构建指南](CONTRIBUTING/info_zh.md)。
 
 ## 贡献指南
 
-我们欢迎任何形式的贡献，详细流程请参阅 **[贡献指南](CONTRIBUTING/CONTRIBUTING.md)**。
+我们欢迎任何形式的贡献，详细流程请参阅 **[贡献指南](CONTRIBUTING/CONTRIBUTING_zh.md)**。
 
 提交前请阅读：
-- [写作样式规范](CONTRIBUTING/style.md)
+- [写作样式规范](CONTRIBUTING/style_zh.md)
 - [中英文术语对照](CONTRIBUTING/terminology.md)
 
 ## 社区
