@@ -35,7 +35,7 @@ restrict network communication within individual racks. This approach
 has become a core design requirement for distributed machine learning
 systems.
 
-![Architecture of a machine learningcluster](../img/ch10/ch10-datacentre.png)
+![Architecture of a machine learningcluster](../img/ch09/ch10-datacentre.png)
 :label:`ch010/ch10-datacentre`
 
 So, how much network bandwidth is required for training a large-scale

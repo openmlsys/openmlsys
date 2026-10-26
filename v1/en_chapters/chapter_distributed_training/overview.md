@@ -46,7 +46,7 @@ expansive data centers and cloud computing facilities and managing them
 effectively through distributed training systems, we can cater to the
 surging computational requirements of evolving models.
 
-![Machine Learning Model Size vs. Hardware ComputationalCapability](../img/ch10/ch10-computation-increase.png)
+![Machine Learning Model Size vs. Hardware ComputationalCapability](../img/ch09/ch10-computation-increase.png)
 :label:`ch010/ch10-computation-increase`
 
 ### Memory Constraints
@@ -77,7 +77,7 @@ distributed training. We can harness the power of numerous servers in a
 distributed training system to parallelly train a machine learning
 model.
 
-![Comparison between single-node computing and multi-Node distributedcomputing](../img/ch10/ch10-single-vs-multi.png)
+![Comparison between single-node computing and multi-Node distributedcomputing](../img/ch09/ch10-single-vs-multi.png)
 :label:`ch010/ch10-single-vs-multi`
 
 For enhancing the efficiency of the distributed training system, it is

@@ -19,7 +19,7 @@ variation for a robot to expect to have an accurate model of its
 environment, the objects in it, or the skills required to manipulate
 them.
 
-![An Overview of Common Frameworks for RobotLearning.](../img/ch13/framework.pdf)
+![An Overview of Common Frameworks for RobotLearning.](../img/ch13/robot_learning_overview.png)
 :label:`robot-framework`
 
 ## Robot Interaction Environments
@@ -94,7 +94,7 @@ crucial for achieving successful transfer of learned policies from
 simulation to reality.
 
 ![Robot manipulation environments in real
-world [@geng2022end].](../img/ch13/realworld.pdf)
+world [@geng2022end].](../img/ch13/real-world.png)
 
 ### Hardware Considerations:
 :label:`hardware-considerations`
@@ -237,7 +237,7 @@ an action in a given state.
 **Affordance Learning:**
 
 ![Affordance visualization results in robot manipulation
-tasks [@geng2022end].](../img/ch13/affordance.pdf)
+tasks [@geng2022end].](../img/ch13/affordance.png)
 
 Affordance learning focuses on understanding the action possibilities
 that the environment offers to a

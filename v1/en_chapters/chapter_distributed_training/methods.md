@@ -18,7 +18,7 @@ network, we employ a computational graph, comprising connected
 operators. Each operator executes a layer of the neural network, storing
 parameters to be updated during the training.
 
-![Single-node trainingsystem](../img/ch10/ch10-single-node.png)
+![Single-node trainingsystem](../img/ch09/ch10-single-node.png)
 :label:`ch010/ch10-single-node`
 
 The execution of a computational graph involves two phases: *forward*
@@ -83,7 +83,7 @@ devices (e.g., gradient 1 on device 1 and gradient 1 on device 2) are
 aggregated (typically by AllReduce, a collective communication
 operation) to calculate an average gradient.
 
-![Data-parallelsystem](../img/ch10/ch10-data-parallel.png)
+![Data-parallelsystem](../img/ch09/ch10-data-parallel.png)
 :label:`ch010/ch10-data-parallel`
 
 ## Model Parallelism
@@ -121,7 +121,7 @@ completes backward computation based on the local partition of
 operator 1. The local computation results on the devices are aggregated
 and returned to complete the backward computation process.
 
-![Model-parallel system: intra-operatorparallelism](../img/ch10/ch10-model-parallel-intra-op.png)
+![Model-parallel system: intra-operatorparallelism](../img/ch09/ch10-model-parallel-intra-op.png)
 :label:`ch010/ch10-model-parallel-intra-op`
 
 In some cases, the overall model --- rather than specific operators ---
@@ -144,7 +144,7 @@ backward computation, device 2 sends the backward computation result of
 operator 2 to device 1 for backward computation of operator 1,
 completing the training on a mini-batch.
 
-![Model-parallel system: inter-operatorparallelism](../img/ch10/ch10-model-parallel-inter-op.png)
+![Model-parallel system: inter-operatorparallelism](../img/ch09/ch10-model-parallel-inter-op.png)
 :label:`ch010/ch10-model-parallel-inter-op`
 
 ## Hybrid Parallelism
@@ -170,5 +170,5 @@ local gradients are averaged by using the AllReduce operation. The
 averaged gradient is back-propagated to the replicas of operator 1 on
 devices 1 and 3, and the backward computation process ends.
 
-![Hybrid-parallelsystem](../img/ch10/ch10-hybrid-parallel.png)
+![Hybrid-parallelsystem](../img/ch09/ch10-hybrid-parallel.png)
 :label:`ch010/ch10-hybrid-parallel`

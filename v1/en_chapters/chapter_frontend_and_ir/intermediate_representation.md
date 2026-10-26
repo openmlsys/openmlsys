@@ -28,7 +28,7 @@ analyzing and optimizing IRs, the optimizer enhances the extensibility
 of the compilation process and minimizes the impact that might be
 introduced during an optimization process on the frontend and backend.
 
-![Compiler's optimizationprocess](../img/ch04/IR-IR_structure.png)
+![Compiler's optimizationprocess](../img/ch04/中间表示-中间表示结构.png)
 :label:`ch04/ch04-IR`
 
 With the ongoing evolution of compiler techniques, the development of
@@ -82,7 +82,7 @@ operands and one target). Figure
 :numref:`ch04/ch04-linearIR` illustrates the stack machine code
 and three-address code representations for the expression $a-b*5$.
 
-![Stack machine code and three-addresscode](../img/ch04/IR-linear_IR.png)
+![Stack machine code and three-addresscode](../img/ch04/中间表示-线性中间表示.png)
 :label:`ch04/ch04-linearIR`
 
 ### Graphical Intermediate Representation
@@ -104,7 +104,7 @@ shared by multiple parent nodes. By reusing subtrees, the DAG reduces
 the cost of the evaluation process, especially when the compiler can
 verify that the value of $a$ remains constant.
 
-![AST and DAG](../img/ch04/IR-ASTDAG.png)
+![AST and DAG](../img/ch04/中间表示-ASTDAG.svg)
 :label:`ch04/ch04-AST_DAG`
 
 ### Hybrid Intermediate Representation
@@ -127,7 +127,7 @@ control transfer between these blocks is implemented through edges. This
 combination of linear IR for basic blocks and graphical IR for control
 flow allows for a flexible and efficient representation in LLVM IR.
 
-![LLVM IR](../img/ch04/IR-LLVMIR.png)
+![LLVM IR](../img/ch04/中间表示-LLVMIR.png)
 :label:`ch04/ch04-LLVM_IR`
 
 ## Intermediate Representation in Machine Learning Frameworks
@@ -340,7 +340,7 @@ that can be performed at two adjacent levels can be a conundrum for
 framework developers. Finally, defining distinct operator granularities
 at different levels might impact accuracy to a certain degree.
 
-![TensorFlow's IRdesign](../img/ch04/IR-MLIR.png)
+![TensorFlow's IRdesign](../img/ch04/中间表示-MLIR.png)
 :label:`ch04/ch04-tensorflow_ecosystem`
 
 ### Multi-Level Intermediate Representation
@@ -464,7 +464,7 @@ ParameterNode signifies the function's formal parameter, and CNode
 (corresponding to a compound expression in ANF) indicates function
 invocation.
 
-![MindIR grammar](../img/ch04/IR-MindIR.png)
+![MindIR grammar](../img/ch04/中间表示-MindIR.png)
 :label:`ch04/ch04-MindIR`
 
 The example provided below in Code 1 offers a deeper analysis of MindIR.

@@ -8,7 +8,7 @@ and execute machine learning applications. Figure
 :numref:`intro/system-ecosystem` provides an overview of the
 various application scenarios for machine learning systems.
 
-![Application scenarios of machine learningsystems](../img/intro/system-ecosystem.png)
+![Application scenarios of machine learningsystems](../img/ch01/system-ecosystem.png)
 :label:`intro/system-ecosystem`
 
 1.  **Federated learning:** Laws and regulations on user privacy

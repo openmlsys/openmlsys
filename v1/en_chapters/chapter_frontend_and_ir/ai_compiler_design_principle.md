@@ -16,7 +16,7 @@ compilers like the Low Level Virtual Machine (LLVM). Thus, gaining an
 understanding of the basic architecture of the LLVM compiler, depicted
 in Figure :numref:`ch04/llvm-basic`, will be beneficial.
 
-![Basic architecture of the LLVMcompiler](../img/ch04/LLVM_basic_architecture.png)
+![Basic architecture of the LLVMcompiler](../img/ch04/LLVM基础结构.png)
 :label:`ch04/llvm-basicwidth="\\linewidth"`
 
 The LLVM compiler consists of three components: the frontend,
@@ -82,5 +82,5 @@ In this process, the compiler frontend handles graph compilation and
 hardware-agnostic optimization, while the compiler backend conducts
 tasks like hardware-specific optimization and operator selection.
 
-![Working process of MindSpore's AIcompiler](../img/ch04/compiler_process.png)
+![Working process of MindSpore's AIcompiler](../img/ch04/编译器整体流程.png)
 :label:`ch04/msflowwidth="\\linewidth"`

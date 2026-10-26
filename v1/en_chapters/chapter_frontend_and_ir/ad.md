@@ -190,12 +190,12 @@ particularly important when dealing with functions of multiple
 variables, with each mode having specific use cases and efficiency
 implications.
 
-![Computational graph of the examplefunction](../img/ch04/AD-example_graph.png)
+![Computational graph of the examplefunction](../img/ch04/自动微分-示例计算图.svg)
 :label:`ch04/ch04-calculation_graph`
 
 ### Forward Mode
 
-![Illustration of forward-mode automaticdifferentiation](../img/ch04/AD-forward_example.png)
+![Illustration of forward-mode automaticdifferentiation](../img/ch04/自动微分-前向模式自动微分示例.png)
 :label:`ch04/ch04-forward-mode-compute-function`
 
 Figure :numref:`ch04/ch04-forward-mode-compute-function` elucidates thecomputation process within the forward mode. The sequence of elementaryoperations, derived from the source program, is displayed on the left.Following the chain rule and using established derivative evaluationrules, we sequentially compute each intermediate variable ${\dot{v}_i}=\frac{\partial v_i}{\partial x_1}$ from top to bottom, as depicted on the right. 
@@ -234,7 +234,7 @@ leveraging the chain rule and established derivative evaluation rules
 ${\bar{x}_1}=\frac{\partial y}{\partial x_1}$ and
 ${\bar{x}_2}=\frac{\partial y}{\partial x_2}$.
 
-![Illustration of reverse-mode automaticdifferentiation](../img/ch04/AD-backward_example.png)
+![Illustration of reverse-mode automaticdifferentiation](../img/ch04/自动微分-反向模式自动微分示例.png)
 :label:`ch04/ch04-backward-mode-compute`
 
 Every reverse pass of function $f$ produces partial derivatives of asingle output with respect to all inputs, represented by the followingvectors. This corresponds to a single row of the Jacobian matrix.Consequently, executing $m$ reverse passes gives us the full Jacobianmatrix.

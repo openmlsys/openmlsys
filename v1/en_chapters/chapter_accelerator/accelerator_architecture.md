@@ -20,7 +20,7 @@ target market of the GPU.
 Figure :numref:`ch06/ch06-gv100` illustrates the architecture of the
 Volta GV100 . This architecture has:
 
-![Volta GV100](../img/ch06/V100.png)
+![Volta GV100](../img/ch06/V100.svg)
 :label:`ch06/ch06-gv100`
 
 1.  6 GPU processing clusters (GPCs), each containing:
@@ -118,7 +118,7 @@ handle various neural networks.
 Figure :numref:`ch06/ch06-compute-unit` demonstrates how different
 layers of neural networks select appropriate compute units.
 
-![Computeunits](../img/ch06/compute_unit.png)
+![Computeunits](../img/ch06/compute_unit.svg)
 :label:`ch06/ch06-compute-unit`
 
 1.  **Scalar Unit**: calculates one scalar element at a time, similar to
@@ -145,7 +145,7 @@ floating-point arithmetic units, which are Scalar Units, and 8 Tensor
 Cores, which are 3D Cube Units specially designed for neural network
 applications.
 
-![Volta GV100 SM](../img/ch06/SM.png)
+![Volta GV100 SM](../img/ch06/SM.svg)
 :label:`ch06/ch06-SM`
 
 A Tensor Core is capable of performing one $4\times4$ matrix
@@ -156,7 +156,7 @@ Figure :numref:`ch06/ch06-tensorcore`.
 D = A * B + C
 ```
 
-![Tensor Core's $4\times4$ matrix multiply-accumulateoperation](../img/ch06/tensor_core.png)
+![Tensor Core's $4\times4$ matrix multiply-accumulateoperation](../img/ch06/tensor_core.svg)
 :label:`ch06/ch06-tensorcore`
 
 $\bf{A}$, $\bf{B}$, $\bf{C}$, and $\bf{D}$ are $4\times4$ matrices.
@@ -170,7 +170,7 @@ compute units.
 
 ## Domain Specific Architecture
 
-![Da Vinciarchitecture](../img/ch06/davinci_architecture.png)
+![Da Vinciarchitecture](../img/ch06/davinci_architecture.svg)
 :label:`ch06/ch06-davinci_architecture`
 
 Domain Specific Architecture (DSA) has been an area of interest in

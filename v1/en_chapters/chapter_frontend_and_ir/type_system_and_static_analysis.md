@@ -124,5 +124,5 @@ module, cache module, semantics inference module, and control flow
 processing module, as illustrated in
 Figure :numref:`ch04/ch04-compiler-frontend`.
 
-![Static analysismodule](../img/ch04/static_analysis_module.png)
+![Static analysismodule](../img/ch04/静态分析-静态分析模块.png)
 :label:`ch04/ch04-compiler-frontend`

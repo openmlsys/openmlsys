@@ -68,7 +68,7 @@ row index and the column vector in matrix $B$ according to the column
 index, computes the vector inner product. The thread also stores the
 result back to $C$ matrix in line 17.
 
-![Simple implementation ofGEMM](../img/ch06/practise/naive.png)
+![Simple implementation ofGEMM](../img/ch06/6.4/naive.png)
 :label:`cuda_naive_gemm`
 
 The method of launching the kernel function is shown in
@@ -177,7 +177,7 @@ from matrix $A$ and matrix $B$ from left to right and from top to
 bottom, computes the data, and stores the data to matrix $C$, as shown
 in Figure :numref:`use_float4`.
 
-![Enhancing arithmeticintensity](../img/ch06/practise/use_float4.png)
+![Enhancing arithmeticintensity](../img/ch06/6.4/use_float4.png)
 :label:`use_float4`
 
 For details about the complete code, see
@@ -188,7 +188,7 @@ Figure :numref:`use_tile`. For
 details about the code used to achieve this, see
 [gemm_use_tile.cu](https://github.com/openmlsys/openmlsys-cuda/blob/main/gemm_use_tile.cu).
 
-![Further enhancement of the arithmetic intensity by adding matrixblocks processed by eachthread](../img/ch06/practise/use_tile.png)
+![Further enhancement of the arithmetic intensity by adding matrixblocks processed by eachthread](../img/ch06/6.4/use_tile.png)
 :label:`use_tile`
 
 The test results are as follows:
@@ -256,7 +256,7 @@ shared memory can be used to improve the program throughput by enabling
 different threads in the same thread block to load unique data and reuse
 shared data.
 
-![Threads loading redundantdata](../img/ch06/practise/duplicated_data.png)
+![Threads loading redundantdata](../img/ch06/6.4/duplicated_data.png)
 :label:`duplicated_data`
 
 We have previously mentioned that the inner product can be computed by
@@ -281,10 +281,10 @@ threads from the global memory and stores the data in the shared memory.
 During computational processes, each thread only needs to load the data
 it requires from the shared memory.
 
-![Writing data to the sharedmemory](../img/ch06/practise/use_smem_store.png)
+![Writing data to the sharedmemory](../img/ch06/6.4/use_smem_store.png)
 :label:`use_smem_store`
 
-![Loading data from the sharedmemory](../img/ch06/practise/use_smem_load.png)
+![Loading data from the sharedmemory](../img/ch06/6.4/use_smem_load.png)
 :label:`use_smem_load`
 
 For details about the complete code, see
@@ -355,10 +355,10 @@ the current operation do not require the data in the next loop. As such,
 the execution of these computation instructions will not be blocked by
 the instructions that load the data for the next loop.
 
-![Pipeline of the previous GPU kernelfunction](../img/ch06/practise/use_smem_pipeline.png)
+![Pipeline of the previous GPU kernelfunction](../img/ch06/6.4/use_smem_pipeline.png)
 :label:`use_smem_pipeline`
 
-![Pipeline that hides the shared memory loadinglatency](../img/ch06/practise/hide_smem_latency.png)
+![Pipeline that hides the shared memory loadinglatency](../img/ch06/6.4/hide_smem_latency.png)
 :label:`hide_smem_latency`
 
 For details about the complete code, see
@@ -398,7 +398,7 @@ written to `tile` in the last loop in the inner loop after $tileK - 1$
 loops are executed, further reducing the latency of writing data to
 `tile`. Figure :numref:`hide_global_latency` shows the optimized pipeline.
 
-![Pipeline that hides the global memory loadinglatency](../img/ch06/practise/hide_global_latency.png)
+![Pipeline that hides the global memory loadinglatency](../img/ch06/6.4/hide_global_latency.png)
 :label:`hide_global_latency`
 
 For details about the complete code, see

@@ -12,7 +12,7 @@ concentrates on IRs and automatic differentiation, and later provides a
 succinct introduction to basic compiler concepts, including type
 systems, static analysis, and frontend optimization.
 
-![Typical structure of an AI compilerfrontend](../img/ch04/compiler_frontend_structure.png)
+![Typical structure of an AI compilerfrontend](../img/ch04/编译器前端基础架构.svg)
 :label:`ch04/compiler_frontend_structure`
 
 An **Intermediate Representation** is a data structure, or a form of

@@ -18,10 +18,9 @@ this technology, this chapter explains the following key aspects:
 ```toc
 :maxdepth: 2
 
-Computational_Graph_Functions
-Computational_Graph_Basics
-Generating_a_Computational_Graph
-Scheduling_and_Executing_Computational_Tasks
-Chapter_Summary
-Further_Reading
+components_of_computational_graph
+background_and_functionality
+generation_of_computational_graph
+schedule_of_computational_graph
+summary
 ```

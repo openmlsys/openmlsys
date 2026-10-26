@@ -8,7 +8,7 @@ while TensorFlow and MindSpore come with built-in parameter server
 implementations, PyTorch requires users to implement the parameter
 servers themselves by using RPC interfaces.
 
-![Architecture of a parameter serversystem](../img/ch10/ch10-parameter-servers.png)
+![Architecture of a parameter serversystem](../img/ch09/ch10-parameter-servers.png)
 :label:`ch010/ch10-parameter-servers`
 
 ## System Architecture

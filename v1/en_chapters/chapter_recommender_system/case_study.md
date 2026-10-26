@@ -112,7 +112,7 @@ synchronization, we'll examine Ekko. Figure
 architecture where replicas can be synchronized among decentralized
 parameter servers.
 
-![Example of decentralized synchronization protocols for parameterservers](../img/ch_recommender/p2p_replication.png)
+![Example of decentralized synchronization protocols for parameterservers](../img/ch10/ch-recsys/p2p_replication.png)
 :label:`P2P replication`
 
 To execute the peer-to-peer synchronization algorithm, Ekko first
@@ -203,7 +203,7 @@ considered high priority; otherwise, it is deemed low priority. The
 value of *k* is user-defined, and the kth percentile is estimated using
 an existing algorithm based on historical priority data.
 
-![Application-aware model update scheduler](../img/ch_recommender/update_scheduler.png)
+![Application-aware model update scheduler](../img/ch10/ch-recsys/update_scheduler.png)
 :label:`model update scheduler`
 
 ## Online Model State Management
@@ -230,7 +230,7 @@ this model is redirected to another model in a healthy state. The
 corrupted model is then rolled back to a previous healthy state before
 being reintroduced online.
 
-![Online Model StateManagement](../img/ch_recommender/state_manager.png)
+![Online Model StateManagement](../img/ch10/ch-recsys/state_manager.png)
 :label:`model state manager`
 
 [^1]: The update amplitude could either be the gradient itself or the

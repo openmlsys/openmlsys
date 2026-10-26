@@ -42,7 +42,7 @@ decision strategy can be trained through re-parameterization. We will
 introduce the perception, planning, and control systems in the following
 subsections.
 
-![Automatic driving framework based on imitation learning](../img/ch17/idm.png)
+![Automatic driving framework based on imitation learning](../img/ch13/idm.png)
 :label:`ch17/ch17-learning_decision_module`
 
 ## Perception System
@@ -100,7 +100,7 @@ frameworks have been proposed. TartanVO, which outperforms traditional
 geometry-based methods, is the first learning-based VO model that can be
 generalized to multiple datasets and real-world scenarios.
 
-![Main system components ofORB-SLAM3](../img/ch17/orbslam3.png)
+![Main system components ofORB-SLAM3](../img/ch13/orbslam3.png)
 :label:`ch17/ch17-orbslam3`
 
 ## Planning System
@@ -136,7 +136,7 @@ Decision Process (POMDP) model for autonomous driving based on deep RL,
 covering important components such as the environment, reward, and
 agent.
 
-![POMDP model for deep RL--based autonomousdriving ](../img/ch17/rl_ad.png)
+![POMDP model for deep RL--based autonomousdriving ](../img/ch13/rl_ad.png)
 :label:`ch17/ch17-rl_ad`
 
 ## Control System
@@ -188,7 +188,7 @@ a safe learning control system. Lyapunov functions can effectively
 evaluate the stability of nonlinear dynamical systems. Recently, neural
 Lyapunov has been proposed to take safety into account.
 
-![Safe learning control system where data is used to update controlstrategies or safetyfilters](../img/ch17/safe_learning_control.png)
+![Safe learning control system where data is used to update controlstrategies or safetyfilters](../img/ch13/safe_learning_control.png)
 :label:`ch17/ch17-safe_learning_control`
 
 ## Robot Safety

@@ -27,12 +27,11 @@ The learning objectives of this chapter include:
 ```toc
 :maxdepth: 2
 
-Overview_of_AI_Compilers
-Overview_of_AI_Compiler_Frontends
-Intermediate_Representation
-Automatic_Differentiation
-Type_Systems_and_Static_Analysis
-Frontend_Compilation_Optimization
-Chapter_Summary
-Further_Reading
+ai_compiler_design_principle
+overview_of_frontend
+intermediate_representation
+ad
+type_system_and_static_analysis
+common_frontend_optimization_pass
+summary
 ```

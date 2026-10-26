@@ -67,7 +67,7 @@ discrete, continuous, or categorical. The three types of adapters are
 collectively referred to as adapters in Figure
 :numref:`ch011/ch11-rlzoo`.
 
-![Reinforcement learning system used in the RLzoo algorithmlibrary](../img/ch11/ch11-rlzoo.pdf)
+![Reinforcement learning system used in the RLzoo algorithmlibrary](../img/ch12/ch12-rlzoo.png)
 :label:`ch011/ch11-rlzoo`
 
 The policy networks and value networks constitute the core learning

@@ -20,7 +20,7 @@ diminished accuracy. On the other hand, using a more complex model may
 provide more accurate results but deter users due to longer waiting
 times.
 
-![Example of a multi-stage recommendationpipeline](../img/ch_recommender/recommender_pipeline.png)
+![Example of a multi-stage recommendationpipeline](../img/ch10/ch-recsys/recommender_pipeline.png)
 :label:`recommender pipeline`
 
 To mitigate this, contemporary recommender systems typically deploy
@@ -63,7 +63,7 @@ each representing a unique user or item. The two-tower model employs a
 scoring function to evaluate the similarity between user vectors and
 item vectors.
 
-![Structure of the two-towermodel](../img/ch_recommender/two_tower_model.png)
+![Structure of the two-towermodel](../img/ch10/ch-recsys/two_tower_model.png)
 :label:`two tower model`
 
 ### Training
@@ -180,7 +180,7 @@ Deep Learning Recommendation Model (DLRM). As depicted in Figure
 DLRM consists of embedding tables, multi-layer perceptrons (MLPs) that
 include two layers, and an interaction layer.[^2]
 
-![Structure of DLRM](../img/ch_recommender/dlrm_model.png)
+![Structure of DLRM](../img/ch10/ch-recsys/dlrm_model.png)
 :label:`dlrm model`
 
 Similar to the two-tower model, the DLRM initially uses embedding tables
@@ -205,7 +205,7 @@ the input for the top MLP. After further processing by the top MLP, the
 final output score reflects the probability of a user clicking on the
 item.
 
-![Interaction principlediagram](../img/ch_recommender/interaction.png)
+![Interaction principlediagram](../img/ch10/ch-recsys/interaction.png)
 :label:`interaction`
 
 ### Training Process

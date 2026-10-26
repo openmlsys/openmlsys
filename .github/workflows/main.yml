@@ -29,6 +29,7 @@ jobs:
           python3 -m unittest discover -s tests -p 'test_prepare_mdbook_zh.py'
           python3 -m unittest discover -s tests -p 'test_assemble_docs_publish_tree.py'
           python3 -m unittest discover -s tests -p 'test_ensure_book_resources.py'
+          python3 -m unittest discover -s tests -p 'test_image_references.py'
           python3 -m unittest discover -s tests -p 'test_update_docs_workflow.py'
 
       - name: Build v2 (EN + ZH) with mdBook

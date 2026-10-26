@@ -40,15 +40,11 @@ The key learning objectives of this chapter are as follows:
 ```toc
 :maxdepth: 2
 
-Overview
-Parallelism_Methods
-Pipeline_Parallelism_with_Micro-Batching
-Architecture_of_Machine_Learning_Clusters
-Collective_Communication
-Parameter_Server
-Federated_Learning
-Training_Large_Language_Models
-Chapter_Summary
-Further_Reading
+overview
+methods
+cluster
+collective
+parameter_servers
+summary
 ```
 

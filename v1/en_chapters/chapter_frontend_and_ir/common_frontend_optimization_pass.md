@@ -26,7 +26,7 @@ types and sequence of optimization operations. These adjustments are
 contingent upon the set level of compilation optimization, as
 illustrated in Figure :numref:`ch06/ch06-opt-pass`.
 
-![Structural layout of an optimization pass in compilationoptimization](../img/ch04/optimization_pass.png)
+![Structural layout of an optimization pass in compilationoptimization](../img/ch04/编译优化-pass结构.svg)
 :label:`ch06/ch06-opt-pass`
 
 ## Prevalent Optimization Methods
@@ -48,7 +48,7 @@ code can decrease the size of IRs and expedite both the compilation and
 execution of a program. These types of code can result from human errors
 or may manifest during other compilation optimizations.
 
-![Elimination of deadcode](../img/ch04/dead_code_elimination.png)
+![Elimination of deadcode](../img/ch04/编译优化-无用代码消除.svg)
 :label:`ch06/ch06-opt-pass-useless-code0-elimination`
 
 In Chapter
@@ -70,7 +70,7 @@ compilation.
 Figure :numref:`ch06/ch06-opt-pass-constant-broadcast` depicts these two
 methods.
 
-![Constant propagation and constant foldingtechniques](../img/ch04/constant_propagation_and_constant_folding.png)
+![Constant propagation and constant foldingtechniques](../img/ch04/编译优化-常量传播与常量折叠.svg)
 :label:`ch06/ch06-opt-pass-constant-broadcast`
 
 ### Common Subexpression Elimination
@@ -84,7 +84,7 @@ Figure :numref:`ch06/ch06-opt-pass-CSE`. As such, E doesn't need to be
 computed again; it can be directly replaced with the expression result
 obtained from the preceding computation.
 
-![Common subexpression eliminationprocess](../img/ch04/common_subexpression_elimination.png)
+![Common subexpression eliminationprocess](../img/ch04/编译优化-公共子表达式消除.svg)
 :label:`ch06/ch06-opt-pass-CSE`
 
 Common subexpression elimination, like the elimination of dead code and

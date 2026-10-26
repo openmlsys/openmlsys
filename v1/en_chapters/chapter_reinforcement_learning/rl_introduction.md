@@ -42,7 +42,7 @@ Figure :numref:`ch011/ch11-rl` shows the abstract process, which is the
 most common model description of reinforcement learning in the
 literature.
 
-![Framework of reinforcementlearning](../img/ch11/ch11-rl.pdf)
+![Framework of reinforcementlearning](../img/ch12/ch12-rl.png)
 :label:`ch011/ch11-rl`
 
 Take video gaming as an example. A gamer needs to gradually become

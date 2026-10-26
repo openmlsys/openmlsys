@@ -28,7 +28,7 @@ that the device can directly access the data. When the computation is
 finished, the user can obtain the training result once the result data
 is copied from the device memory back to the host memory.
 
-![Host memory and devicememory](../img/ch07/host-device-memory.png)
+![Host memory and devicememory](../img/ch05/host-device-memory.png)
 :label:`ch07/ch07-compiler-backend-memory-01`
 
 ## Process of Memory Allocation
@@ -57,7 +57,7 @@ Figure
 :numref:`ch07/ch07-compiler-backend-memory-02` illustrates an
 example of memory allocation.
 
-![Memory allocationexample](../img/ch07/memory_allocate.png)
+![Memory allocationexample](../img/ch05/memory_allocate.png)
 :label:`ch07/ch07-compiler-backend-memory-02`
 
 In this example, memory addresses are assigned to the input tensor,
@@ -94,7 +94,7 @@ operator memory to be allocated using offset pointers from pre-allocated
 device memory, significantly reducing the time required compared to
 direct memory allocations from the device.
 
-![Memory allocation using double offsetpointers](../img/ch07/device_malloc.png)
+![Memory allocation using double offsetpointers](../img/ch05/device_malloc.png)
 :label:`ch07/ch07-compiler-backend-memory-03`
 
 ## Memory Reuse
@@ -129,7 +129,7 @@ in the same memory. In Figure
 accommodate only four rectangular blocks (i.e., tensors T0, T1, T2, and
 T3) when no memory reuse policy is applied, as shown in the left chart.
 
-![Memory lifetimecharts](../img/ch07/combine_memory_resue_and_no_reuse_cn.png)
+![Memory lifetimecharts](../img/ch05/combine_memory_reuse_and_no_reuse.png)
 :label:`ch07/ch07-compiler-backend-memory-04`
 
 To determine an appropriate memory reuse policy, we face an NP-complete
@@ -182,7 +182,7 @@ in this scenario, a typical approach is to allocate contiguous memory
 addresses to all weights on the network and then perform a single
 broadcast operation.
 
-![Memory fusion of communicationoperators](../img/ch07/memory_fusion.png)
+![Memory fusion of communicationoperators](../img/ch05/memory_fusion.png)
 :label:`ch07/ch07-compiler-backend-memory-06`
 
 ### In-place Operators
@@ -209,7 +209,7 @@ simplified to a single step: copying tensor `b` to the position
 corresponding to tensor `a`. This reduces data copy time by eliminating
 two copies and eliminates the need to allocate memory for tensor `a’`.
 
-![Memory allocation of an in-placeoperator](../img/ch07/inplace-op.png)
+![Memory allocation of an in-placeoperator](../img/ch05/inplace-op.png)
 :label:`ch07/ch07-compiler-backend-memory-08`
 
 ## Data Compression

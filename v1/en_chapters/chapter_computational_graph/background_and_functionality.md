@@ -7,7 +7,7 @@ dependencies between operators.
 Figure :numref:`ch04/ch04-simpleDAG` shows a computational graph example
 of $\bf{Z}$=ReLU$(\bf{X}\times\bf{Y})$.
 
-![Simple computationalgraph](../img/ch04/simple-graph.png)
+![Simple computationalgraph](../img/ch03/simpledag.png)
 :label:`ch04/ch04-simpleDAG`
 
 ## Tensors and Operators
@@ -20,7 +20,7 @@ vector is a rank-1 tensor with one axis; and a three-channel RGB color
 image is a rank-3 tensor with three axes. See Figure
 :numref:`ch04/ch04-tensor`.
 
-![Tensors](../img/ch04/tensor.png)
+![Tensors](../img/ch03/tensor.png)
 :label:`ch04/ch04-tensor`
 
 In a machine learning framework, a tensor stores not only data itself
@@ -78,7 +78,7 @@ Sparse tensors often handle graph data of graph neural networks (GNNs)
 and are encoded using special formats such as the coordinate list (COO)
 to improve storage efficiency.
 
-![Types of tensors](../img/ch04/tensor-class.png)
+![Types of tensors](../img/ch03/tensorclass.svg)
 :label:`ch04/ch04-tensor1`
 
 Operators are the basic compute units of neural networks. They process
@@ -143,7 +143,7 @@ activation function, and the data flow will be interrupted. We can
 therefore conclude that the operators in this computational graph depend
 on each other with transitive relations.
 
-![Computationaldependencies](../img/ch04/dependence.png)
+![Computationaldependencies](../img/ch03/dependence.svg)
 :label:`ch04/ch04-dependence`
 
 Three types of dependencies are available.
@@ -174,7 +174,7 @@ underflow to negative infinity, or tend to 0. These all lead to
 unexpected training results. As such, we should avoid circular
 dependencies between operators when designing deep learning models.
 
-![Circulardependency](../img/ch04/recurrent.png)
+![Circulardependency](../img/ch03/recurrent.svg)
 :label:`ch04/ch04-recurrent`
 
 In machine learning frameworks, the *unrolling* method is used to
@@ -192,7 +192,7 @@ with unique identifiers. When a subgraph is replicated to produce an
 unrolled loop, the replicated tensors and operators are assigned new
 identifiers to avoid circular dependencies.
 
-![Unrolled loop](../img/ch04/unroll.png)
+![Unrolled loop](../img/ch03/unroll.png)
 :label:`ch04/ch04-recurrent-1`
 
 ## Control Flows
@@ -289,7 +289,7 @@ participate in computation due to conditional control. Similarly, in the
 backward computational graph, tensor $\bf{C}$ is skipped in gradient
 computation.
 
-![Computational graphs of conditionalcontrol](../img/ch04/if.png)
+![Computational graphs of conditionalcontrol](../img/ch03/if.png)
 :label:`ch04/ch04-if`
 
 A control loop allows us to execute an operation in a loop zero or
@@ -324,7 +324,7 @@ also a loop, with the same number of iterations as the forward loop. The
 gradient value output by one iteration serves as the input value for
 calculating the gradient of the next iteration until the loop ends.
 
-![Computational graphs of loopcontrol](../img/ch04/while.png)
+![Computational graphs of loopcontrol](../img/ch03/while.png)
 :label:`ch04/ch04-while`
 
 ## Gradient Computation Using the Chain Rule
@@ -384,7 +384,7 @@ backpropagation based on the error between the output value and label
 value to update the weight parameters to minimize the error. The weight
 parameters to be updated include $\bf{W}$ and $\bf{W_1}$.
 
-![Backpropagation computationalgraph](../img/ch04/chain.png)
+![Backpropagation computationalgraph](../img/ch03/chain.png)
 :label:`ch04/ch04-chain`
 
 The mean square error (MSE) is selected as the loss function in this

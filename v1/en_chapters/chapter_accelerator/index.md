@@ -18,9 +18,9 @@ This chapter has the following learning objectives:
 ```toc
 :maxdepth: 2
 
-Overview
-Components_of_Hardware_Accelerators
-Programming_Methods
-Performance_Optimization_Methods
-Chapter_Summary
+accelerator_introduction
+accelerator_architecture
+accelerator_programming
+accelerator_practise
+summary
 ```

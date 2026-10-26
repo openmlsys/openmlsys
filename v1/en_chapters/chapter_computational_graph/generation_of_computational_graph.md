@@ -26,7 +26,7 @@ The static graph approach decouples the definition and execution
 processes. That is, a static graph is compiled before it is executed, as
 shown in Figure :numref:`ch04/ch04-static`.
 
-![Generating and executing a staticgraph](../img/ch04/static.png)
+![Generating and executing a staticgraph](../img/ch03/static.png)
 :label:`ch04/ch04-static`
 
 When a model program is generated using the frontend language, the
@@ -81,7 +81,7 @@ learning frameworks are able to compile Python control flows as their
 static graph equivalents. In order to implement control flows in this
 case, we can use the control primitives provided by the framework.
 
-![Generating a staticgraph](../img/ch04/static_gen.png)
+![Generating a staticgraph](../img/ch03/static_gen.png)
 :label:`ch04/ch04-static-gen`
 
 Static computational graphs offer two distinct advantages. First, they
@@ -133,7 +133,7 @@ paradigm, the dynamic graph approach allows developers to create neural
 network models at the frontend and is therefore favored by a vast number
 of deep learning researchers.
 
-![Dynamic graph principle](../img/ch04/eager.png)
+![Dynamic graph principle](../img/ch03/eager.png)
 :label:`ch04/ch04-eager1`
 
 Next, we reuse the pseudocode in the previous section to compare the
@@ -154,7 +154,7 @@ computational dependencies, and dynamically generates a temporary graph.
 Figure :numref:`ch04/ch04-dynamic-gen` shows the process of generating a
 dynamic graph.
 
-![Generating a dynamicgraph](../img/ch04/eager-gen.png)
+![Generating a dynamicgraph](../img/ch03/eager-gen.png)
 :label:`ch04/ch04-dynamic-gen`
 
 Forward computation is run through the neural network in the sequence
@@ -362,7 +362,7 @@ into the corresponding static graph API in this phase, so as to include
 every branch of the control flow in the resulting graph. Next, we can
 easily generate static graph code from the translated syntax tree.
 
-![Source code transformation](../img/ch04/ast.png)
+![Source code transformation](../img/ch03/ast.svg)
 :label:`ch04/ch04-ast`
 
 In numerous instances, the utilization of either tracing or source code

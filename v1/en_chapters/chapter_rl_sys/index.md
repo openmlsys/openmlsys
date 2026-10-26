@@ -13,10 +13,10 @@ chapter are as follows:
 ```toc
 :maxdepth: 2
 
-Overview_of_Robotic_Systems
-Robot_Operating_System
-Case_Study
-Modern_Robot_Learning
-Chapter_Summary
+rl_sys_intro
+ros
+ros_code_ex
+robot_learning
+summary
 ```
 

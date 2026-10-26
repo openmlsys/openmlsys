@@ -4,7 +4,7 @@ Figure :numref:`ch07/ch07-compiler-backend-01` illustrates the
 architecture of the AI compiler backend, situated between the frontend
 and the hardware driver layer.
 
-![Architecture of AI compilerbackend](../img/ch07/compiler-backend-architecture.pdf)
+![Architecture of AI compilerbackend](../img/ch05/compiler-backend-architecture.png)
 :label:`ch07/ch07-compiler-backend-01`
 
 Graph optimization is a crucial step that involves transforming the

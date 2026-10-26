@@ -40,10 +40,10 @@ The chapter aims to achieve the following learning objectives:
 ```toc
 :maxdepth: 2
 
-Overview
-Machine_Learning_Workflow
-Neural_Network_Programming
-Functional_Programming
-Bridging_Python_and_C_C++_Functions
-Chapter_Summary
+development_history
+ml_workflow
+neural_network_layer
+c_python_interaction
+ml_programming_paradigm
+summary
 ```

@@ -125,5 +125,5 @@ for batch_idx, (data, target) in enumerate(testing_dataloader):
 # For debugging, you can print logs inside the training or evaluation loop, or use python debugger.
 ```
 
-![Workflow within a machine learningsystem](../img/ch03/workflow.pdf)
+![Workflow within a machine learningsystem](../img/ch02/img_workflow.svg)
 :label:`ch03/workflow`
