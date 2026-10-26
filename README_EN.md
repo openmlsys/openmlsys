@@ -27,7 +27,7 @@
 
 An open-source book explaining the design principles and implementation experience of modern machine learning systems, covering the complete technology stack from programming interfaces and computational graphs to compilers and distributed training.
 
-**English version 1 (stable):** [openmlsys.github.io/html-en/](https://openmlsys.github.io/html-en/)
+**English version 1 (stable):** [openmlsys.github.io/v1/](https://openmlsys.github.io/v1/)
 
 **English version 2:** Under reconstruction.
 

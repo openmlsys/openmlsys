@@ -45,7 +45,7 @@ A single tree is too weak to withstand a sandstorm. Similarly, it was the forest
 
 By May 2022, the core authors and editors (Luo Mai, Hao Dong, Xuefeng Jin, and Zhiliang Gan), the book coordinator (Zhipeng Tan), and the following contributors have endeavored to create this book: **Introduction** (Luo Mai, Hao Dong, and Zhiliang Gan), **Programming Model** (Cheng Lai, Luo Mai, and Hao Dong), **Computational Graph** (Jiarong Han, Luo Mai, and Hao Dong), **AI Compiler and Frontend Technology** (Zhibo Liang, Qinghua Zhang, Bingjian Huang, Jianfeng Yu, and Zhiliang Gan), **AI Compiler Backend and Runtime** (Jinjin Chu, Pei Mu, and Fubi Cai), **Hardware Accelerator** (Renwei Zhang, Jie Ren, Wenteng Liang, Chao Liu, Gang Chen, and Mingqi Li), **Data Processing** (Xiulong Yuan), **Model Deployment** (Gangqiang Han, Yehui Tang, Zhiqiang Zhai, and Shanni Li), **Distributed Training** (Luo Mai and Peiyuan Liao) **Federated Learning System** (Tiancheng Wu and Hanchen Wang), **Recommender System** (Yao Fu, Bei Pei, and Luo Mai), **Reinforcement Learning System** (Zihan Ding), **Explainable AI System** (Haoyang Li and Xiaohui Li), and **Robotic System** (Jiankai Sun and Kaiyan Xiao).
 
-We welcome new contributors to help improve and expand the book's content. If you're interested, please contact us through our book's [OpenMLSys Community](https://openmlsys.github.io/html-en/). Let's work together to create a machine learning systems book that advances the world.
+We welcome new contributors to help improve and expand the book's content. If you're interested, please contact us through our book's [OpenMLSys Community](https://github.com/openmlsys/openmlsys). Let's work together to create a machine learning systems book that advances the world.
 
 Luo Mai
 
