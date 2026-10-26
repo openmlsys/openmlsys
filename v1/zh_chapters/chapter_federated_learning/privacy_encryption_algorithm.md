@@ -29,8 +29,6 @@ FL-Client将加噪后的模型权重矩阵$W_p$上传至云侧FL-Server进行联
 
 尽管差分隐私技术可以适当保护用户数据隐私，但是当参与FL-Client数量比较少或者高斯噪声幅值较大时，模型精度会受较大影响。为了同时满足模型保护和模型收敛这两个要求，MindSpore Federated提供了基于MPC的安全聚合方案。
 
-尽管差分隐私技术可以适当保护用户数据隐私，但是当参与FL-Client数量比较少或者高斯噪声幅值较大时，模型精度会受较大影响。为了同时满足模型保护和模型收敛这两个要求，MindSpore Federated提供了基于MPC的安全聚合方案。
-
 在这种训练模式下，假设参与的FL-Client集合为$U$，对于任意FL-Client $u$和$v$，它们会两两协商出一对随机扰动$p_{uv}$、$p_{vu}$，满足
 
 $$
@@ -99,7 +97,7 @@ $$
 对于每个FL-Client，给定随机采样的符号值$x$，任意两个本地更新$\Delta$，$\Delta^\prime$的Top-K集合记为$S_k$和$S_k^\prime$，对于任意输出维度集合$J\in\mathcal{J}$，令$\nu=|S_k \cap J|$, $\nu^\prime=|S_k^\prime \cap J|$为$J$与两组Top-K维度集的交集数量。根据 :eqref:`emmds`，以下不等式成立：
 
 $$
-\frac{\mathrm{Pr}\[J|\Delta\]}{\mathrm{Pr}\[J|\Delta^\prime\]} = \frac{\mathrm{Pr}\[J|S_{k}\]}{\mathrm{Pr}\[J|S^\prime_{k}\]} = \frac{\frac{\mathrm{exp}(\frac{\epsilon}{\phi}\cdot u(S_{k}, J))}{\sum_{J^\prime\in\mathcal{J}}\mathrm{exp}(\frac{\epsilon}{\phi}\cdot u(S_{k}, J^\prime))}}{\frac{\mathrm{exp}(\frac{\epsilon}{\phi}\cdot u(S^\prime_{k}, J))}{\sum_{J^\prime\in\mathcal{J}}\mathrm{exp}(\frac{\epsilon}{\phi}\cdot u(S^\prime_{k}, J^\prime))}}
+\frac{\mathrm{Pr}[J|\Delta]}{\mathrm{Pr}[J|\Delta^\prime]} = \frac{\mathrm{Pr}[J|S_{k}]}{\mathrm{Pr}[J|S^\prime_{k}]} = \frac{\frac{\mathrm{exp}(\frac{\epsilon}{\phi}\cdot u(S_{k}, J))}{\sum_{J^\prime\in\mathcal{J}}\mathrm{exp}(\frac{\epsilon}{\phi}\cdot u(S_{k}, J^\prime))}}{\frac{\mathrm{exp}(\frac{\epsilon}{\phi}\cdot u(S^\prime_{k}, J))}{\sum_{J^\prime\in\mathcal{J}}\mathrm{exp}(\frac{\epsilon}{\phi}\cdot u(S^\prime_{k}, J^\prime))}}
     = \frac{\frac{\mathrm{exp}(\epsilon\cdot 𝟙(\nu \geq \nu_{th}))}{\sum_{\tau=0}^{\tau=h}\omega_{\tau}\cdot \mathrm{exp}(\epsilon\cdot 𝟙(\tau\geq\nu_{th}))}}{\frac{
     \mathrm{exp}(\epsilon\cdot 𝟙(\nu^\prime \geq \nu_{th}))}{\sum_{\tau=0}^{\tau=h}\omega_{\tau}\cdot \mathrm{exp}(\epsilon\cdot 𝟙(\tau\geq\nu_{th}))}} \\
     = \frac{\mathrm{exp}(\epsilon\cdot 𝟙(\nu \geq \nu_{th}))}{
@@ -114,25 +112,25 @@ $$
 $$
 \mathrm{Pr}(\nu=\tau|\nu_{th})=
     \begin{cases}
-        \omega_{\tau} / \Omega \quad \quad \quad \quad \quad \mathrm{ } &if \quad \tau\in\[0,\nu_{th}\) \\
-        \omega_{\tau}\cdot\mathrm{exp}(\epsilon) / \Omega \quad \quad &if \quad \tau\in\[\nu_{th},h\]
+        \omega_{\tau} / \Omega \quad \quad \quad \quad \quad \mathrm{ } &if \quad \tau\in[0,\nu_{th}) \\
+        \omega_{\tau}\cdot\mathrm{exp}(\epsilon) / \Omega \quad \quad &if \quad \tau\in[\nu_{th},h]
     \end{cases}
 $$
 :eqlabel:`discrete-prob`
 
 $$
-    \mathbb{E}\[\nu|\nu_{th}\] = \sum_{\tau=0}^{\tau=h}\tau\cdot \mathrm{Pr}(\nu=\tau|\nu_{th})
+    \mathbb{E}[\nu|\nu_{th}] = \sum_{\tau=0}^{\tau=h}\tau\cdot \mathrm{Pr}(\nu=\tau|\nu_{th})
 $$
 :eqlabel:`expectation`
 
-这里，$\Omega$为 :eqref:`emmds`中$\mathcal{P}$的分母部分。直觉上，$\mathbb{E}\[\nu|\nu_{th}\]$越高，随机采样的$J$集合中包含的Top-K维度的概率就越大，从而模型效用就越好。因此，我们将$\mathbb{E}\[\nu|\nu_{th}\]$最高时的阈值确定为目标阈值$\nu_{th}^{\*}$，即：
+这里，$\Omega$为 :eqref:`emmds`中$\mathcal{P}$的分母部分。直觉上，$\mathbb{E}[\nu|\nu_{th}]$越高，随机采样的$J$集合中包含的Top-K维度的概率就越大，从而模型效用就越好。因此，我们将$\mathbb{E}[\nu|\nu_{th}]$最高时的阈值确定为目标阈值$\nu_{th}^{*}$，即：
 
 $$
-\nu_{th}^{\*} = \underset{\nu_{th}\in\[1, h\]}{\operatorname{argmax}} \mathbb{E}\[\nu|\nu_{th}\]
+\nu_{th}^{*} = \underset{\nu_{th}\in[1, h]}{\operatorname{argmax}} \mathbb{E}[\nu|\nu_{th}]
 $$
 :eqlabel:`threshold`
 
-最后，我们在 :numref:`signds_workflow`中描述了SignDS算法的详细流程。给定本地模型更新$\Delta$，我们首先随机采样一个符号值$s$并构建Top-K集合$S_k$。接下来，我们根据 :eqref:`threshold`确定阈值$\nu_{th}^{\*}$并遵循 :eqref:`emmds`定义的概率选择输出集合$J$。考虑到输出域$\mathcal{J}$包含$\binom{d}{k}$个可能的维度集合，以一定概率直接从$\mathcal{J}$中随机采样一个组合需要很大的计算成本和空间成本。因此，我们采用了逆采样算法以提升计算效率。具体来说，我们首先从标准均匀分布中采样一个随机值$\beta\sim U(0,1)$，并根据 :eqref:`discrete-prob`中$p(\nu=\tau|\nu_{th})$的累计概率分布$CDF_{\tau}$确定输出维度集合中包含的Top-K维度数$\nu$。最后，我们从Top-K集合$S_k$中随机选取$\nu$个维度，从非Top-K集合中随机采样$h-\nu$个维度，以构建最终的输出维度集合$J$。
+最后，我们在 :numref:`signds_workflow`中描述了SignDS算法的详细流程。给定本地模型更新$\Delta$，我们首先随机采样一个符号值$s$并构建Top-K集合$S_k$。接下来，我们根据 :eqref:`threshold`确定阈值$\nu_{th}^{*}$并遵循 :eqref:`emmds`定义的概率选择输出集合$J$。考虑到输出域$\mathcal{J}$包含$\binom{d}{k}$个可能的维度集合，以一定概率直接从$\mathcal{J}$中随机采样一个组合需要很大的计算成本和空间成本。因此，我们采用了逆采样算法以提升计算效率。具体来说，我们首先从标准均匀分布中采样一个随机值$\beta\sim U(0,1)$，并根据 :eqref:`discrete-prob`中$p(\nu=\tau|\nu_{th})$的累计概率分布$CDF_{\tau}$确定输出维度集合中包含的Top-K维度数$\nu$。最后，我们从Top-K集合$S_k$中随机选取$\nu$个维度，从非Top-K集合中随机采样$h-\nu$个维度，以构建最终的输出维度集合$J$。
 
 ![SignDS工作流程](../img/ch10/ch10-federated-learning-signds.PNG)
 :width:`800px`
