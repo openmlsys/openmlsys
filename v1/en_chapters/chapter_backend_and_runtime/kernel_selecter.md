@@ -41,7 +41,7 @@ row-major order by default, as shown at the top of the figure. However,
 matrix **B** is read in column-major order in the matrix multiplication
 process, as shown at the bottom.
 
-![Matrix data layouts in matrixmultiplication](../img/ch07/matmuldatalayout.png)
+![Matrix data layouts in matrixmultiplication](../img/ch05/matmuldatalayout.png)
 :label:`ch07/ch07-compiler-backend-06`
 
 Storing matrix **B** in the reading order increases the computation
@@ -56,7 +56,7 @@ channels, and H and W denote the height and width respectively. Figure
 diagram of an input with batch size 2, channels 16, height 5, and width
 4.
 
-![Formatdiagram](../img/ch07/data_format.png)
+![Formatdiagram](../img/ch05/data_format.png)
 :label:`ch07/ch07-compiler-backend-07`
 
 A multidimensional matrix is flattened into 1D format before it is
@@ -88,7 +88,7 @@ before the next channel is processed. The same procedure is repeated
 until the last channel of the last image is processed. NCHW is the
 default format on PyTorch and MindSpore.
 
-![RGB image data in NHWCformat](../img/ch07/nchw.png)
+![RGB image data in NHWCformat](../img/ch05/nchw.png)
 :label:`ch07/ch07-compiler-backend-08`
 
 Access to data in NHWC format also begins at the lowest dimension (i.e.,
@@ -109,7 +109,7 @@ to the jumps from the innermost axis to the next. For example, \[a:1\]
 indicates the jump from axis W to axis H, and \[b:1\] indicates the jump
 from axis C (the innermost) to axis W.
 
-![NCHW and NHWCformats](../img/ch07/nchwandnhwc.png)
+![NCHW and NHWCformats](../img/ch05/nchwandnhwc.png)
 :label:`ch07/ch07-compiler-backend-nchwandnhwc`
 
 These two formats offer a high degree of flexibility and are therefore
@@ -141,7 +141,7 @@ In Figure :numref:`ch07/ch07-float32andfloat16`, *Sig* refers to the sign
 bit that indicates the sign of a number, *Exponent* refers to the
 exponent bits, and *Mantissa* refers to the mantissa bits.
 
-![Binary representation of floating-pointnumbers](../img/ch07/floatdtype.png)
+![Binary representation of floating-pointnumbers](../img/ch05/floatdtype.png)
 :label:`ch07/ch07-float32andfloat16`
 
 Applying Equation
@@ -190,7 +190,7 @@ types, and execution efficiency of a given operator vary depending on
 the target hardware. Then, the compiler backend selects an operator
 based on the data type and data format derived from the IR.
 
-![Operator selection process (using GPU as anexample)](../img/ch07/select_kernel.png)
+![Operator selection process (using GPU as anexample)](../img/ch05/select_kernel.png)
 :label:`ch07/ch07-compiler-backend-select`
 
 The result of the operator selection process might not be as expected

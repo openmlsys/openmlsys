@@ -3,7 +3,7 @@
 Figure :numref:`intro/framework-architecture` shows the basic
 architecture of a typical, complete machine learning framework.
 
-![Architecture of a machine learningframework](../img/intro/framework-architecture.png)
+![Architecture of a machine learningframework](../img/ch01/framework-architecture.png)
 :label:`intro/framework-architecture`
 
 1.  **Programming interfaces:** A machine learning framework needs to

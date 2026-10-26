@@ -18,7 +18,7 @@ communication before introducing commonly used collective communication
 operators. These include Broadcast, Reduce, AllGather, Scatter, and
 AllReduce:
 
-![Examples of collective communicationoperators](../img/ch10/ch10-collective-operators.png)
+![Examples of collective communicationoperators](../img/ch09/ch10-collective-operators.png)
 :label:`ch010/ch10-collective-operators`
 
 -   **Broadcast**: The Broadcast operator is often employed in a
@@ -130,7 +130,7 @@ devices 1 and 3 are paired to jointly complete the summation of data in
 partition 3, and devices 3 and 2 are paired to jointly complete the
 summation of data in partition 2.
 
-![Process of the AllReducealgorithm](../img/ch10/ch10-allreduce-process.png)
+![Process of the AllReducealgorithm](../img/ch09/ch10-allreduce-process.png)
 :label:`ch010/ch10-allreduce-process`
 
 Such distributed computing of gradients performed by Reduce operators

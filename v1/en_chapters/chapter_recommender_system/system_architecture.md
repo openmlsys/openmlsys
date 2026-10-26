@@ -26,7 +26,7 @@ Inference servers handle user requests, procure the necessary model
 parameters from parameter servers based on these requests, and calculate
 the recommendation outcomes.
 
-![Architecture of a recommendersystem](../img/ch_recommender/recommender_system.png)
+![Architecture of a recommendersystem](../img/ch10/ch-recsys/ch10-recommendation-systems.png)
 :label:`recommender systems`
 
 # System Components
@@ -87,7 +87,7 @@ store. When the training or inference module needs to access a specific
 user's features, all necessary features can be retrieved from the
 feature store using just the user ID.
 
-![Example of a featurestore](../img/ch_recommender/feature_store.png)
+![Example of a featurestore](../img/ch10/ch-recsys/feature_store.png)
 :label:`feature store`
 
 One significant advantage of utilizing feature stores is the potential
@@ -142,7 +142,7 @@ space. The structure of an embedding table in a recommendation model
 bears resemblance to its counterpart in a natural language processing
 (NLP) model, though there are subtle distinctions.
 
-![Structure of a recommendation model](../img/ch_recommender/recommendation_model.png)
+![Structure of a recommendation model](../img/ch10/ch-recsys/ch10-recommendation-models.png)
 :label:`recommendation models`
 
 In NLP models, the majority of parameters are found within deep neural
@@ -197,7 +197,7 @@ offered by the parameter server architecture greatly improves the
 efficiency of storage and computation resource management in
 recommendation systems.
 
-![Role of parameter servers in a recommender system](../img/ch_recommender/parameter_server_in_recommendation.png)
+![Role of parameter servers in a recommender system](../img/ch10/ch-recsys/parameter_server_in_recommendation.png)
 :label:`parameter server in recommendation`
 
 The parameter servers in a recommender system have a dual role. They

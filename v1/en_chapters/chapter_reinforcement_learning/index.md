@@ -9,11 +9,9 @@ training intelligent systems to maximize cumulative reward over time.
 ```toc
 :maxdepth: 2
 
-Overview
-Introduction_to_Reinforcement_Learning
-Single-Node_Reinforcement_Learning_System
-Distributed_Reinforcement_Learning_System
-Multi-agent_Reinforcement_Learning
-Multi-agent_Reinforcement_Learning_System
-Chapter_Summary
+rl_introduction
+single_node_rl
+marl
+marl_sys
+summary
 ```

@@ -56,7 +56,7 @@ performed (depending on the backend hardware support) once the
 compilation is complete. However, some optimization operations can only
 be performed in their entirety during the deployment phase.
 
-![Layered computer storagearchitecture](../img/ch08/ch09-storage.png)
+![Layered computer storagearchitecture](../img/ch08/storage.png)
 :label:`ch-deploy/fusion-storage`
 
 ## Operator Fusion
@@ -81,7 +81,7 @@ operations on the memory. Furthermore, operator fusion allows some
 computation to be completed in advance, eliminating redundant or even
 cyclic redundant computing during forward computation.
 
-![Convolution + Batchnorm operatorfusion](../img/ch08/ch09-conv-bn-fusion.png)
+![Convolution + Batchnorm operatorfusion](../img/ch08/conv-bn-fusion.png)
 :label:`ch-deploy/conv-bn-fusion`
 
 To describe the principle of operator fusion, we will use two operators,
@@ -174,7 +174,7 @@ type of operators that have the same computational logic but are more
 suitable for online deployment. In this way, we can reduce the
 computation workload and compress the model.
 
-![Replacement ofBatchnorm](../img/ch08/ch09-bn-replace.png)
+![Replacement ofBatchnorm](../img/ch08/bn-replace.png)
 :label:`ch-deploy/bn-replace`
 
 Figure :numref:`ch-deploy/bn-replace` depicts the replacement of
@@ -210,7 +210,7 @@ Common methods of operator reordering include moving cropping operators
 (e.g., Slice, StrideSlice, and Crop) forward, and reordering Reshape,
 Transpose, and BinaryOp.
 
-![Reordering ofCrop](../img/ch08/ch09-crop-reorder.png)
+![Reordering ofCrop](../img/ch08/crop-reorder.png)
 :label:`ch-deploy/crop-reorder`
 
 Crop is used to cut a part out of the input feature map as the output.

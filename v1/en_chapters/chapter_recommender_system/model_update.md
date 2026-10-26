@@ -58,7 +58,7 @@ quality of recommendation. A depiction of this offline model update
 process can be seen in Figure
 :numref:`offline update`.
 
-![Offline Process of UpdatingModels](../img/ch_recommender/offline_update.png)
+![Offline Process of UpdatingModels](../img/ch10/ch-recsys/offline_update.png)
 :label:`offline update`
 
 To break it down, when a model completes a training period, the

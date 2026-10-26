@@ -28,7 +28,7 @@ val count = ones.reduce(_+_)
 
 We can see that users need only four lines of code to accomplish the complex task of counting specific field occurrences in a distributed dataset. This is made possible by Spark's core RDD programming abstraction. From the computation flow visualization in :numref:`rdd_transformation_example`, we can also clearly see that after creating the dataset, users only need to describe the operators applied to the dataset, while the execution and implementation of the operators are handled by the system's runtime.
 
-![The core of Spark programming --- RDD transformations](../img//ch07/7.2/RDD.png)
+![The core of Spark programming --- RDD transformations](../img/ch07/7.2/RDD.png)
 
 :width:`800px`
 :label:`rdd_transformation_example`

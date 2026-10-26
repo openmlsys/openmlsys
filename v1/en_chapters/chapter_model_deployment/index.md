@@ -24,13 +24,11 @@ The key aspects this chapter explores are as follows:
 ```toc
 :maxdepth: 2
 
-Overview
-Conversion_to_Inference_Model_and_Model_Optimization
-Model_Compression
-Advanced_Efficient_Techniques
-Model_Inference
-Security_Protection_of_Models
-Chapter_Summary
-Further_Reading
+model_deployment_introduction
+model_converter_and_optimizer
+model_compression
+model_inference
+model_security
+summary
 ```
 

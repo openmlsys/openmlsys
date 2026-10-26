@@ -76,7 +76,7 @@ partitioned, and multiple threads are used to process different data
 partitions. This allows operators to be computed in parallel, thereby
 multiplying the operator performance.
 
-![Data partitioning for matrixmultiplication](../img/ch08/ch09-parallel.png)
+![Data partitioning for matrixmultiplication](../img/ch08/parallel.png)
 :label:`ch09_parallel`
 
 In Figure :numref:`ch09_parallel`, the matrix in the multiplication can be
@@ -144,7 +144,7 @@ Figure :numref:`ch-deploy/register`, NEON register v0 can store 128
 bits, which is equal to the capacity of 4 float32, 8 float16, or 16
 int8.
 
-![Structure of the NEON register v0 of an ARMv8CPU](../img/ch08/ch09-register.png)
+![Structure of the NEON register v0 of an ARMv8CPU](../img/ch08/register.png)
 :label:`ch-deploy/register`
 
 The single instruction multiple data (SIMD) method can be used to
@@ -157,7 +157,7 @@ multiple data values in the NEON register at a time. For example, the
 floating-point values in registers v1 and v2 are added to the value in
 v0.
 
-![fmla instructioncomputing](../img/ch08/ch09-fmla.png)
+![fmla instructioncomputing](../img/ch08/fmla.png)
 :label:`ch-deploy/fmla`
 
 **3) Assembly language optimization**
@@ -217,7 +217,7 @@ Figure :numref:`ch-deploy/conv_nhwc` is a diagram of convolution. The
 input shape is (1, IH, IW, IC), the convolution kernel shape is (OC, KH,
 KW, IC), and the output shape is (1, OH, OW, OC).
 
-![Generalconvolution](../img/ch08/ch09-conv_nhwc.png)
+![Generalconvolution](../img/ch08/conv_nhwc.png)
 :label:`ch-deploy/conv_nhwc`
 
 As shown in Figure
@@ -227,7 +227,7 @@ on the right. The number of rows corresponds to the number of OH \* OW
 outputs. For a row vector, Img2col processes KH \* KW data points of
 each input channel in sequence, from the first channel to channel IC.
 
-![Img2col on the convolutioninput](../img/ch08/ch09-img2col_input.png)
+![Img2col on the convolutioninput](../img/ch08/img2col_input.png)
 :label:`ch-deploy/img2col_input`
 
 As shown in Figure
@@ -240,7 +240,7 @@ convolution operation is converted into the multiplication of two
 matrices. In practice, the data rearrangement of Img2col and GEMM is
 performed simultaneously to save time.
 
-![Img2col on the convolutionkernel](../img/ch08/ch09-img2col_weight.png)
+![Img2col on the convolutionkernel](../img/ch08/img2col_weight.png)
 :label:`ch-deploy/img2col_weight`
 
 **(2) Winograd**
@@ -342,7 +342,7 @@ $$\textit{\textbf{Y}}=\textit{\textbf{A}}^{\rm T}(\textit{\textbf{G}}g\textit{\t
 The logical process of Winograd can be divided into four steps, as shown
 in Figure :numref:`ch-deploy/winograd`.
 
-![Winogradsteps](../img/ch08/ch09-winograd.png)
+![Winogradsteps](../img/ch08/winograd.png)
 :label:`ch-deploy/winograd`
 
 To use Winograd of ***F***(2$\times$`<!-- -->`{=html}2,

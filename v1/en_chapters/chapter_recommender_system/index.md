@@ -34,12 +34,10 @@ This chapter has the following learning objectives:
 ```toc
 :maxdepth: 2
 
-Overview
-System_Components
-Recommendation_Pipeline
-Model_Update
-Supporting_Real-time_Machine_Learning
-Chapter_Summary
-Further_Reading
+system_architecture
+multi_stage_recommender_system
+model_update
+case_study
+summary
 ```
 

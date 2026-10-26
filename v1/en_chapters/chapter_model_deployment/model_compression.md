@@ -22,7 +22,7 @@ the memory usage during inference can be reduced, and the inference on
 processors that are good at processing low-precision operations can be
 accelerated.
 
-![Principles ofquantization](../img/ch08/ch09-quant-minmax.png)
+![Principles ofquantization](../img/ch08/quant-minmax.png)
 :label:`ch-deploy/quant-minmax`
 
 The number of bits and the range of data represented by different data
@@ -288,7 +288,7 @@ quantized to represent weights using fewer bits. In addition, using
 Huffman coding can further reduce the memory cost of the deep neural
 network.
 
-![Deep Compressionalgorithm](../img/ch08/ch09-deepcomp.png)
+![Deep Compressionalgorithm](../img/ch08/deepcomp.png)
 :label:`ch-deploy/deepcomp`
 
 In addition to removing redundant neurons, a dictionary learning-based

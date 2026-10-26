@@ -32,7 +32,7 @@ connected layer grows substantially --- from n$\times$m during the
 initial transformation to m$\times$p in the subsequent one.
 
 <figure id="fig:ch03/fc_layer_1">
-<img src="../img/ch03/fc_layer_1.png" style="width:60.0%" />
+<img src="../img/ch02/fc_layer_1.svg" style="width:60.0%" />
 <figcaption>Fully connected layer illustration</figcaption>
 </figure>
 
@@ -147,7 +147,7 @@ for inserting/deleting parameters, adding/removing neural network
 layers, and retrieving neural network model information.
 
 <figure id="fig:ch03/cell_abstract">
-<img src="../img/ch03/cell_abstract.png" style="width:90.0%" />
+<img src="../img/ch02/cell_abstract.svg" style="width:90.0%" />
 <figcaption>Abstraction technique of neural network base
 classes</figcaption>
 </figure>

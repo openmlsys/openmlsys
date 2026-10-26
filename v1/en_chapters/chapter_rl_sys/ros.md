@@ -58,7 +58,7 @@ performance. The communication system of ROS 2 is based on the data
 distribution service (DDS), as shown in
 Figure :numref:`ch17/ch17-ROS2_arch`.
 
-![Overview of ROS/ROS 2architecture ](../img/ch17/ROS2_arch.png)
+![Overview of ROS/ROS 2architecture ](../img/ch13/ROS2_arch.png)
 :label:`ch17/ch17-ROS2_arch`
 
 ROS 2 relies on combining workspaces using the shell environment.
@@ -96,7 +96,7 @@ summarized as follows:
 3.  Before a node goes offline, it also broadcasts the offline
     information to other nodes.
 
-![Robotic system consisting of many nodes working inconcert](../img/ch17/ros2_graph.png)
+![Robotic system consisting of many nodes working inconcert](../img/ch13/ros2_graph.png)
 :label:`ch17/ch17-ROS2_graph`
 
 ## ROS 2 Topics
@@ -114,7 +114,7 @@ windows within rqt. Although we can run such tools in a traditional
 standalone manner, rqt makes it easier to manage the various types of
 windows on the screen simultaneously.
 
-![A node can publish data and subscribe to any number of topicssimultaneously.](../img/ch17/ros2_topics.png)
+![A node can publish data and subscribe to any number of topicssimultaneously.](../img/ch13/ros2_topics.png)
 :label:`ch17/ch17-ROS2_topics`
 
 ## ROS 2 Services
@@ -131,7 +131,7 @@ providing a desired service and the service processes the request and
 generates a response, as shown in
 Figure :numref:`ch17/ch17-ROS2_services`.
 
-![ROS 2service](../img/ch17/ros2_services.png)
+![ROS 2service](../img/ch13/ros2_services.png)
 :label:`ch17/ch17-ROS2_services`
 
 ## ROS 2 Parameters
@@ -158,7 +158,7 @@ an action goal can tell a robot to head for a position. The robot can
 send updates (i.e., feedback) while it navigates a path to the position,
 and then send a result message when it arrives at its destination.
 
-![ROS 2 action](../img/ch17/ros2_actions.png)
+![ROS 2 action](../img/ch13/ros2_actions.png)
 :label:`ch17/ch17-ROS2_actions`
 
 [^1]: https://docs.ros.org/en/foxy/Tutorials/Understanding-ROS2-Nodes.html

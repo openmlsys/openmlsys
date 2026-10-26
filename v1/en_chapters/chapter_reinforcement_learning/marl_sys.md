@@ -36,7 +36,7 @@ type of method relies on a distributed system to implement multi-agent
 training and gaming, reflecting the dependency of multi-agent
 reinforcement learning on distributed computing.
 
-![Multi-agent reinforcement learning training in the form of aleague](../img/ch11/ch11-marl-train.pdf)
+![Multi-agent reinforcement learning training in the form of aleague](../img/ch12/ch12-marl-train.svg)
 :label:`ch011/ch11-marl-train`
 
 Now, let's look at the difficulties involved in building a multi-agent
@@ -195,5 +195,5 @@ training. While this example describes a distributed multi-agent system
 in general terms, there may be many different designs for different game
 types and algorithm structures in real-world applications.
 
-![Distributed multi-agent reinforcement learningsystem](../img/ch11/ch11-marl-sys.png)
+![Distributed multi-agent reinforcement learningsystem](../img/ch12/ch12-marl-sys.png)
 :label:`ch011/ch11-marl-sys`

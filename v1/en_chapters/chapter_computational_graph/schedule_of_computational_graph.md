@@ -42,7 +42,7 @@ a). According to the operator call sequence of the model code, such as
 a-\>b-\>c-\>d-\>e, all operator nodes are put into the queue in turn,
 and the scheduling ends.
 
-![Operator scheduling andexecution](../img/ch04/schedule.png)
+![Operator scheduling andexecution](../img/ch03/schedule.svg)
 :label:`ch04/ch04-diaoduzhixing`
 
 With the ordering, we then prepare to distribute the operators in the
@@ -107,7 +107,7 @@ upstream. As such, we have to schedule the operators in this
 computational graph to a serial queue in order to ensure that each
 operator receives the necessary input.
 
-![Serial operatorscheduling](../img/ch04/order.png)
+![Serial operatorscheduling](../img/ch03/order.png)
 :label:`ch04/ch04-diaodu`
 
 A computational graph may also contain operators independent of each
@@ -117,7 +117,7 @@ different hardware devices to implement parallel computing. Compared
 with the serial mode, parallel computing decreases execution time by
 leveraging more computing resources at the same time.
 
-![Parallel operator scheduling](../img/ch04/para.png)
+![Parallel operator scheduling](../img/ch03/para.svg)
 :label:`ch04/ch04-para`
 
 Serial execution and parallel execution have their own advantages and
@@ -217,7 +217,7 @@ preprocessing and model training tasks must wait until a batch of data
 is completely loaded, and because the I/O channel for data loading is
 idle at model training time.
 
-![Synchronous mechanism](../img/ch04/sync.png)
+![Synchronous mechanism](../img/ch03/synchronization.svg)
 :label:`ch04/ch04-tongbu`
 
 In the asynchronous setting shown in Figure
@@ -229,7 +229,7 @@ idle time between data loading, data preprocessing, and model training
 in the asynchronous mechanism is notably reduced, thereby shortening the
 overall training time with improved execution efficiency.
 
-![Asynchronous mechanism](../img/ch04/async.png)
+![Asynchronous mechanism](../img/ch03/asynchronous.svg)
 :label:`ch04/ch04-yibu`
 
 To further shorten the training time and improve the execution
@@ -241,5 +241,5 @@ and preprocessing, allowing the model to quickly traverse the entire
 dataset. On the other hand, parallel computing increases the batch size
 in iterative training, increasing the efficiency of computing resources.
 
-![Asynchronous mechanism combined with parallelcomputing](../img/ch04/para-async.png)
+![Asynchronous mechanism combined with parallelcomputing](../img/ch03/asyn_para.svg)
 :label:`ch04/ch04-yibubingxing`

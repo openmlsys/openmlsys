@@ -28,11 +28,11 @@ This chapter aims to achieve the following learning objectives:
 ```toc
 :maxdepth: 2
 
-Overview
-Graph_Optimization
-Operator_Selection
-Memory_Allocation
-Operator_Compiler
-Chapter_Summary
-Further_Reading
+overview
+graph_optimizer
+kernel_selecter
+memory_allocator
+compute_schedule_and_execute
+op_compiler
+summary
 ```

@@ -6,7 +6,7 @@ data/
 *.DS_Store
 *.csv
 *egg-info*
-dist*
+/dist/
 _build/
 test*.md
 run.sh

@@ -21,7 +21,7 @@ decoupling the frontend and backend languages in design, as shown in
 Figure :numref:`ch04/ch04-DAG`. From a top-level view, computational
 graph technology provides the following key functions:
 
-![Computational graph--basedarchitecture](../img/ch04/graph.png)
+![Computational graph--basedarchitecture](../img/ch03/graph.png)
 :label:`ch04/ch04-DAG`
 
 1.  **Unified representation of the computation process.** Developers

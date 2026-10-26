@@ -25,7 +25,7 @@ observations are the environment states. However, this is the least
 possible in the real world. In practice, agents usually have different
 observations on the environment.
 
-![Two possible multiagent reinforcement learning frameworks: (a)Synchronous multiagent decision-making; (b) Asynchronous multiagentdecision-making](../img/ch11/ch11-marl.pdf)
+![Two possible multiagent reinforcement learning frameworks: (a)Synchronous multiagent decision-making; (b) Asynchronous multiagentdecision-making](../img/ch12/ch12-marl.png)
 :label:`ch011/ch11-marl`
 
 ## Multi-agent RL
@@ -120,7 +120,7 @@ converge to the objective we expect. Due to the possible existence of
 such a cycle, we need training methods that are more complex and methods
 that are designed for multiagent learning to achieve our objective.
 
-![Self-playalgorithm](../img/ch11/ch11-marl-sp.png)
+![Self-playalgorithm](../img/ch12/ch12-marl-sp.png)
 :label:`ch011/ch11-marl-sp`
 
 Generally, multiagent reinforcement learning is more complex than
@@ -140,7 +140,7 @@ an optimal strategy based on its opponent's historical average
 strategies, and vice versa. In this manner, players can converge to Nash
 equilibrium strategy in games like rock-paper-scissors.
 
-![Fictitious self-playalgorithm](../img/ch11/ch11-marl-fsp.pdf)
+![Fictitious self-playalgorithm](../img/ch12/ch12-marl-fsp.png)
 :label:`ch011/ch11-marl-fsp`
 
 [^1]: Assume that the agents use the same reward discount factor.
