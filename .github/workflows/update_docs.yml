@@ -48,9 +48,17 @@ jobs:
 
       - name: Assemble and deploy to openmlsys.github.io
         env:
-          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         run: |
-          git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/openmlsys/openmlsys.github.io.git
+          # DEPLOY_KEY is the private half of a write-enabled deploy key on openmlsys.github.io.
+          key_file="${RUNNER_TEMP}/deploy_key"
+          known_hosts="${RUNNER_TEMP}/known_hosts"
+          printf '%s\n' "${DEPLOY_KEY}" > "${key_file}"
+          chmod 600 "${key_file}"
+          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "${known_hosts}"
+          export GIT_SSH_COMMAND="ssh -i ${key_file} -o IdentitiesOnly=yes -o UserKnownHostsFile=${known_hosts} -o StrictHostKeyChecking=yes"
+
+          git clone git@github.com:openmlsys/openmlsys.github.io.git
 
           python3 tools/assemble_docs_publish_tree.py \
             --destination-root openmlsys.github.io \
