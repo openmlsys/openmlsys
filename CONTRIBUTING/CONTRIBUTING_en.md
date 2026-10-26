@@ -78,6 +78,27 @@ After modifying source files under `zh_chapters/` or `en_chapters/`, the browser
 
 For detailed custom syntax (math, figure labels, citations, code blocks) and figure guidelines, refer to the **[Writing Style Guide](style_en.md)**.
 
+### Drawing Figures with AI Agents (Excalidraw Skill)
+
+The repository includes a project-level agent skill,
+[`.claude/skills/excalidraw-diagram/`](../.claude/skills/excalidraw-diagram/SKILL.md).
+`.agents/skills/excalidraw-diagram` is a symlink to the same directory.
+Claude Code, and other agents that support the Agent Skills format, load it
+automatically when you ask them to draw a figure for the book.
+
+The skill tells the agent to:
+
+- keep the editable `.excalidraw` source next to the exported SVG/PNG in `v1/img/ch<NN>/`
+- make separate `-zh` variants for figures that contain text
+- follow a palette that stays legible in dark mode
+- never reference PDF images
+
+Lint figures and chapter references before you commit:
+
+```bash
+python3 .claude/skills/excalidraw-diagram/scripts/check_figures.py v1/img/ch06 v2/en_chapters/06_chapter_training_systems/index.md
+```
+
 ---
 
 ## Submission Workflow
