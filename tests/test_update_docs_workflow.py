@@ -13,7 +13,9 @@ class UpdateDocsWorkflowTests(unittest.TestCase):
     def test_workflow_deploys_to_openmlsys_github_io(self) -> None:
         workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
 
-        self.assertIn("DEPLOY_TOKEN", workflow)
+        self.assertIn("secrets.DEPLOY_KEY", workflow)
+        self.assertIn("git@github.com:openmlsys/openmlsys.github.io.git", workflow)
+        self.assertNotIn("DEPLOY_TOKEN", workflow)
         self.assertIn("openmlsys.github.io", workflow)
         self.assertIn("git push", workflow)
 
