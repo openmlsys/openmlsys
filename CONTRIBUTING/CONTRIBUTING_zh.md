@@ -78,6 +78,26 @@ cd v2/config/en_config && mdbook serve --open
 
 详细的自定义语法（公式、图片标签、文献引用、代码块等）及图片规范，请参阅 **[写作样式规范](style_zh.md)**。
 
+### 使用 AI Agent 绘图（Excalidraw Skill）
+
+仓库内置了项目级 Agent Skill
+[`.claude/skills/excalidraw-diagram/`](../.claude/skills/excalidraw-diagram/SKILL.md)。
+`.agents/skills/excalidraw-diagram` 是指向同一目录的符号链接。
+让 Claude Code 或其他支持 Agent Skills 格式的 Agent 为本书绘图时，它们会自动加载该 Skill。
+
+该 Skill 要求 Agent：
+
+- 将可编辑的 `.excalidraw` 源文件与导出的 SVG/PNG 一起放在 `v1/img/ch<NN>/`
+- 为含文字的图另做 `-zh` 中文版本
+- 使用在暗色模式下同样清晰的配色
+- 不引用 PDF 图片
+
+提交前可运行以下命令检查图片源文件与章节中的引用：
+
+```bash
+python3 .claude/skills/excalidraw-diagram/scripts/check_figures.py v1/img/ch06 v2/zh_chapters/06_chapter_training_systems/index.md
+```
+
 ---
 
 ## 提交流程
